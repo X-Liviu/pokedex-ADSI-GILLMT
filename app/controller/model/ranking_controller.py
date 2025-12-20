@@ -1,4 +1,5 @@
 import json
+import sqlite3
 from typing import List, Any, Dict
 from app.database.connection import Connection
 
@@ -11,19 +12,19 @@ class Ranking:
     @staticmethod
     def mostrarUsuarios() -> str:
         resultado: Dict[str, List[Ranking.Usuario]] = None
-        sentence: str = "NombreUsuario, Rareza from Usuario inner join Equipo inner join PokemonEnEquipo inner join Pokemon Order By NombreUsuario;"
+        sentence: str = "select NombreUsuario, Rareza from Usuario inner join Equipo inner join PokemonEnEquipo inner join Pokemon Order By NombreUsuario;"
 
         conexion_ranking: Connection = Connection()
-        resultado_sql: List[Any] = conexion_ranking.select(sentence)
+        resultado_sql: List[sqlite3.Row] = conexion_ranking.select(sentence)
 
         if len(resultado_sql) > 0:
             resultado = {"usuarios": []}
 
         for fila in resultado_sql:
             usuario_actual: Ranking.Usuario = Ranking.Usuario()
-            usuario_actual["nombre"] = fila[0]
-            usuario_actual["rareza"] = fila[1]
-            usuario_actual["puesto"] = fila[2]
+            usuario_actual["nombre"] = fila["nombre"]
+            usuario_actual["rareza"] = fila["rareza"]
+            usuario_actual["puesto"] = fila["puesto"]
 
             resultado.get("usuarios").append(usuario_actual)
 

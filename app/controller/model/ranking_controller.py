@@ -4,7 +4,7 @@ from typing import List, Any, Dict
 from app.database.connection import Connection
 
 class Ranking:
-    Usuario = Dict[str: str, str: float, str: int] # Asignaciones de tipos de dato. Equivalente a typedef de C
+    Usuario = Dict[str, Any] # Asignaciones de tipos de dato. Equivalente a typedef de C
 
     def __init__(self):
         pass
@@ -21,7 +21,7 @@ class Ranking:
             resultado = {"usuarios": []}
 
         for fila in resultado_sql:
-            usuario_actual: Ranking.Usuario = Ranking.Usuario()
+            usuario_actual: Ranking.Usuario = {"nombre": "", "rareza": -1.0, "puesto": -1}
             usuario_actual["nombre"] = fila["nombre"]
             usuario_actual["rareza"] = fila["rareza"]
             usuario_actual["puesto"] = fila["puesto"]

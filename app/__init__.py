@@ -3,6 +3,8 @@ import sqlite3
 
 from flask import Flask
 
+from app.controller.ui.verRanking_controller import ranking_blueprint
+
 from app.controller.ui.book_controller import book_blueprint
 from app.controller.ui.loan_controller import loan_blueprint
 from app.controller.ui.user_controlller import user_blueprint
@@ -40,8 +42,22 @@ def create_app():
     # Crear conexión a la base de datos
     db = Connection()
 
+    """
     app.register_blueprint(user_blueprint(db))
     app.register_blueprint(book_blueprint(db))
     app.register_blueprint(loan_blueprint(db))
+    """
+
+    app.register_blueprint(ranking_blueprint(db))
+
+    """
+    Esto es para que se redireccione a otra
+    direccion, siempre que se quiera acceder
+    a index.
+    """
+
+    @app.route('/')
+    def index() -> str:
+        return app.redirect("/ranking")
 
     return app

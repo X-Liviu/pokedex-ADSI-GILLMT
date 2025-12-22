@@ -9,7 +9,18 @@ class MarcoDex:
         pass
 
     def mostrarUsuarios(self) -> str:
-        return ranking_controller.mostrarUsuarios()
+        resultado: str = None
+        if ranking_controller.Ranking.getMyRankings() != None:
+            resultado = ranking_controller.Ranking.getMyRanking().mostrarUsuarios()
+
+        return resultado
+
+    def mostrarUsuario(self, pNombreUsuario: str) -> str:
+        resultado: str = None
+        if ranking_controller.Ranking.getMyRankings() != None:
+            resultado = ranking_controller.Ranking.getMyRanking().mostrarUsuario(pNombreUsuario)
+
+        return resultado
 
     def newEquipo(self):
         if gestorUsuario.noEsNull() :

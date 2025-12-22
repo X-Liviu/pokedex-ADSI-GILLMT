@@ -13,3 +13,34 @@ class Usuario:
             if equipo.esEsteEquipo(numEquipo):
                 return equipo
         return None
+
+    def tieneEquipos(self):
+        if self.lista_equipos:
+            return True
+        else:
+            return False
+
+    def obtenerEquipos(self):
+        numeros_id = []
+        for equipo in self.lista_equipos:
+            numeros_id.append(equipo.id)
+
+        return numeros_id
+
+    def exportarEquiposJSON(self):
+        # Obtenemos la lista de números
+        lista_nums = self.obtenerEquipos()
+
+        # Creamos un diccionario para darle estructura al JSON
+        datos = {
+            "usuario": self.nombreUsuario,
+            "cantidad": len(lista_nums),
+            "ids_equipos": lista_nums
+        }
+
+        # Convertimos el diccionario a una cadena de texto formato JSON
+        return json.dumps(datos, indent=4)
+
+
+
+

@@ -1,3 +1,5 @@
+import json
+
 class Usuario:
     def __init__(self, nombre: str, apellido: str, nombre_usuario: str, correo: str, contrasena: str, rol: str, lista_equipos: list):
         self.nombre = nombre

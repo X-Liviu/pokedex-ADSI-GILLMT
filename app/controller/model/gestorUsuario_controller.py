@@ -3,6 +3,12 @@ class gestorUsuario:
         self.usuario = usuario
         pass
 
+    def noEsNull(self):
+        return self.usuario is None
+
+    def crearEquipo(self) :
+        return self.usuario.addEquipo()
+
     def tieneEquipos(self) :
         return self.usuario.tieneEquipos()
 

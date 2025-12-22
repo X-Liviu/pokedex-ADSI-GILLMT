@@ -1,7 +1,7 @@
 class Equipo:
-    def __init__(self, numEquipo: int, lista_pokemon):
+    def __init__(self, numEquipo: int):
         self.numEquipo = numEquipo
-        self.lista_pokemon = lista_pokemon
+        self.lista_pokemon = []
 
     def esEsteEquipo(self, num):
         return self.numEquipo == num

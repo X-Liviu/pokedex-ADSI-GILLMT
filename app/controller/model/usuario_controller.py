@@ -1,5 +1,8 @@
 import json
 
+from app.controller.model.equipo_controller import Equipo
+
+
 class Usuario:
     def __init__(self, nombre: str, apellido: str, nombre_usuario: str, correo: str, contrasena: str, rol: str, lista_equipos: list):
         self.nombre = nombre
@@ -9,6 +12,17 @@ class Usuario:
         self.contrasena = contrasena
         self.rol = rol
         self.lista_equipos = lista_equipos
+
+    def addEquipo(self) :
+        if self.tieneEquipos() :
+            ultimo_num = max(equipo.numEquipo for equipo in self.lista_equipos)
+            numEquipo = ultimo_num + 1
+        else:
+            numEquipo = 1
+
+        nuevo_equipo = Equipo(numEquipo)
+        self.lista_equipos.append(nuevo_equipo)
+        return nuevo_equipo.numEquipo
 
     def buscarEquipo(self, numEquipo: int):
         for equipo in self.lista_equipos:

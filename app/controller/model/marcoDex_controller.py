@@ -1,13 +1,22 @@
+from app.controller.model.gestorPokeDex_controller import gestorPokeDex
 from app.controller.model.ranking_controller import Ranking
 from app.custom_types import Custom_types
 from app.controller.model.equipo_controller import Equipo
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 
-from typing import Dict
-
 class MarcoDex:
-    def __init__(self):
-        pass
+    myMarcoDex: MarcoDex = None
+
+    def __init__(self, bd: Connection):
+        if MarcoDex.myMarcoDex == None:
+            self.bd: Connection = bd
+            MarcoDex.myMarcoDex = self
+        else:
+            raise Custom_types.SingletonError()
+
+    @classmethod # Igual que los metodos estaticos de Java
+    def getMyMarcoDex(cls) -> MarcoDex:
+        return cls.myMarcoDex
 
     def mostrarUsuarios(self) -> Custom_types.Ranking.Usuarios:
         resultado: Custom_types.Ranking.Usuarios = {"usuarios": []}
@@ -48,3 +57,6 @@ class MarcoDex:
 
     def getListaEquipos(self) :
         return gestorUsuario.getListaEquipos()
+
+    def obtenerEfectos(self, nombreEspecie) :
+        return gestorPokeDex.obtenerEfectos(nombreEspecie)

@@ -5,8 +5,8 @@ class Efecto:
         self.efecto = efecto
 
     def esFuerte(self, nombreTipo) :
-        return nombreTipo == self.tipoAtacante && self.efecto == "Eficaz"
+        return (nombreTipo == self.tipoAtacante) & (self.efecto == "Eficaz")
 
     def esDebil(self, nombreTipo) :
-        return nombreTipo == self.tipoAtacante && self.efecto == "Debil"
+        return (nombreTipo == self.tipoAtacante) & (self.efecto == "Debil")
 

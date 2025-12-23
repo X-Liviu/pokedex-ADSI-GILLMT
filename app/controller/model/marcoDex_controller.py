@@ -1,6 +1,7 @@
 from app.controller.model.gestorPokeDex_controller import gestorPokeDex
 from app.controller.model.ranking_controller import Ranking
 from app.custom_types import Custom_types
+from app.database.connection import Connection
 from app.controller.model.equipo_controller import Equipo
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 
@@ -60,3 +61,9 @@ class MarcoDex:
 
     def obtenerEfectos(self, nombreEspecie) :
         return gestorPokeDex.obtenerEfectos(nombreEspecie)
+
+    def caracteristicasPokemon(self, nombreEspecie) :
+        return gestorPokeDex.caracteristicasPokemon(nombreEspecie)
+
+    def cadenaEvolutiva(self, nombreEspecie) :
+        return gestorPokeDex.cadenaEvolutiva(nombreEspecie)

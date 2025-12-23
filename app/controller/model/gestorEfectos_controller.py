@@ -1,3 +1,4 @@
+import json
 class GestorEfectos:
 
     def __init__(self, efectos: list):

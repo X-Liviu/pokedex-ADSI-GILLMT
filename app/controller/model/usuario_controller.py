@@ -57,6 +57,10 @@ class Usuario:
         # Convertimos el diccionario a una cadena de texto formato JSON
         return json.dumps(datos, indent=4)
 
-
-
+    def mejorPokemon(self, numEquipo):
+        elEquipo = self.buscarEquipo(numEquipo)
+        if elEquipo != None :
+            return elEquipo.getMejorPokemon()
+        else:
+            return -1
 

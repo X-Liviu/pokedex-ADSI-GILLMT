@@ -8,3 +8,12 @@ class Equipo:
 
     def tiene6(self):
         return len(self.lista_pokemon) == 6
+
+    def getMejorPokemon(self):
+        max = 0.0
+        elPokemon = self.lista_pokemon[0]
+        for Pokemon in range(1, len(self.lista_pokemon)):
+            if max <= Pokemon.rareza:
+                rareza = Pokemon.rareza
+                elPokemon = Pokemon
+        return elPokemon.getInfo()

@@ -14,3 +14,6 @@ class gestorUsuario:
 
     def getListaEquipos(self) :
         return self.usuario.exportarEquiposJSON()
+
+    def mejorPokemon(self, numEquipo) :
+        return self.usuario.mejorPokemon(numEquipo)

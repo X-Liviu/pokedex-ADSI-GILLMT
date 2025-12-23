@@ -22,6 +22,11 @@ class Ranking:
         return cls.myRanking
 
     def mostrarUsuarios(self) -> Custom_types.Ranking.Usuarios:
+        """
+        pre:
+        post: Devuelve un diccionario con todos los usuarios existentes
+        en la base de datos en orden de mas rareza a menos rareza
+        """
         resultado: Custom_types.Ranking.Usuarios = None
         sentence: str = """
         SELECT Usuario.NombreUsuario, Pokemon.Rareza
@@ -48,13 +53,14 @@ class Ranking:
                 resultado.get("usuarios").append(usuario_actual)
 
         return resultado
-        """
-        El metodo dump transforma el diccionario en un objeto JSON y lo guarda en un archivo,
-        mientras que el metodo dumps transforma el diccionario en un objeto JSON, pero este
-        esta contenido en un string
-        """
 
     def mostrarUsuario(self, pNombreUsuario: str) -> Custom_types.Ranking.Usuario:
+        """
+        pre: "pNombreUsuario" no esta vacio
+        post: Dado un nombre de usuario, devuelve un diccionario con
+        su nombre, una lista de pokemon que usa y sus nombres no comunes
+        correspondientes.
+        """
         resultado: Custom_types.Ranking.Usuario = None
         sentence: str = f"""
         SELECT
@@ -77,10 +83,5 @@ class Ranking:
             for fila in resultado_sql:
                 resultado.get("equipoEspecie").append(fila["equipoEspecie"])
                 resultado.get("equipoCustom").append(fila["equipoCustom"])
-
-        return resultado
-
-    def aniadirAmigo(self, nombreUsuario1: str, nombreUsuario2: str) -> Custom_types.Ranking.AmigoAniadido:
-        resultado: Custom_types.Ranking.AmigoAniadido = {"Aniadido": False}
 
         return resultado

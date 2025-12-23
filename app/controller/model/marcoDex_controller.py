@@ -3,6 +3,7 @@ from app.custom_types import Custom_types
 from app.controller.model.equipo_controller import Equipo
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 
+from typing import Dict
 
 class MarcoDex:
     def __init__(self):
@@ -22,12 +23,21 @@ class MarcoDex:
 
         return resultado
 
-    def aniadirAmigo(self, nombreUsuario1: str, nombreUsuario2: str) -> Custom_types.Ranking.AmigoAniadido:
-        resultado: Custom_types.Ranking.AmigoAniadido = {"Aniadido": False}
-        if Ranking.getMyRanking() != None:
-            resultado = Ranking.getMyRanking().aniadirAmigo(nombreUsuario1, nombreUsuario2)
+    def aniadirAmigo(self, nombreUsuario: str) -> Dict[str, bool]:
+        resultado: Dict[str, bool] = {"Aniadido": False}
+        if gestorUsuario.getMyGestorUsuario() != None:
+            resultado["Aniadido"] = gestorUsuario.getMyGestorUsuario().aniadirAmigo(nombreUsuario)
 
         return resultado
+
+    """
+    Las llamadas que se estan haciendo a GestorUsuario no pertenecen a una instancia.
+    En ningun momento hemos creado un objeto en ninguna de los metodos. Tampoco se pasa
+    una referencia a un objeto por parametros de dichos metodos. Hay que crear una MAE o
+    pasar referencia a un objeto creado al inicio de todo por parametros en todos los metodos
+    que requiera llamadas a este. Janire en su proyecto de ejemplo crea objetos en la
+    constructora de otros(book_controller en loan_controller) 
+    """
 
     def newEquipo(self):
         if gestorUsuario.noEsNull() :

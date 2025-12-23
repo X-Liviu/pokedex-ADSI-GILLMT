@@ -12,6 +12,7 @@ class Usuario:
         self.contrasena = contrasena
         self.rol = rol
         self.lista_equipos = lista_equipos
+        # self.amigos = []
 
     def addEquipo(self) :
         if self.tieneEquipos() :
@@ -57,6 +58,23 @@ class Usuario:
         # Convertimos el diccionario a una cadena de texto formato JSON
         return json.dumps(datos, indent=4)
 
+    def ainadirAmigo(self, nombre):
+        resultado = False
+        if not self._esAmigo(nombre):
+            pass
+            # nuevoAmigo = Usuario()
+            # self.lista_amigos.append(nuevoAmigo)
+        return resultado
 
-
-
+    """
+    def _esAmigo(self, nombre):
+        resultado = False
+        indice = 0
+        longitud = len(self.amigos)
+        while not resultado and indice < longitud:
+            if self.amigos[indice].esNombre(nombre):
+                resultado = not resultado
+            else:
+                indice += 1
+        return resultado
+    """

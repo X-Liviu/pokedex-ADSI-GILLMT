@@ -1,5 +1,6 @@
 import sqlite3
 from typing import List
+
 from app.custom_types import Custom_types
 from app.database.connection import Connection
 
@@ -39,13 +40,12 @@ class Ranking:
         if len(resultado_sql) > 0:
             resultado = {"usuarios": []}
 
-        for fila in resultado_sql:
-            usuario_actual: Custom_types.Ranking.Usuario = {"nombre": "", "rareza": -1.0, "puesto": -1}
-            usuario_actual["nombre"] = fila["nombre"]
-            usuario_actual["rareza"] = fila["rareza"]
-            usuario_actual["puesto"] = fila["puesto"]
-
-            resultado.get("usuarios").append(usuario_actual)
+            for fila in resultado_sql:
+                usuario_actual: Custom_types.Ranking.Usuario = {"nombre": "", "rareza": -1.0, "puesto": -1}
+                usuario_actual["nombre"] = fila["nombre"]
+                usuario_actual["rareza"] = fila["rareza"]
+                usuario_actual["puesto"] = fila["puesto"]
+                resultado.get("usuarios").append(usuario_actual)
 
         return resultado
         """
@@ -77,5 +77,10 @@ class Ranking:
             for fila in resultado_sql:
                 resultado.get("equipoEspecie").append(fila["equipoEspecie"])
                 resultado.get("equipoCustom").append(fila["equipoCustom"])
+
+        return resultado
+
+    def aniadirAmigo(self, nombreUsuario1: str, nombreUsuario2: str) -> Custom_types.Ranking.AmigoAniadido:
+        resultado: Custom_types.Ranking.AmigoAniadido = {"Aniadido": False}
 
         return resultado

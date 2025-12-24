@@ -1,6 +1,7 @@
 import json
 class Pokemon:
-    def __init__(self, pokemon_id: int, nombre_custom: str, rareza: float, shiny: bool, altura: float, peso : float, especie: str):
+    def __init__(self, pokemon_id: int, nombre_custom: str, rareza: float,
+                 shiny: bool, altura: float, peso : float, especie: str, imagen: str):
         self.pokemon_id = pokemon_id
         self.nombre_custom = nombre_custom
         self.rareza = rareza
@@ -8,6 +9,7 @@ class Pokemon:
         self.altura = altura
         self.peso = peso
         self.especie = especie
+        self.imagen = imagen
 
     def getInfo(self):
         datos = {
@@ -17,6 +19,7 @@ class Pokemon:
             "shiny": self.shiny,
             "altura": self.altura,
             "peso": self.peso,
-            "especie": self.especie
+            "especie": self.especie,
+            "imagen": self.imagen
         }
         return json.dumps(datos, indent=4)

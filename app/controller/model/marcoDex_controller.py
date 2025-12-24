@@ -53,11 +53,17 @@ class MarcoDex:
         if gestorUsuario.noEsNull() :
             return gestorUsuario.crearEquipo()
 
+    def aniadirPokemon(self, nombreEspecie: str, nombrePokemon: str, numEquipo: int):
+        return gestorUsuario.aniadirPokemon(nombreEspecie, nombrePokemon, numEquipo)
+
     def tieneEquipos(self) :
         return gestorUsuario.tieneEquipos()
 
     def getListaEquipos(self) :
         return gestorUsuario.getListaEquipos()
+
+    def mostrarInfoEquipo(self, numEquipo):
+        return gestorUsuario.mostrarInfoEquipo(numEquipo)
 
     def obtenerEfectos(self, nombreEspecie) :
         return gestorPokeDex.obtenerEfectos(nombreEspecie)

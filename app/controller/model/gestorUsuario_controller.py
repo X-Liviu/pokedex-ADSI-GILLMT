@@ -12,11 +12,22 @@ class gestorUsuario:
     def crearEquipo(self) :
         return self.usuario.addEquipo()
 
+    def aniadirPokemon(self, nombreEspecie, nombrePokemon, numEquipo):
+        equipo = self.usuario.buscarEquipo(numEquipo)
+        if not equipo.tiene6():
+            return equipo.addPokemon(nombreEspecie, nombrePokemon)
+        else:
+            return -1
+
     def tieneEquipos(self) :
         return self.usuario.tieneEquipos()
 
     def getListaEquipos(self) :
         return self.usuario.exportarEquiposJSON()
+
+    def mostrarInfoEquipo(self, numEquipo) :
+        equipo = self.usuario.buscarEquipo(numEquipo)
+        return equipo.mostrarInfoEquipo()
 
     def mejorPokemon(self, numEquipo) :
         return self.usuario.mejorPokemon(numEquipo)

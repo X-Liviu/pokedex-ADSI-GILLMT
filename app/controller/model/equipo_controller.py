@@ -1,3 +1,6 @@
+from app.controller.model.pokemon_controller import Pokemon
+
+
 class Equipo:
     def __init__(self, numEquipo: int):
         self.numEquipo = numEquipo
@@ -8,6 +11,34 @@ class Equipo:
 
     def tiene6(self):
         return len(self.lista_pokemon) == 6
+
+    def addPokemon(self, nombreEspecie, nombrePokemon):
+        newPokemon = Pokemon()
+        """
+        El id se compone del nº del equipo al que se añade + 
+        la posicion del pokemon en la lista del equipo
+        """
+        nuevoId = int(str(self.numEquipo) + str(len(self.lista_pokemon) + 1))
+        newPokemon.pokemon_id = nuevoId
+        newPokemon.nombre_custom = nombrePokemon
+        newPokemon.nombre_especie = nombreEspecie
+
+        return 1
+
+    def mostrarInfoEquipo(self):
+        resumen_equipo = []
+        for pokemon in self.lista_pokemon:
+            info_completa = pokemon.getInfo()
+
+            info_filtrada = {
+                "pokemon id": info_completa["pokemon id"],
+                "nombre_custom": info_completa["nombre_custom"],
+                "imagen": info_completa["imagen"]
+            }
+
+            resumen_equipo.append(info_filtrada)
+
+        return resumen_equipo
 
     def getMejorPokemon(self):
         max = 0.0

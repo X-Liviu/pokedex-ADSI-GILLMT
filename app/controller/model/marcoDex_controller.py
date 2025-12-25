@@ -44,8 +44,8 @@ class MarcoDex:
         return resultado
 
     """
-    Las llamadas que se estan haciendo a GestorUsuario no pertenecen a una instancia.
-    En ningun momento hemos creado un objeto en ninguna de los metodos. Tampoco se pasa
+    --PARA TABATA-- Las llamadas que se estan haciendo a GestorUsuario no pertenecen a una instancia
+    u objeto. En ningun momento hemos creado un objeto en ninguna de los metodos. Tampoco se pasa
     una referencia a un objeto por parametros de dichos metodos. Hay que crear una MAE o
     pasar referencia a un objeto creado al inicio de todo por parametros en todos los metodos
     que requiera llamadas a este. Janire en su proyecto de ejemplo crea objetos en la

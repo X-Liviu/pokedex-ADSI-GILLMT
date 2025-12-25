@@ -59,6 +59,9 @@ class MarcoDex:
     def aniadirPokemon(self, nombreEspecie: str, nombrePokemon: str, numEquipo: int):
         return gestorUsuario.aniadirPokemon(nombreEspecie, nombrePokemon, numEquipo)
 
+    def guardarEquipo(self, numEquipo: int):
+        gestorUsuario.guardarEquipo(numEquipo)
+
     def tieneEquipos(self) :
         return gestorUsuario.tieneEquipos()
 

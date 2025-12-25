@@ -4,7 +4,8 @@ from app.controller.model.equipo_controller import Equipo
 
 
 class Usuario:
-    def __init__(self, nombre: str, apellido: str, nombre_usuario: str, correo: str, contrasena: str, rol: str, lista_equipos: list):
+    def __init__(self, nombre: str, apellido: str, nombre_usuario: str,
+                 correo: str, contrasena: str, rol: str, lista_equipos: list):
         self.nombre = nombre
         self.apellido = apellido
         self.nombre_usuario = nombre_usuario
@@ -30,6 +31,10 @@ class Usuario:
             if equipo.esEsteEquipo(numEquipo):
                 return equipo
         return None
+
+    def guardarEquipo(self, numEquipo: int):
+        equipo = self.buscarEquipo(numEquipo)
+        equipo.guardarEquipo(numEquipo, self.nombre_usuario)
 
     def tieneEquipos(self):
         if self.lista_equipos:

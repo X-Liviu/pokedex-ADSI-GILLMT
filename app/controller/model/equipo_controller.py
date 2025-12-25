@@ -2,9 +2,10 @@ from app.controller.model.pokemon_controller import Pokemon
 
 
 class Equipo:
-    def __init__(self, numEquipo: int):
+    def __init__(self, numEquipo: int, db):
         self.numEquipo = numEquipo
         self.lista_pokemon = []
+        self.db = db
 
     def esEsteEquipo(self, num):
         return self.numEquipo == num
@@ -24,6 +25,13 @@ class Equipo:
         newPokemon.nombre_especie = nombreEspecie
 
         return 1
+
+    def guardarEquipo(self, numEquipo: int, nombre_usuario: str) :
+        self.db.insert(
+            sentence="INSERT INTO Equipo (idEquipo, NombreUsuario) VALUES (%numEquipo%, %nombre_usuario%)"
+        )
+        for pokemon in self.lista_pokemon:
+            pokemon.guardarPokemon(numEquipo)
 
     def mostrarInfoEquipo(self):
         resumen_equipo = []

@@ -19,6 +19,9 @@ class gestorUsuario:
         else:
             return -1
 
+    def guardarEquipo(self, numEquipo):
+        self.usuario.guardarEquipo(numEquipo)
+
     def tieneEquipos(self) :
         return self.usuario.tieneEquipos()
 

@@ -4,6 +4,9 @@ from app.custom_types import Custom_types
 from app.database.connection import Connection
 from app.controller.model.equipo_controller import Equipo
 from app.controller.model.gestorUsuario_controller import gestorUsuario
+from typing import Dict
+
+class MarcoDex: pass # Es necesario sino, la linea 12 (myMarcoDex: MarcoDex = None) no funciona
 
 class MarcoDex:
     myMarcoDex: MarcoDex = None
@@ -73,3 +76,6 @@ class MarcoDex:
 
     def cadenaEvolutiva(self, nombreEspecie) :
         return gestorPokeDex.cadenaEvolutiva(nombreEspecie)
+
+if __name__ == "__main__":
+    pass

@@ -6,11 +6,21 @@
 </head>
 <body>
     <table>
-        <a>Nombre: </a>
-        <a>Pokemon</a>
+        <h2>Nombre: {{info_usuario.nombre}}</h2>
+        <h3>Pokemon</h3>
         <div>
-            <a>Foto</a>
-            <a>Pokemon: Nombre</a>
+            <table>
+                <tr>
+                    {% for especie_actual in info_usuario.equipoEspecie %}
+                        <td>{{especie_actual}}</td>
+                    {% endfor %}
+                </tr>
+                <tr>
+                    {% for nombre_actual in info_usuario.equipoCustom %}
+                        <td>{{nombre_actual}}</td>
+                    {% endfor %}
+                </tr>
+            </table>
         </div>
 
     </table>

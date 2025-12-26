@@ -76,6 +76,7 @@ class Usuario:
             pass
             # nuevoAmigo = Usuario()
             # self.lista_amigos.append(nuevoAmigo)
+            # resultado = not resultado
         return resultado
 
     """

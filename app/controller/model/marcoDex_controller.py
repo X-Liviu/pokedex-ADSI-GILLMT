@@ -19,7 +19,9 @@ class MarcoDex:
             raise Custom_types.SingletonError()
 
     @classmethod # Igual que los metodos estaticos de Java
-    def getMyMarcoDex(cls) -> MarcoDex:
+    def getMyMarcoDex(cls, db: Connection) -> MarcoDex:
+        if cls.myMarcoDex == None:
+            MarcoDex(db)
         return cls.myMarcoDex
 
     def mostrarUsuarios(self) -> Custom_types.Ranking.Usuarios:

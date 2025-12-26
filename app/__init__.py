@@ -32,17 +32,6 @@ de las funciones de los otros archivos mediante directoio.archivo, pueda acceder
 a funciones implementadas aqui, como si la carpeta fuera un archivo.py.
 """
 
-
-def inicializar_MAEs(db: Connection) -> None:
-    """
-    En vez de realizar las inicializaciones cuando se quiera
-    acceder al objeto MAE. Inicializamos aqui los objetos. Asi
-    nos aseguramos que siempre que se hace un getMiObjeto exista
-    la instancia.
-    """
-    Ranking(db)
-    MarcoDex(db)
-
 def init_db():
     print("Iniciando la base de datos")
     if os.path.exists(Config.DB_PATH):
@@ -61,8 +50,6 @@ def create_app():
 
     # Crear conexión a la base de datos
     db = Connection()
-
-    inicializar_MAEs(db)
 
     """
     app.register_blueprint(user_blueprint(db))

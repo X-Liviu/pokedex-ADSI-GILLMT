@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 
-from app.controller.model.marcoDex_controller import MarcoDex
+from app.controller.model.ranking_controller import Ranking
 from app.database.connection import Connection
 
 from app.controller.model.prueba_nombre_aleatorio import generar_nombre
@@ -19,7 +19,7 @@ def perfil_usuario_blueprint(db: Connection) -> Blueprint:
     nombre_direccion_ver_perfil: str = "perfil_usuario"
     bp_perfil_usuario = Blueprint(nombre_direccion_ver_perfil, __name__)
 
-    ranking_service: MarcoDex = MarcoDex.getMyMarcoDex()
+    ranking_service: Ranking = Ranking.getMyRanking(db)
 
     @bp_perfil_usuario.route("/perfil_usuario/<name>")
     def perfil_usuario(name: str) -> str:

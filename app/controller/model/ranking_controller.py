@@ -18,7 +18,9 @@ class Ranking:
             raise Custom_types.SingletonError()
 
     @classmethod # Igual que los metodos estaticos de Java
-    def getMyRanking(cls) -> Ranking:
+    def getMyRanking(cls, db: Connection) -> Ranking:
+        if cls.myRanking == None:
+            Ranking(db)
         return cls.myRanking
 
     def mostrarUsuarios(self) -> Custom_types.Ranking.Usuarios:

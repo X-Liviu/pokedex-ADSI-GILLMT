@@ -14,7 +14,7 @@ def ranking_blueprint(db: Connection) -> Blueprint:
 
     bp_ranking.register_blueprint(perfil_usuario_blueprint(db))
 
-    ranking_service: Ranking = Ranking.getMyRanking() # Se inicializan todas las MAEs en __init__.py
+    ranking_service: Ranking = Ranking.getMyRanking(db)
 
     lista_usuarios = prueba_ranking(10)
 

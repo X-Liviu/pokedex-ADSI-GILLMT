@@ -2,7 +2,7 @@
 from flask import Blueprint, render_template, request
 
 from app.controller.model.gestorEfectos_controller import GestorEfectos
-from app.controller.model.gestorUsuario_controller import GestorUsuario
+from app.controller.model.gestorUsuario_controller import gestorUsuario
 # Custom Types
 from app.custom_types import Custom_types
 
@@ -30,7 +30,7 @@ def perfil_usuario_blueprint(db: Connection) -> Blueprint:
     bp_perfil_usuario = Blueprint(nombre_direccion_ver_perfil, __name__)
 
     ranking_service: Ranking = Ranking.getMyRanking(db)
-    user_service: GestorUsuario = GestorUsuario.getMyGestorUsuario(db, "caca")
+    user_service: gestorUsuario = gestorUsuario.getMyGestorUsuario(db, "caca")
 
     @bp_perfil_usuario.route("/perfil_usuario/<name>", methods=["GET", "POST"])
     def perfil_usuario(name: str) -> str:

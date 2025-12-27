@@ -1,5 +1,5 @@
 import sqlite3
-from typing import List
+from typing import List, Dict
 
 from app.custom_types import Custom_types
 from app.database.connection import Connection
@@ -47,12 +47,16 @@ class Ranking:
         if len(resultado_sql) > 0:
             resultado = {"usuarios": []}
 
+            lista_usuarios: Dict[str: int] = {}
+
             for fila in resultado_sql:
-                usuario_actual: Custom_types.Ranking.Usuario = {"nombre": "", "rareza": -1.0, "puesto": -1}
-                usuario_actual["nombre"] = fila["nombre"]
-                usuario_actual["rareza"] = fila["rareza"]
-                usuario_actual["puesto"] = fila["puesto"]
-                resultado.get("usuarios").append(usuario_actual)
+                if fila["NombreUsuario"] not in lista_usuarios.keys():
+                    lista_usuarios[fila["NombreUsuario"]] = 0
+
+                lista_usuarios[fila["NombreUsuario"]] += int(fila["rareza"])
+
+            for nombre_usuario in lista_usuarios.keys():
+                resultado.get("usuarios").append({"nombre": nombre_usuario, "rareza": lista_usuarios[nombre_usuario]/10})
 
         return resultado
 
@@ -64,7 +68,7 @@ class Ranking:
         correspondientes.
         """
         resultado: Custom_types.Ranking.Usuario = None
-        sentence: str = f"""
+        sentence: str = """
         SELECT
         NombreEspecie, NombreCustom
         from Usuario
@@ -74,16 +78,16 @@ class Ranking:
         on Equipo.idEquipo = PokemonEnEquipo.idEquipo
         inner join Pokemon
         on PokemonEnEquipo.idPokemon = Pokemon.idPokemon
-        WHERE Usuario.NombreUsuario = {pNombreUsuario};
+        WHERE Usuario.NombreUsuario = ?;
         """
 
-        resultado_sql: List[sqlite3.Row] = self.bd.select(sentence)
+        resultado_sql: List[sqlite3.Row] = self.bd.select(sentence, [pNombreUsuario])
 
         if len(resultado_sql) > 0:
             resultado = {"nombre": pNombreUsuario, "equipoEspecie": [], "equipoCustom": []}
 
             for fila in resultado_sql:
-                resultado.get("equipoEspecie").append(fila["equipoEspecie"])
-                resultado.get("equipoCustom").append(fila["equipoCustom"])
+                resultado.get("equipoEspecie").append(fila["NombreEspecie"])
+                resultado.get("equipoCustom").append(fila["NombreCustom"])
 
         return resultado

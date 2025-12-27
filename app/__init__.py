@@ -33,6 +33,10 @@ a funciones implementadas aqui, como si la carpeta fuera un archivo.py.
 """
 
 def init_db():
+    """
+    Importa la estructura del archivo .sql
+    a la base de datos (marcoDex.sqlite)
+    """
     print("Iniciando la base de datos")
     if os.path.exists(Config.DB_PATH):
         print("La base de datos existe")

@@ -17,20 +17,18 @@ from app.controller.model.prueba_nombre_aleatorio import generar_nombre
 from app.controller.model.prueba_generar_pokemon import  get_pokemon, get_nombres
 
 def get_info_usuario(cant: int):
-    resultado = {
+    return {
         "nombre": generar_nombre(),
         "equipoEspecie": get_pokemon(cant),
         "equipoCustom": get_nombres(cant),
     }
-
-    return resultado
 
 def perfil_usuario_blueprint(db: Connection) -> Blueprint:
     nombre_direccion_ver_perfil: str = "perfil_usuario"
     bp_perfil_usuario = Blueprint(nombre_direccion_ver_perfil, __name__)
 
     ranking_service: Ranking = Ranking.getMyRanking(db)
-    user_service: gestorUsuario = gestorUsuario.getMyGestorUsuario(db, "caca")
+    user_service: gestorUsuario = gestorUsuario.getMyGestorUsuario(db)
 
     @bp_perfil_usuario.route("/perfil_usuario/<name>", methods=["GET", "POST"])
     def perfil_usuario(name: str) -> str:
@@ -56,7 +54,7 @@ def perfil_usuario_blueprint(db: Connection) -> Blueprint:
             except:
                 estado_amigo_nuevo = Custom_types.VerUsuario.AMIGO_ERROR
 
-        # return render_template("perfil_usuario.html", info_usuario = ranking_service.mostrarUsuario(name) )
-        return render_template("perfil_usuario.html", info_usuario=get_info_usuario(6), estado_solicitud = estado_amigo_nuevo)
+        return render_template("perfil_usuario.html", info_usuario = ranking_service.mostrarUsuario(name) )
+        # return render_template("perfil_usuario.html", info_usuario=get_info_usuario(6), estado_solicitud = estado_amigo_nuevo)
 
     return bp_perfil_usuario

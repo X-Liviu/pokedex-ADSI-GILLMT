@@ -20,6 +20,6 @@ def ranking_blueprint(db: Connection) -> Blueprint:
 
     @bp_ranking.route(f"/{nombre_direccion_ranking}", methods=['GET'])
     def ranking() -> str:
-        return render_template("ranking.html", usuarios = lista_usuarios)
+        return render_template("ranking.html", usuarios = ranking_service.mostrarUsuarios())
 
     return bp_ranking

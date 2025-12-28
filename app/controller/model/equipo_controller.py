@@ -24,6 +24,7 @@ class Equipo:
         newPokemon.nombre_custom = nombrePokemon
         newPokemon.nombre_especie = nombreEspecie
 
+        self.lista_pokemon.append(newPokemon)
         return 1
 
     def guardarEquipo(self, numEquipo: int, nombre_usuario: str) :
@@ -47,6 +48,17 @@ class Equipo:
             resumen_equipo.append(info_filtrada)
 
         return resumen_equipo
+
+    def borrarPokemon(self, idPokemon):
+        self.lista_pokemon = [p for p in self.lista_pokemon if p.pokemon_id != idPokemon]
+
+    def clonar(self):
+        nuevoEquipo = Equipo(self.numEquipo)
+        for pokemon in self.lista_pokemon:
+            nuevoPokemon = pokemon.clonarPokemon()
+            nuevoEquipo.lista_pokemon.append(nuevoPokemon)
+
+        return nuevoEquipo
 
     def getMejorPokemon(self):
         max = 0.0

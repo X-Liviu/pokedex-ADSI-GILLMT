@@ -55,23 +55,40 @@ class MarcoDex:
     """
 
     def newEquipo(self):
-        if gestorUsuario.noEsNull() :
-            return gestorUsuario.crearEquipo()
+        if gestorUsuario.getMyGestorUsuario() != None:
+            return gestorUsuario.getMyGestorUsuario().crearEquipo()
 
     def aniadirPokemon(self, nombreEspecie: str, nombrePokemon: str, numEquipo: int):
-        return gestorUsuario.aniadirPokemon(nombreEspecie, nombrePokemon, numEquipo)
+        if gestorUsuario.getMyGestorUsuario() != None:
+            return gestorUsuario.getMyGestorUsuario().aniadirPokemon(nombreEspecie, nombrePokemon, numEquipo)
 
     def guardarEquipo(self, numEquipo: int):
-        gestorUsuario.guardarEquipo(numEquipo)
+        if gestorUsuario.getMyGestorUsuario() != None:
+            gestorUsuario.getMyGestorUsuario().guardarEquipo(numEquipo)
 
     def tieneEquipos(self) :
-        return gestorUsuario.tieneEquipos()
+        if gestorUsuario.getMyGestorUsuario() != None:
+            return gestorUsuario.getMyGestorUsuario().tieneEquipos()
 
     def getListaEquipos(self) :
-        return gestorUsuario.getListaEquipos()
+        if gestorUsuario.getMyGestorUsuario() != None:
+            return gestorUsuario.getMyGestorUsuario().getListaEquipos()
+
+    def clonarEquipo(self, numEquipo):
+        if gestorUsuario.getMyGestorUsuario() != None:
+            gestorUsuario.getMyGestorUsuario().clonarEquipo(numEquipo)
 
     def mostrarInfoEquipo(self, numEquipo):
-        return gestorUsuario.mostrarInfoEquipo(numEquipo)
+        if gestorUsuario.getMyGestorUsuario() != None:
+            return gestorUsuario.getMyGestorUsuario().mostrarInfoEquipo(numEquipo)
+
+    def borrarPokemon(self, numEquipo, idPokemon):
+        if gestorUsuario.getMyGestorUsuario() != None:
+            gestorUsuario.getMyGestorUsuario().borrarPokemon(numEquipo, idPokemon)
+
+    def compararCopias(self,numEquipo):
+        if gestorUsuario.getMyGestorUsuario() != None:
+            gestorUsuario.getMyGestorUsuario().compararCopias(numEquipo)
 
     def obtenerEfectos(self, nombreEspecie) :
         return gestorPokeDex.obtenerEfectos(nombreEspecie)

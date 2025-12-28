@@ -33,3 +33,7 @@ class Pokemon:
         self.db.insert(
             sentence="INSERT INTO PokemonEnEquipo (idEquipo, idPokemon) VALUES (%numEquipo%, %self.pokemon_id%)"
         )
+
+    def clonarPokemon(self):
+        nuevoPokemon = Pokemon(self.pokemon_id, self.nombre_custom, self.rareza, self.shiny, self.altura, self.peso, self.especie, self.imagen)
+        return nuevoPokemon

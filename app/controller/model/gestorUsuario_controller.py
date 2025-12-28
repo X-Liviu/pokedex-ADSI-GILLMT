@@ -1,13 +1,10 @@
 import sqlite3
-
+from app.controller.model.gestorCopiasEquipo_controller import gestorCopiasEquipo
 class gestorUsuario:
     def __init__(self, db, usuario) :
         self.db = db
         self.usuario = usuario
         pass
-
-    def noEsNull(self):
-        return self.usuario is None
 
     def crearEquipo(self) :
         return self.usuario.addEquipo()
@@ -31,6 +28,19 @@ class gestorUsuario:
     def mostrarInfoEquipo(self, numEquipo) :
         equipo = self.usuario.buscarEquipo(numEquipo)
         return equipo.mostrarInfoEquipo()
+
+    def clonarEquipo(self, numEquipo) :
+        if gestorCopiasEquipo.getMyGestorCopiasEquipo() != None:
+            gestorCopiasEquipo.getMyGestorCopiasEquipo().clonarEquipo(self.usuario, numEquipo)
+
+    def borrarPokemon(self, numEquipo, idPokemon):
+        equipo = self.usuario.buscarEquipo(numEquipo)
+        equipo.borrarPokemon(idPokemon)
+
+    def compararCopias(self,numEquipo) :
+        if gestorCopiasEquipo.getMyGestorCopiasEquipo() != None:
+            gestorCopiasEquipo.getMyGestorCopiasEquipo().compararCopiasEliminar(self.usuario, numEquipo)
+            gestorCopiasEquipo.getMyGestorCopiasEquipo().compararCopiasAñadir(self.usuario, numEquipo)
 
     def mejorPokemon(self, numEquipo) :
         return self.usuario.mejorPokemon(numEquipo)

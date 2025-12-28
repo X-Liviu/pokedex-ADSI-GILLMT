@@ -135,14 +135,29 @@ CREATE TABLE IF NOT EXISTS EfectoTipo (
 
 
 -- Insertar entidades para pruebas
+-- Tata
 INSERT OR IGNORE INTO Usuario VALUES ("Tata430", "Tata", "Morente", "tata@hotmail.es", "5678tata", "activa", FALSE);
+
+--Tate
+INSERT OR IGNORE INTO Usuario Values ( "Tate430", "Aco", "ElZapas", "marlartate@gmail.com", "1234tate", "activisimo", FALSE );
 
 INSERT OR IGNORE INTO EspeciePokemon VALUES ("Pikachu", "Caca", FALSE, 1.75, 1.43, "Canto");
 
+-- Tata
 INSERT OR IGNORE INTO Pokemon VALUES (NULL,"Jon", 1, FALSE, 1.5, 1.5, "Pikachu");
-INSERT OR IGNORE INTO Pokemon VALUES (NULL,"Lauta", 8, FALSE, 1.1, 1.1, "Pikachu");
+INSERT OR IGNORE INTO Pokemon VALUES (NULL,"Laura", 8, FALSE, 1.1, 1.1, "Pikachu");
 
+-- Tate
+INSERT OR IGNORE INTO Pokemon VALUES (NULL, "Victor", 10, FALSE, 1.9, 1.5, "Pikachu");
+
+-- Tata
 INSERT OR IGNORE INTO Equipo VALUES (NULL, "Tata430");
+-- Tate
+INSERT OR IGNORE INTO Equipo VALUES (NULL, "Tate430");
 
+-- Tata
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (1, 1);
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (1, 2);
+
+-- Tate
+INSERT OR IGNORE INTO PokemonEnEquipo VALUES (2, 3);

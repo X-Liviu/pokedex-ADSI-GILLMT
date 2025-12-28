@@ -29,7 +29,8 @@ class Ranking:
         post: Devuelve un diccionario con todos los usuarios existentes
         en la base de datos en orden de mas rareza a menos rareza
         """
-        resultado: Custom_types.Ranking.Usuarios = None
+        resultado: Custom_types.Ranking.ListaUsuarios = None
+
         sentence: str = """
         SELECT Usuario.NombreUsuario, Pokemon.Rareza
         from Usuario
@@ -45,20 +46,27 @@ class Ranking:
         resultado_sql: List[sqlite3.Row] = self.bd.select(sentence)
 
         if len(resultado_sql) > 0:
-            resultado = {"usuarios": []}
+            resultado = Custom_types.Ranking.ListaUsuarios()
 
-            lista_usuarios: Dict[str: int] = {}
+            usuario_actual: Custom_types.Ranking.Usuario = {"nombre": "", "rareza": 0}
 
             for fila in resultado_sql:
-                if fila["NombreUsuario"] not in lista_usuarios.keys():
-                    lista_usuarios[fila["NombreUsuario"]] = 0
 
-                lista_usuarios[fila["NombreUsuario"]] += int(fila["rareza"])
+                if fila["NombreUsuario"] != usuario_actual["nombre"]:
+                    if usuario_actual["nombre"] != "":
+                        resultado.insercion_ordenada(usuario_actual)
+                    usuario_actual["nombre"] = fila["NombreUsuario"]
+                    usuario_actual["rareza"] = 0
 
-            for nombre_usuario in lista_usuarios.keys():
-                resultado.get("usuarios").append({"nombre": nombre_usuario, "rareza": lista_usuarios[nombre_usuario]/10})
+                usuario_actual["rareza"] += int(fila["rareza"])
 
-        return resultado
+            resultado.insercion_ordenada(usuario_actual)
+
+            for value in resultado.to_dict("usuarios").values():
+                for usuario_actual in value:
+                    print(usuario_actual)
+
+        return resultado.to_dict("usuarios")
 
     def mostrarUsuario(self, pNombreUsuario: str) -> Custom_types.Ranking.Usuario:
         """
@@ -81,13 +89,13 @@ class Ranking:
         WHERE Usuario.NombreUsuario = ?;
         """
 
-        resultado_sql: List[sqlite3.Row] = self.bd.select(sentence, [pNombreUsuario])
+        resultado_sql: List[sqlite3.Row] = self.bd.select(sentence, (pNombreUsuario,))
 
         if len(resultado_sql) > 0:
             resultado = {"nombre": pNombreUsuario, "equipoEspecie": [], "equipoCustom": []}
 
             for fila in resultado_sql:
-                resultado.get("equipoEspecie").append(fila["NombreEspecie"])
-                resultado.get("equipoCustom").append(fila["NombreCustom"])
+                resultado["equipoEspecie"].append(fila["NombreEspecie"])
+                resultado["equipoCustom"].append(fila["NombreCustom"])
 
         return resultado

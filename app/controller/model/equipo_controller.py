@@ -1,10 +1,13 @@
+import json
+import random
 from app.controller.model.pokemon_controller import Pokemon
-
+import sqlite3
 
 class Equipo:
     def __init__(self, numEquipo: int, db):
         self.numEquipo = numEquipo
         self.lista_pokemon = []
+        self.ultimo_id_pokemon = 0
         self.db = db
 
     def esEsteEquipo(self, num):
@@ -13,16 +16,35 @@ class Equipo:
     def tiene6(self):
         return len(self.lista_pokemon) == 6
 
-    def addPokemon(self, nombreEspecie, nombrePokemon):
-        newPokemon = Pokemon()
-        """
-        El id se compone del nº del equipo al que se añade + 
-        la posicion del pokemon en la lista del equipo
-        """
-        nuevoId = int(str(self.numEquipo) + str(len(self.lista_pokemon) + 1))
-        newPokemon.pokemon_id = nuevoId
-        newPokemon.nombre_custom = nombrePokemon
-        newPokemon.nombre_especie = nombreEspecie
+    def addPokemon(self, nombreEspecie, nombrePokemon, pokedex):
+        # 1. Obtenemos el JSON de la Pokedex
+        # Asumimos que get_info ya devuelve un diccionario o hacemos el parse
+        info_especie_json = pokedex.get_info(nombreEspecie)
+        datos = json.loads(info_especie_json) if isinstance(info_especie_json, str) else info_especie_json
+
+        if not datos:
+            return -1  # Especie no encontrada
+
+        # 2. Generamos el ID único histórico
+        self.ultimo_id_pokemon += 1
+        nuevoId = int(str(self.numEquipo) + str(self.ultimo_id_pokemon))
+
+        # 3. Calculamos el Booleano Shiny (ej. 10% de probabilidad)
+        es_shiny = random.random() < 0.1
+
+        # 4. Creamos la instancia con los datos del JSON + el azar
+        newPokemon = Pokemon(
+            pokemon_id=nuevoId,
+            nombre_custom=nombrePokemon,
+            rareza=datos.get("rareza", 0.0),
+            shiny=es_shiny,  # El booleano generado
+            altura=datos.get("altura", 0.0),
+            peso=datos.get("peso", 0.0),
+            especie=nombreEspecie,
+            # Elegimos la imagen del JSON según si es shiny o no
+            imagen=datos.get("imagen_shiny") if es_shiny else datos.get("imagen_normal"),
+            db=self.db
+        )
 
         self.lista_pokemon.append(newPokemon)
         return 1
@@ -47,10 +69,17 @@ class Equipo:
 
             resumen_equipo.append(info_filtrada)
 
-        return resumen_equipo
+        return json.dumps(resumen_equipo)
 
     def borrarPokemon(self, idPokemon):
         self.lista_pokemon = [p for p in self.lista_pokemon if p.pokemon_id != idPokemon]
+
+    def buscarPokemon(self, idPokemon):
+        for pokemon in self.lista_pokemon:
+            if pokemon.pokemon_id == idPokemon:
+                return True
+        return False
+
 
     def clonar(self):
         nuevoEquipo = Equipo(self.numEquipo)

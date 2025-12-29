@@ -11,6 +11,7 @@ from app.model.usuario import Usuario
 
 # Custom UI
 from app.controller.ui.verRanking_controller import ranking_blueprint
+from app.controller.ui.changelog_controller import changelog_blueprint
 
 # Tipos de datos
 from config import Config

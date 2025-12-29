@@ -1,7 +1,9 @@
 import sqlite3
-from typing import List, Dict
+from typing import List
 
-from app.custom_types import Custom_types
+from app.model.lista_usuarios import ListaUsuarios
+from app.model.usuario_ranking import UsuarioRanking
+from app.utils.custom_types import Custom_types
 from app.database.connection import Connection
 
 class Ranking: pass
@@ -29,7 +31,7 @@ class Ranking:
         post: Devuelve un diccionario con todos los usuarios existentes
         en la base de datos en orden de mas rareza a menos rareza
         """
-        resultado: Custom_types.Ranking.ListaUsuarios = None
+        resultado: ListaUsuarios = None
 
         sentence: str = """
         SELECT Usuario.NombreUsuario, Pokemon.Rareza
@@ -46,25 +48,21 @@ class Ranking:
         resultado_sql: List[sqlite3.Row] = self.bd.select(sentence)
 
         if len(resultado_sql) > 0:
-            resultado = Custom_types.Ranking.ListaUsuarios()
+            resultado = ListaUsuarios()
 
-            usuario_actual: Custom_types.Ranking.Usuario = {"nombre": "", "rareza": 0}
+            usuario_actual: UsuarioRanking = UsuarioRanking("", 0)
 
             for fila in resultado_sql:
 
-                if fila["NombreUsuario"] != usuario_actual["nombre"]:
-                    if usuario_actual["nombre"] != "":
+                if not usuario_actual.es_mi_nombre(fila["NombreUsuario"]):
+                    if not usuario_actual.es_mi_nombre(""):
                         resultado.insercion_ordenada(usuario_actual)
-                    usuario_actual["nombre"] = fila["NombreUsuario"]
-                    usuario_actual["rareza"] = 0
 
-                usuario_actual["rareza"] += int(fila["rareza"])
+                    usuario_actual = UsuarioRanking(fila["Nombre"], 0)
+
+                usuario_actual.add_rareza(int(fila["Rareza"]))
 
             resultado.insercion_ordenada(usuario_actual)
-
-            for value in resultado.to_dict("usuarios").values():
-                for usuario_actual in value:
-                    print(usuario_actual)
 
         return resultado.to_dict("usuarios")
 

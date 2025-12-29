@@ -1,4 +1,4 @@
-from app.custom_types import Custom_types
+from app.utils.custom_types import Custom_types
 from random import randint, uniform
 
 def get_abecedario() -> str:

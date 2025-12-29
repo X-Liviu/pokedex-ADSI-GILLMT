@@ -1,10 +1,9 @@
 # Flask
 from flask import Blueprint, render_template, request
 
-from app.controller.model.gestorEfectos_controller import GestorEfectos
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 # Custom Types
-from app.custom_types import Custom_types
+from app.utils.custom_types import Custom_types
 
 # Modelo
 from app.controller.model.ranking_controller import Ranking

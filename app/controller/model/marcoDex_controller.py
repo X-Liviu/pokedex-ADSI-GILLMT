@@ -98,5 +98,18 @@ class MarcoDex:
     def cadenaEvolutiva(self, nombreEspecie) :
         return gestorPokeDex.cadenaEvolutiva(nombreEspecie)
 
+    def tiene_amigos(self, usuario):
+        if gestorUsuario.getMyGestorUsuario() != None:
+            return gestorUsuario.getMyGestorUsuario().tiene_amigos(usuario)
+        return False
+
+    def mostrar_changelog(self, usuario):
+        #clase de gestor_noticia por crear
+        return self.gestor_noticias.getGestorNoticias.mostrar_changelog(usuario)
+
+    def getNombreUsuario(self):
+        #TODO
+        return
+
 if __name__ == "__main__":
     pass

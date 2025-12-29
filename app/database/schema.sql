@@ -133,6 +133,14 @@ CREATE TABLE IF NOT EXISTS EfectoTipo (
     FOREIGN KEY (NombreTipo2) REFERENCES Tipo(Nombre)
 );
 
+CREATE TABLE IF NOT EXISTS Publica (
+    NombreUsuario TEXT,
+    FechaHora DATE,
+    Contenido TEXT,
+    PRIMARY KEY (NombreUsuario, FechaHora),
+    FOREIGN KEY (NombreUsuario) REFERENCES Usuario(Nombre)
+);
+
 
 -- Insertar entidades para pruebas
 -- Tata
@@ -141,6 +149,7 @@ INSERT OR IGNORE INTO Usuario VALUES ("Tata430", "Tata", "Morente", "tata@hotmai
 --Tate
 INSERT OR IGNORE INTO Usuario Values ( "Tate430", "Aco", "ElZapas", "marlartate@gmail.com", "1234tate", "activisimo", FALSE );
 
+       --¿Aquí es donde habrá que conectar con el repo ese de github?
 INSERT OR IGNORE INTO EspeciePokemon VALUES ("Pikachu", "Caca", FALSE, 1.75, 1.43, "Canto");
 
 -- Tata

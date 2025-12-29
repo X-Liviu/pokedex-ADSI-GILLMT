@@ -2,76 +2,174 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Historial de Cambios</title>
+    <title>Marcodex - Eventos Recientes</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background: #fff; color: #333; margin: 0; padding: 40px; }
-        .container { max-width: 800px; margin: 0 auto; }
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap');
 
-        h1 { border-bottom: 3px solid #ff5252; padding-bottom: 10px; margin-bottom: 40px; }
+        :root {
+            --pink-header: #ff66c4;
+            --pink-item: #d65db1;
+            --border: 3px solid #000;
+            --shadow: 4px 4px 0px #000;
+        }
 
-        .timeline-item {
+        body {
+            font-family: 'Fredoka', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .window {
+            width: 800px;
+            height: 550px;
+            background: white;
+            border: var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
             position: relative;
-            padding-left: 40px;
-            margin-bottom: 30px;
-            border-left: 2px solid #ddd;
         }
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -6px;
-            top: 0;
-            width: 10px;
-            height: 10px;
-            background: #ff5252;
-            border-radius: 50%;
-        }
-        .version-tag {
-            background: #eee;
-            padding: 2px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 0.8em;
-            color: #555;
-        }
-        .date { color: #999; font-size: 0.9em; margin-left: 10px; }
-        .changes { margin-top: 10px; }
-        .changes li { margin-bottom: 5px; }
 
-        .back-link { display: inline-block; margin-bottom: 20px; color: #007bff; text-decoration: none; }
+        .window-header {
+            height: 50px;
+            background: var(--pink-header);
+            border-bottom: var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
+        .red { background: #ff4d4d; }
+        .yellow { background: #ffcc00; }
+        .green { background: #00cc00; }
+
+        .content {
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-bar {
+            width: 450px;
+            border: 2px solid black;
+            border-radius: 20px;
+            padding: 5px 5px 5px 15px;
+            display: flex;
+            align-items: center;
+            background: white;
+            margin-bottom: 20px;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+        }
+
+        .search-input { border: none; outline: none; flex: 1; font-family: inherit; font-weight: bold; color: #555; }
+        .btn-filter { background: var(--pink-header); border: 2px solid black; border-radius: 15px; padding: 5px 15px; font-weight: bold; cursor: pointer; font-family: inherit; margin-left: 10px; box-shadow: 2px 2px 0px #000; }
+        .btn-filter:active { transform: translate(2px, 2px); box-shadow: none; }
+
+        .event-list-container { flex: 1; overflow-y: auto; padding-right: 10px; }
+        .event-list-container::-webkit-scrollbar { width: 10px; }
+        .event-list-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 5px; }
+        .event-list-container::-webkit-scrollbar-thumb { background: var(--pink-item); border-radius: 5px; border: 2px solid #000; }
+
+        .event-list { display: flex; flex-direction: column; gap: 12px; }
+
+        .event-item { width: 90%; background: var(--pink-item); border-radius: 15px; display: flex; flex-direction: column; justify-content: center; padding: 10px 15px; color: black; border: 2px solid transparent; transition: transform 0.1s; }
+        .event-item:hover { border: 2px solid black; }
+
+        .event-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; border-bottom: 1px solid rgba(0,0,0,0.2); padding-bottom: 3px; }
+        .user-name { font-weight: 900; font-size: 1.1rem; color: #000; }
+        .event-date { font-size: 0.85rem; color: #440f36; font-weight: normal; }
+        .event-body { font-size: 1rem; line-height: 1.2; }
+
+        .empty-message { text-align: center; color: #777; font-style: italic; margin-top: 50px; font-size: 1.2rem; }
+
+        .btn-back { position: absolute; bottom: 20px; right: 30px; background: #f2e9e4; border: var(--border); padding: 10px 30px; border-radius: 12px; font-weight: bold; box-shadow: var(--shadow); cursor: pointer; text-decoration: none; color: black; }
+        .btn-back:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <a href="/" class="back-link">← Volver al Menú</a>
-
-    <h1>Changelog del Proyecto</h1>
-
-    <div class="timeline-item">
-        <div>
-            <span class="version-tag">v1.0.1</span>
-            <span class="date">29/12/2025</span>
+    <div class="window">
+        <div class="window-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+            <span style="margin-left: 10px;">Eventos Recientes</span>
         </div>
-        <h3>Mejoras Visuales</h3>
-        <ul class="changes">
-            <li>Añadido diseño CSS a las pantallas de Login y Menú.</li>
-            <li>Corregido error en la conexión de la base de datos local.</li>
-        </ul>
+
+        <div class="content">
+            <div class="search-bar">
+                <span class="search-icon">🔍</span>
+                <input type="text" id="inputBusqueda" class="search-input" placeholder="Filtrar por Usuario">
+                <button class="btn-filter" id="btnFiltrar">Filtrar</button>
+            </div>
+
+            <div class="event-list-container">
+                <div id="listaEventos" class="event-list">
+                    </div>
+            </div>
+        </div>
+        <a href="menu.html" class="btn-back">Volver</a>
     </div>
 
-    <div class="timeline-item">
-        <div>
-            <span class="version-tag">v1.0.0</span>
-            <span class="date">20/12/2025</span>
-        </div>
-        <h3>Lanzamiento Inicial</h3>
-        <ul class="changes">
-            <li>Estructura base del proyecto Flask creada.</li>
-            <li>Base de datos SQLite (library.sqlite) integrada.</li>
-        </ul>
-    </div>
+    <script>
+        window.onload = async function() {
+            // PASO 1: Llamada a tieneAmigos()
+            const usuarioTieneAmigos = await Marcodex.tieneAmigos();
 
-</div>
+            // PASO 2: Comprobar respuesta
+            if (usuarioTieneAmigos === false) {
 
+                // PASO 3 (Rama False): Mostrar errorNoAmigos
+                mostrarPantallaError(contenedor);
+
+            } else {
+
+                // PASO 4 (Rama True): Llamar a mostrarChangeLog()
+                const noticiasJSON = await Marcodex.mostrarChangeLog(Marcodex.getNombreUsuario());
+
+                // PASO 5: Coger el JSON y mostrar noticias (El Loop)
+                if (noticiasJSON.length === 0) {
+                    contenedor.innerHTML = `<div class="empty-message">No hay noticias recientes.</div>`;
+                } else {
+                    noticiasJSON.forEach(noticia => {
+                        // Renderizar cada elemento del JSON: { nombreUsuario, fecha, contenido }
+                        pintarNoticia(noticia, contenedor);
+                    });
+                }
+            }
+        };
+
+        // Funciones auxiliares de renderizado (Solo pintan HTML)
+        function mostrarPantallaError(contenedor) {
+            contenedor.innerHTML = `<div class="empty-message">
+                No tienes amigos agregados.<br>Agrega amigos para ver sus novedades.
+            </div>`;
+        }
+
+        function pintarNoticia(datos, contenedor) {
+            const item = document.createElement('div');
+            item.className = 'event-item';
+
+            // Usamos las claves exactas del JSON que pediste
+            item.innerHTML = `
+                <div class="event-header">
+                    <span class="user-name">${datos.nombreUsuario}</span>
+                    <span class="event-date">${datos.fecha}</span>
+                </div>
+                <div class="event-body">${datos.contenido}</div>
+            `;
+            contenedor.appendChild(item);
+        }
+    </script>
 </body>
 </html>

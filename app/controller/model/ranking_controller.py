@@ -3,7 +3,7 @@ from typing import List
 
 from app.model.lista_usuarios import ListaUsuarios
 from app.model.usuario_ranking import UsuarioRanking
-from app.utils.custom_types import Custom_types
+from app.model.utils.custom_types import Custom_types
 from app.database.connection import Connection
 
 class Ranking: pass
@@ -58,7 +58,7 @@ class Ranking:
                     if not usuario_actual.es_mi_nombre(""):
                         resultado.insercion_ordenada(usuario_actual)
 
-                    usuario_actual = UsuarioRanking(fila["Nombre"], 0)
+                    usuario_actual = UsuarioRanking(fila["NombreUsuario"], 0)
 
                 usuario_actual.add_rareza(int(fila["Rareza"]))
 

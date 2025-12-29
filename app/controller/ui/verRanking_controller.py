@@ -4,8 +4,6 @@ from app.controller.model.ranking_controller import Ranking
 from app.database.connection import Connection
 from app.controller.ui.verUsuario_controller import perfil_usuario_blueprint
 
-from app.controller.model.prueba_nombre_aleatorio import prueba_ranking
-
 def ranking_blueprint(db: Connection) -> Blueprint:
     nombre_direccion_ranking: str = "ranking"
     bp_ranking = Blueprint(nombre_direccion_ranking, __name__)
@@ -15,8 +13,6 @@ def ranking_blueprint(db: Connection) -> Blueprint:
     bp_ranking.register_blueprint(perfil_usuario_blueprint(db))
 
     ranking_service: Ranking = Ranking.getMyRanking(db)
-
-    lista_usuarios = prueba_ranking(10)
 
     @bp_ranking.route(f"/{nombre_direccion_ranking}", methods=['GET'])
     def ranking() -> str:

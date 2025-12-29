@@ -1,4 +1,13 @@
-from app.utils.custom_types import Custom_types
+from app.model.utils.custom_types import Custom_types
+
+"""
+-----------Usuario Ranking vs Usuario normal-----------
+El primero solo es para manipular los datos del nombre
+y el ranking dada la base de datos, ya que en el ranking
+hemos considerado obtener los datos haciendo una consulta.
+Entonces, Usuario normal no vale usar, porque seria por
+objetos.
+"""
 
 class UsuarioRanking: pass
 

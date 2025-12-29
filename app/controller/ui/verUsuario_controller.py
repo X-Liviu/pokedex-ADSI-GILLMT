@@ -3,24 +3,13 @@ from flask import Blueprint, render_template, request
 
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 # Custom Types
-from app.utils.custom_types import Custom_types
+from app.model.utils.custom_types import Custom_types
 
 # Modelo
 from app.controller.model.ranking_controller import Ranking
 
 # Base de Datos
 from app.database.connection import Connection
-
-# Pruebas
-from app.controller.model.prueba_nombre_aleatorio import generar_nombre
-from app.controller.model.prueba_generar_pokemon import  get_pokemon, get_nombres
-
-def get_info_usuario(cant: int):
-    return {
-        "nombre": generar_nombre(),
-        "equipoEspecie": get_pokemon(cant),
-        "equipoCustom": get_nombres(cant),
-    }
 
 def perfil_usuario_blueprint(db: Connection) -> Blueprint:
     nombre_direccion_ver_perfil: str = "perfil_usuario"

@@ -1,6 +1,6 @@
 from typing import List
 from app.model.usuario_ranking import UsuarioRanking
-from app.utils.custom_types import Custom_types
+from app.model.utils.custom_types import Custom_types
 
 class ListaUsuarios:
     def __init__(self):

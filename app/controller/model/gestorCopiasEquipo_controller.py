@@ -1,4 +1,4 @@
-from app.controller.model.usuario_controller import Usuario
+from app.model.usuario import Usuario
 from app.controller.model.pokemon_controller import Pokemon
 from app.controller.model.equipo_controller import Equipo
 

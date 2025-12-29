@@ -3,9 +3,11 @@ import sqlite3
 
 from flask import Flask
 
+from app.controller.model.gestorUsuario_controller import gestorUsuario
 # MAEs
 from app.controller.model.marcoDex_controller import MarcoDex
 from app.controller.model.ranking_controller import Ranking
+from app.model.usuario import Usuario
 
 # Custom UI
 from app.controller.ui.verRanking_controller import ranking_blueprint

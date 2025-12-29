@@ -1,6 +1,6 @@
 from app.controller.model.gestorPokeDex_controller import gestorPokeDex
 from app.controller.model.ranking_controller import Ranking
-from app.utils.custom_types import Custom_types
+from app.model.utils.custom_types import Custom_types
 from app.database.connection import Connection
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 from typing import Dict

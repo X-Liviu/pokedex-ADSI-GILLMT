@@ -1,7 +1,5 @@
 import json
-
 from app.controller.model.equipo_controller import Equipo
-
 
 class Usuario:
     def __init__(self, nombre: str, apellido: str, nombre_usuario: str,

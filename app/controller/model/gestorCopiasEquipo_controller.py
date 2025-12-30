@@ -1,3 +1,4 @@
+from app.model import usuario
 from app.model.usuario import Usuario
 from app.controller.model.pokemon_controller import Pokemon
 from app.controller.model.equipo_controller import Equipo
@@ -21,3 +22,8 @@ class gestorCopiasEquipo:
         for p in equipoEditado.lista_pokemon :
             if not self.copiaOriginal.buscarPokemon(p.pokemon_id):
                 p.guardarPokemon()
+
+    def descartarCambios(self, numEquipo) :
+        equipo = usuario.buscarEquipo(numEquipo)
+        if equipo != None:
+            equipo.restaurarEquipo(self.copiaOriginal)

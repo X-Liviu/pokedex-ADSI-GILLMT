@@ -1,7 +1,7 @@
 import json
 import random
-from app.controller.model.pokemon_controller import Pokemon
 import sqlite3
+from app.controller.model.pokemon_controller import Pokemon
 
 class Equipo:
     def __init__(self, numEquipo: int, db):
@@ -82,12 +82,21 @@ class Equipo:
 
 
     def clonar(self):
-        nuevoEquipo = Equipo(self.numEquipo)
+        nuevoEquipo = Equipo(self.numEquipo,self.db)
+        nuevoEquipo.ultimo_id_pokemon = self.ultimo_id_pokemon
         for pokemon in self.lista_pokemon:
             nuevoPokemon = pokemon.clonarPokemon()
             nuevoEquipo.lista_pokemon.append(nuevoPokemon)
 
         return nuevoEquipo
+
+    def restaurarEquipo(self, equipo):
+        self.numEquipo = equipo.numEquipo
+        self.ultimo_id_pokemon = equipo.ultimo_id_pokemon
+        self.db = equipo.db
+        self.lista_pokemon = []
+        for pokemon in equipo.lista_pokemon:
+            self.lista_pokemon.append(pokemon.clonarPokemon())
 
     def getMejorPokemon(self):
         max = 0.0

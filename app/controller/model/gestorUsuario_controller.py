@@ -42,6 +42,10 @@ class gestorUsuario:
             gestorCopiasEquipo.getMyGestorCopiasEquipo().compararCopiasEliminar(self.usuario, numEquipo)
             gestorCopiasEquipo.getMyGestorCopiasEquipo().compararCopiasAñadir(self.usuario, numEquipo)
 
+    def descartarCambios(self, numEquipo) :
+        if gestorCopiasEquipo.getMyGestorCopiasEquipo() != None:
+            gestorCopiasEquipo.getMyGestorCopiasEquipo().descartarCambios(self.usuario, numEquipo)
+
     def mejorPokemon(self, numEquipo) :
         return self.usuario.mejorPokemon(numEquipo)
 

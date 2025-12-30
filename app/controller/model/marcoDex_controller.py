@@ -89,6 +89,10 @@ class MarcoDex:
         if gestorUsuario.getMyGestorUsuario() != None:
             gestorUsuario.getMyGestorUsuario().compararCopias(numEquipo)
 
+    def descartarCambios(self, numEquipo):
+        if gestorUsuario.getMyGestorUsuario() != None:
+            gestorUsuario.getMyGestorUsuario().descartarCambios(numEquipo)
+
     def obtenerEfectos(self, nombreEspecie) :
         return gestorPokeDex.obtenerEfectos(nombreEspecie)
 

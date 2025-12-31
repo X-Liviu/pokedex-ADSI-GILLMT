@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles del Equipo #{{ equipo.numEquipo }}</title>
+    <style>
+        .pokemon-container { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .poke-card {
+            border: 2px solid #ddd; border-radius: 15px; padding: 15px; width: 200px;
+            text-align: center; background: #fff;
+        }
+        .shiny-label { color: gold; font-weight: bold; text-shadow: 1px 1px #000; }
+        .stats { font-size: 0.9em; color: #666; text-align: left; }
+    </style>
+</head>
+<body>
+    <h1>Equipo #{{ equipo.numEquipo }} de {{ usuario }}</h1>
+
+    <div class="acciones" style="margin-bottom: 20px;">
+        <a href="{{ url_for('ver_equipos.ver_equipos') }}">⬅ Volver a mis equipos</a>
+        <button onclick="window.print()">Imprimir Equipo</button>
+
+        <a href="#" style="background: orange; padding: 10px; color: white; text-decoration: none; border-radius: 5px;">
+            ✏️ Modificar este equipo
+        </a>
+    </div>
+
+    <div class="pokemon-container">
+        {% for p in equipo.lista_pokemon %}
+        <div class="poke-card">
+            <img src="{{ p.imagen }}" alt="{{ p.especie }}" style="width: 100px;">
+            <h3>{{ p.nombre_custom }}</h3>
+            <p><em>{{ p.especie }}</em></p>
+
+            {% if p.shiny %}
+                <p class="shiny-label">✨ SHINY ✨</p>
+            {% endif %}
+
+            <div class="stats">
+                <hr>
+                <p>Altura: {{ p.altura }}m</p>
+                <p>Peso: {{ p.peso }}kg</p>
+                <p>Rareza: {{ p.rareza }}</p>
+            </div>
+        </div>
+        {% else %}
+        <p>Este equipo no tiene Pokémon todavía.</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

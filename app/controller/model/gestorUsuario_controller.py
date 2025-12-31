@@ -1,5 +1,6 @@
 import sqlite3
 from app.controller.model.gestorCopiasEquipo_controller import gestorCopiasEquipo
+
 class gestorUsuario:
     def __init__(self, db, usuario) :
         self.db = db
@@ -30,21 +31,20 @@ class gestorUsuario:
         return equipo.mostrarInfoEquipo()
 
     def clonarEquipo(self, numEquipo) :
-        if gestorCopiasEquipo.getMyGestorCopiasEquipo() != None:
-            gestorCopiasEquipo.getMyGestorCopiasEquipo().clonarEquipo(self.usuario, numEquipo)
+        gestorCopiasEquipo.clonarEquipo(self.usuario, numEquipo)
 
     def borrarPokemon(self, numEquipo, idPokemon):
         equipo = self.usuario.buscarEquipo(numEquipo)
-        equipo.borrarPokemon(idPokemon)
+        if equipo:
+            equipo.borrarPokemon(idPokemon)
 
     def compararCopias(self,numEquipo) :
-        if gestorCopiasEquipo.getMyGestorCopiasEquipo() != None:
-            gestorCopiasEquipo.getMyGestorCopiasEquipo().compararCopiasEliminar(self.usuario, numEquipo)
-            gestorCopiasEquipo.getMyGestorCopiasEquipo().compararCopiasAñadir(self.usuario, numEquipo)
+        gestorCopiasEquipo.compararCopiasEliminar(self.usuario, numEquipo)
+        gestorCopiasEquipo.compararCopiasAniadir(self.usuario, numEquipo)
+        gestorCopiasEquipo.finalizarEdicion(self.usuario.nombre_usuario)
 
     def descartarCambios(self, numEquipo) :
-        if gestorCopiasEquipo.getMyGestorCopiasEquipo() != None:
-            gestorCopiasEquipo.getMyGestorCopiasEquipo().descartarCambios(self.usuario, numEquipo)
+        gestorCopiasEquipo.descartarCambios(self.usuario, numEquipo)
 
     def mejorPokemon(self, numEquipo) :
         return self.usuario.mejorPokemon(numEquipo)

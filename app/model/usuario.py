@@ -48,17 +48,32 @@ class Usuario:
         return numeros_id
 
     def exportarEquiposJSON(self):
-        # Obtenemos la lista de números
-        lista_nums = self.obtenerEquipos()
+        equipos_info = []
 
-        # Creamos un diccionario para darle estructura al JSON
+        # Recorremos la lista de objetos Equipo que tiene el usuario
+        for equipo in self.lista_equipos:
+            # Buscamos la imagen del primer pokemon (la portada)
+            # Usamos un "placeholder" si el equipo está vacío
+            imagen_portada = "sin_imagen.png"
+            if len(equipo.lista_pokemon) > 0:
+                imagen_portada = equipo.lista_pokemon[0].imagen
+
+            # Creamos un pequeño diccionario por cada equipo
+            info_equipo = {
+                "numEquipo": equipo.numEquipo,
+                "foto_principal": imagen_portada,
+                "cantidad_pokemon": len(equipo.lista_pokemon)
+            }
+            equipos_info.append(info_equipo)
+
+        # Estructura final del JSON
         datos = {
-            "usuario": self.nombreUsuario,
-            "cantidad": len(lista_nums),
-            "ids_equipos": lista_nums
+            "usuario": self.nombre_usuario,
+            "total_equipos": len(self.lista_equipos),
+            "equipos": equipos_info
         }
 
-        # Convertimos el diccionario a una cadena de texto formato JSON
+        # Convertimos a cadena JSON con sangría para que sea legible
         return json.dumps(datos, indent=4)
 
     def mejorPokemon(self, numEquipo):

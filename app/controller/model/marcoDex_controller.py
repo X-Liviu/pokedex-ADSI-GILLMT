@@ -9,11 +9,10 @@ class MarcoDex: pass # Es necesario sino, la linea 12 (myMarcoDex: MarcoDex = No
 
 class MarcoDex:
     myMarcoDex: MarcoDex = None
-    usuarios_conectados = {}
 
-    def __init__(self, bd: Connection):
+    def __init__(self, db: Connection):
         if MarcoDex.myMarcoDex == None:
-            self.bd: Connection = bd
+            self.db: Connection = db
             MarcoDex.myMarcoDex = self
         else:
             raise Custom_types.SingletonError()
@@ -22,19 +21,7 @@ class MarcoDex:
     def getMyMarcoDex(cls, db: Connection) -> MarcoDex:
         if cls.myMarcoDex == None:
             MarcoDex(db)
-
         return cls.myMarcoDex
-
-    @classmethod
-    def get_gestor_usuario(cls, nombre_usuario):
-        """
-        Busca el gestor específico de la persona que está navegando.
-        """
-        if nombre_usuario not in cls.usuarios_conectados:
-            # Si es la primera vez que entra, creamos SU gestor personal
-            cls.usuarios_conectados[nombre_usuario] = gestorUsuario(nombre_usuario)
-
-        return cls.usuarios_conectados[nombre_usuario]
 
     def mostrarUsuarios(self) -> Custom_types.Ranking.Usuarios:
         resultado: Custom_types.Ranking.Usuarios = {"usuarios": []}
@@ -67,43 +54,43 @@ class MarcoDex:
     """
 
     def newEquipo(self, nombre_usuario: str):
-        gestor = self.get_gestor_usuario(nombre_usuario)
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         return gestor.crearEquipo()
 
     def aniadirPokemon(self, nombreEspecie: str, nombrePokemon: str, numEquipo: int, nombre_usuario: str):
-        gestor = self.get_gestor_usuario(nombre_usuario)
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         return gestor.aniadirPokemon(nombreEspecie, nombrePokemon, numEquipo)
 
     def guardarEquipo(self, numEquipo: int, nombre_usuario: str):
-        gestor = self.get_gestor_usuario(nombre_usuario)
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.guardarEquipo(numEquipo)
 
     def tieneEquipos(self, nombre_usuario: str) :
-        gestor = self.get_gestor_usuario(nombre_usuario)
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         return gestor.tieneEquipos()
 
     def getListaEquipos(self, nombre_usuario: str) :
-        gestor = self.get_gestor_usuario(nombre_usuario)
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         return gestor.getListaEquipos()
 
     def clonarEquipo(self, numEquipo, nombre_usuario):
-        gestor = self.get_gestor_usuario(nombre_usuario)
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.clonarEquipo(numEquipo)
 
     def mostrarInfoEquipo(self, numEquipo, nombre_usuario):
-        gestor = self.get_gestor_usuario(nombre_usuario)
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         return gestor.mostrarInfoEquipo(numEquipo)
 
     def borrarPokemon(self, numEquipo, idPokemon, nombre_usuario):
-        gestor = self.get_gestor_usuario(nombre_usuario)
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.borrarPokemon(numEquipo, idPokemon)
 
     def compararCopias(self,numEquipo, nombre_usuario):
-        gestor = self.get_gestor_usuario(nombre_usuario)
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.compararCopias(numEquipo)
 
     def descartarCambios(self, numEquipo,nombre_usuario):
-        gestor = self.get_gestor_usuario(nombre_usuario)
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.descartarCambios(numEquipo)
 
     def obtenerEfectos(self, nombreEspecie) :

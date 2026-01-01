@@ -3,7 +3,7 @@ from app.controller.model.equipo_controller import Equipo
 
 class Usuario:
     def __init__(self, nombre: str, apellido: str, nombre_usuario: str,
-                 correo: str, contrasena: str, rol: str, lista_equipos: list):
+                 correo: str, contrasena: str, rol: str, lista_equipos: list, db):
         self.nombre = nombre
         self.apellido = apellido
         self.nombre_usuario = nombre_usuario
@@ -11,6 +11,7 @@ class Usuario:
         self.contrasena = contrasena
         self.rol = rol
         self.lista_equipos = lista_equipos
+        self.db = db
         # self.amigos = []
 
     def addEquipo(self) :

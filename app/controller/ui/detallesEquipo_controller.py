@@ -3,9 +3,9 @@ from app.controller.model.marcoDex_controller import MarcoDex
 from app.database.connection import Connection
 
 def detalles_equipo_blueprint(db: Connection) -> Blueprint:
+
     # Nombre del blueprint que usaremos en el url_for: 'ver_detalles'
     bp_detalles = Blueprint("ver_detalles", __name__)
-
     mDex: MarcoDex = MarcoDex.getMyMarcoDex(db)
 
     @bp_detalles.route("/detalles-equipo/<int:num>")
@@ -13,7 +13,7 @@ def detalles_equipo_blueprint(db: Connection) -> Blueprint:
         nombre_sesion = session.get('username')
 
         if not nombre_sesion:
-            return redirect(url_for('login'))
+            return redirect(url_for('login'))  # Redirección si no hay sesión
 
         # Pedimos a MarcoDex la info de ese equipo concreto
         # mDex usará el nombre de usuario para buscar en su gestorUsuario

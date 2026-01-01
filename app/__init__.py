@@ -14,6 +14,7 @@ from app.controller.ui.verRanking_controller import ranking_blueprint
 from app.controller.ui.changelog_controller import changelog_blueprint
 from app.controller.ui.verEquipos_controller import ver_equipos_blueprint
 from app.controller.ui.detallesEquipo_controller import detalles_equipo_blueprint
+from app.controller.ui.crearEquipo_controller import crear_equipo_blueprint
 
 # Tipos de datos
 from config import Config
@@ -69,6 +70,7 @@ def create_app():
     app.register_blueprint(ranking_blueprint(db))
     app.register_blueprint(ver_equipos_blueprint(db))
     app.register_blueprint(detalles_equipo_blueprint(db))
+    app.register_blueprint(crear_equipo_blueprint(db))
 
     """
     Esto es para que se redireccione a otra
@@ -78,6 +80,6 @@ def create_app():
 
     @app.route('/')
     def index() -> str:
-        return app.redirect("/ranking")
+        return app.redirect("/mis-equipos")
 
     return app

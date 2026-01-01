@@ -1,11 +1,24 @@
 import sqlite3
 from app.controller.model.gestorCopiasEquipo_controller import gestorCopiasEquipo
+from app.model.usuario import Usuario
 
 class gestorUsuario:
+    _instancias_usuarios = {}
     def __init__(self, db, usuario) :
         self.db = db
         self.usuario = usuario
         pass
+
+    @classmethod
+    def getMyGestorUsuario(cls, nombre_usuario, db):
+        if nombre_usuario not in cls._instancias_usuarios:
+            # 1. Creamos el objeto Usuario completo primero
+            usuario = db.getUsuario(nombre_usuario)
+
+            # 2. Creamos el gestor pasándole el objeto completo
+            cls._instancias_usuarios[nombre_usuario] = cls(db, usuario)
+
+        return cls._instancias_usuarios[nombre_usuario]
 
     def crearEquipo(self) :
         return self.usuario.addEquipo()

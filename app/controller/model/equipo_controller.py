@@ -69,11 +69,14 @@ class Equipo:
     def mostrarInfoEquipo(self):
         resumen_equipo = []
         for pokemon in self.lista_pokemon:
-            info_completa = pokemon.getInfo()
+            json_pokemon = pokemon.getInfo()
+
+            info_completa = json.loads(json_pokemon)
 
             info_filtrada = {
                 "pokemon id": info_completa["pokemon id"],
                 "nombre_custom": info_completa["nombre_custom"],
+                "especie": info_completa["especie"],
                 "imagen": info_completa["imagen"]
             }
 

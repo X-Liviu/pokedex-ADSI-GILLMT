@@ -2,15 +2,16 @@
     <h2>Equipo {{ equipo.numEquipo }}:</h2>
 
     <div class="lista-pokemon-centrada" style="display: inline-block; width: 350px;">
-        {% for pokemon in equipo.lista_pokemon %}
+        {% for pokemon in equipo %}
         <div class="fila-rosa" style="background: #D06084; margin: 10px 0; padding: 10px 20px; border-radius: 40px; display: flex; align-items: center;">
-            <img src="{{ pokemon.imagen }}" style="width: 35px; margin-right: 15px;" alt="{{ pokemon.especie }}">
-            <span style="font-weight: bold;">{{ pokemon.nombre_custom }}</span>
+            <img src="{{ pokemon['imagen'] }}" style="width: 35px; margin-right: 15px;" alt="{{ pokemon['especie'] }}">
+            <span style="font-weight: bold;">{{ pokemon['nombre_custom'] }}</span>
         </div>
         {% endfor %}
 
-        {% if equipo.lista_pokemon|length < 6 %}
-            {% for i in range(6 - equipo.lista_pokemon|length) %}
+        {# Para los huecos vacíos: como 'equipo' es la lista, usamos su longitud #}
+        {% if equipo|length < 6 %}
+            {% for i in range(6 - equipo|length) %}
             <div class="fila-rosa" style="background: #D06084; opacity: 0.6; margin: 10px 0; padding: 10px 20px; border-radius: 40px;">
                 <div style="width: 25px; height: 25px; background: rgba(0,0,0,0.2); border-radius: 50%;"></div>
             </div>

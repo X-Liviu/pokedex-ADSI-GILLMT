@@ -16,7 +16,6 @@ def perfil_usuario_blueprint(db: Connection) -> Blueprint:
     bp_perfil_usuario = Blueprint(nombre_direccion_ver_perfil, __name__)
 
     ranking_service: Ranking = Ranking.getMyRanking(db)
-    user_service: gestorUsuario = gestorUsuario.getMyGestorUsuario(db)
 
     @bp_perfil_usuario.route("/perfil_usuario/<name>", methods=["GET", "POST"])
     def perfil_usuario(name: str) -> str:
@@ -26,7 +25,7 @@ def perfil_usuario_blueprint(db: Connection) -> Blueprint:
         de perfil usuario, haciendo una consulta que devuelva lo
         que nos interese de la persona seleccionada
         """
-
+        user_service: gestorUsuario = gestorUsuario.getMyGestorUsuario(db)
         estado_amigo_nuevo: Custom_types.VerUsuario = Custom_types.VerUsuario.NO_SOLICITADO
 
         if request.method == "GET":

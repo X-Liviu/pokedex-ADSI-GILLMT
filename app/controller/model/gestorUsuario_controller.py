@@ -15,8 +15,42 @@ class gestorUsuario:
             # 1. Creamos el objeto Usuario completo primero
             usuario = db.getUsuario(nombre_usuario)
 
+            #PRUEBA
+            #from app.model.usuario import Usuario
+            #from app.controller.model.equipo_controller import Equipo
+            #from app.controller.model.pokemon_controller import Pokemon
+            # p1 = Pokemon(
+            #     pokemon_id=1,
+            #     nombre_custom="Pika-Tata",
+            #     especie="Pikachu",
+            #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+            #     db=db)
+            # p2 = Pokemon(
+            #     pokemon_id=2,
+            #     nombre_custom="Repollito",
+            #     especie="Bulbasaur",
+            #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+            #     db=db
+            # )
+
+            # Creamos el equipo y le metemos los Pokémon
+            #equipo_test = Equipo(numEquipo=1, db=db)
+            #equipo_test.lista_pokemon = [p1, p2]
+
+            # Creamos el objeto Usuario con los 6 argumentos que pide tu clase
+            #usuario_obj = Usuario(
+            #    "Tata",  # nombre
+            #    "Batata",  # apellido
+            #    "nombre_usuario",  # nombre_usuario
+            #    "tata@pokedex.com",  # correo
+            #    "1234",  # contrasena
+            #    "usuario",  # rol
+            #    [equipo_test],  # lista_equipos (metemos el objeto equipo_test directamente)
+            #    db  # db
+            #)
+
             # 2. Creamos el gestor pasándole el objeto completo
-            cls._instancias_usuarios[nombre_usuario] = cls(db, usuario)
+            cls._instancias_usuarios[nombre_usuario] = cls(db, Usuario)
 
         return cls._instancias_usuarios[nombre_usuario]
 

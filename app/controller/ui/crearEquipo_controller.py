@@ -9,8 +9,9 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
     @bp_crear.route("/crear-equipo", methods=["GET"])
     def pantalla_crear():
         nombre_sesion = session.get('username')
+
         if not nombre_sesion:
-            return redirect(url_for('login'))
+            return redirect(url_for('iniciar_sesion'))
 
         # Renderizamos la interfaz para elegir pokémon
         return render_template("crear_equipo.html")

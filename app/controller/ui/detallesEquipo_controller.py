@@ -1,3 +1,5 @@
+import json
+
 from flask import Blueprint, render_template, session, redirect, url_for
 from app.controller.model.marcoDex_controller import MarcoDex
 from app.database.connection import Connection
@@ -13,16 +15,17 @@ def detalles_equipo_blueprint(db: Connection) -> Blueprint:
         nombre_sesion = session.get('username')
 
         if not nombre_sesion:
-            return redirect(url_for('login'))  # Redirección si no hay sesión
+            return redirect(url_for('iniciar_sesion'))  # Redirección si no hay sesión
 
         # Pedimos a MarcoDex la info de ese equipo concreto
         # mDex usará el nombre de usuario para buscar en su gestorUsuario
-        equipo = mDex.mostrarInfoEquipo(num, nombre_sesion)
+        json_str = mDex.mostrarInfoEquipo(num, nombre_sesion)
 
-        if not equipo:
+        if not json_str or json_str == "[]":
             # Si el equipo no existe o no es de ese usuario, volvemos a la lista
             return redirect(url_for('ver_equipos.ver_equipos'))
 
+        equipo = json.loads(json_str)
         return render_template("detalles_equipo.html",
                                equipo=equipo,
                                usuario=nombre_sesion)

@@ -56,15 +56,17 @@
             <h2>Mis Equipos:</h2>
             <div class="lista-scroll">
                 {% for equipo in equipos %}
-                <a href="{{ url_for('ver_detalles.detalles', num=equipo.numEquipo) }}" class="item-equipo">
+                <a href="{{ url_for('ver_detalles.detalles', num=equipo['numEquipo']) }}" class="item-equipo">
                     <div class="icono-contenedor">
-                        {% if equipo.lista_pokemon %}
-                            <img src="{{ equipo.lista_pokemon[0].imagen }}" width="30" alt="Pokemon">
+                        {# Usamos 'foto_principal' que es la clave que definiste en exportarEquiposJSON #}
+                        {% if equipo['foto_principal'] and equipo['foto_principal'] != "sin_imagen.png" %}
+                            <img src="{{ equipo['foto_principal'] }}" width="30" alt="Pokemon">
                         {% else %}
                             <div style="width: 20px; height: 20px; background: #5D2E46; border-radius: 50%;"></div>
                         {% endif %}
                     </div>
-                    <span>Equipo {{ equipo.numEquipo }}</span>
+                    {# Usamos corchetes para ser consistentes con el formato JSON/Diccionario #}
+                    <span>Equipo {{ equipo['numEquipo'] }}</span>
                 </a>
                 {% endfor %}
             </div>

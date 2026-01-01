@@ -2,72 +2,78 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mis Equipos - MarcoDex</title>
+    <title>MarcoDex - Mis Equipos</title>
     <style>
-        body { font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .grid-equipos { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .card-equipo {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+        body {
+            background-color: #FFFFFF;
+            margin: 0; /* Eliminado 'px' redundante */
+            padding: 0;
+            font-family: 'Arial', sans-serif;
         }
-        .card-equipo:hover { transform: translateY(-5px); }
-        .img-lider { width: 120px; height: 120px; object-fit: contain; margin-bottom: 10px; }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
+
+        .contenedor-principal {
+            display: flex;
+            padding: 40px;
+            justify-content: space-around;
+            align-items: flex-start;
+        }
+
+        /* LADO IZQUIERDO: LISTA ROSA */
+        .columna-lista { width: 45%; }
+
+        .item-equipo {
+            display: flex;
+            align-items: center;
+            background-color: #D06084;
+            color: black;
             text-decoration: none;
-            border-radius: 5px;
+            padding: 12px 25px;
+            border-radius: 40px;
+            margin-bottom: 10px;
             font-weight: bold;
-            margin-top: 10px;
         }
-        .btn-info { background-color: #3498db; color: white; }
-        .btn-nuevo { background-color: #2ecc71; color: white; }
-        .btn-menu { background-color: #95a5a6; color: white; }
-        .sin-pokemon { color: #888; font-style: italic; margin: 20px 0; }
+
+        .icono-contenedor {
+            width: 40px; height: 40px; background: rgba(0,0,0,0.15);
+            border-radius: 50%; display: flex; justify-content: center;
+            align-items: center; margin-right: 15px;
+        }
+
+        /* LADO DERECHO: BOTONES RETRO */
+        .boton-retro {
+            background: #EAE3D9; border: 3px solid black; padding: 20px 40px;
+            margin: 15px; border-radius: 15px; font-weight: bold; font-size: 1.3rem;
+            color: #1A2B44; text-align: center; text-decoration: none;
+            box-shadow: 7px 7px 0 black; /* Estilo de tu boceto */
+            display: inline-block;
+            min-width: 250px;
+        }
     </style>
 </head>
 <body>
-
-    <div class="header">
-        <h1>Entrenador: {{ usuario_nombre }}</h1>
-        <div class="nav-links">
-            <a href="/" class="btn btn-menu">Menú Principal</a>
-            <a href="{{ url_for('crear_equipo.pantalla_crear_equipo') }}" class="btn btn-nuevo">
-                + Crear Nuevo Equipo
-            </a>
-        </div>
-    </div>
-
-    <div class="grid-equipos">
-        {% for equipo in equipos %}
-        <div class="card-equipo">
-            <h3>Equipo #{{ equipo.numEquipo }}</h3>
-
-            <div class="portada">
-                {% if equipo.lista_pokemon|length > 0 %}
-                    {# Mostramos la imagen del primer Pokémon de la lista #}
-                    <img src="{{ equipo.lista_pokemon[0].imagen }}" alt="Líder" class="img-lider">
-                    <p><strong>{{ equipo.lista_pokemon[0].nombre_custom }}</strong></p>
-                {% else %}
-                    <div class="sin-pokemon">
-                        <p>Equipo sin Pokémon</p>
+    <div class="contenedor-principal">
+        <div class="columna-lista">
+            <h2>Mis Equipos:</h2>
+            <div class="lista-scroll">
+                {% for equipo in equipos %}
+                <a href="{{ url_for('ver_detalles.detalles', num=equipo.numEquipo) }}" class="item-equipo">
+                    <div class="icono-contenedor">
+                        {% if equipo.lista_pokemon %}
+                            <img src="{{ equipo.lista_pokemon[0].imagen }}" width="30" alt="Pokemon">
+                        {% else %}
+                            <div style="width: 20px; height: 20px; background: #5D2E46; border-radius: 50%;"></div>
+                        {% endif %}
                     </div>
-                {% endif %}
+                    <span>Equipo {{ equipo.numEquipo }}</span>
+                </a>
+                {% endfor %}
             </div>
-
-            <p>{{ equipo.lista_pokemon|length }} / 6 Pokémon</p>
-
-            <a href="{{ url_for('ver_detalles.detalles', num=equipo.numEquipo) }}" class="btn btn-info">
-                Ver Detalles
-            </a>
         </div>
-        {% endfor %}
-    </div>
 
+        <div class="columna-acciones" style="display: flex; flex-direction: column; align-items: center;">
+            <a href="{{ url_for('crear_equipo.pantalla_crear') }}" class="boton-retro">Crear Equipo</a>
+            <a href="/" class="boton-retro">Volver al <br> Menú Principal</a>
+        </div>
+    </div>
 </body>
 </html>

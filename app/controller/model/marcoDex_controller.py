@@ -24,23 +24,14 @@ class MarcoDex:
         return cls.myMarcoDex
 
     def mostrarUsuarios(self) -> Custom_types.Ranking.Usuarios:
-        resultado: Custom_types.Ranking.Usuarios = {"usuarios": []}
-        if Ranking.getMyRankings() != None:
-            resultado = Ranking.getMyRanking().mostrarUsuarios()
-
-        return resultado
+        return Ranking.getMyRanking(self.db).mostrarUsuarios()
 
     def mostrarUsuario(self, pNombreUsuario: str) -> Custom_types.Ranking.Usuario:
-        resultado: Custom_types.Ranking.Usuario = {"nombre": pNombreUsuario, "equipoEspecie": [], "equipoCustom": []}
-        if Ranking.getMyRankings() != None:
-            resultado = Ranking.getMyRanking().mostrarUsuario(pNombreUsuario)
-
-        return resultado
+        return Ranking.getMyRanking(self.db).mostrarUsuario(pNombreUsuario)
 
     def aniadirAmigo(self, nombreUsuario: str) -> Dict[str, bool]:
         resultado: Dict[str, bool] = {"Aniadido": False}
-        if gestorUsuario.getMyGestorUsuario() != None:
-            resultado["Aniadido"] = gestorUsuario.getMyGestorUsuario().aniadirAmigo(nombreUsuario)
+        resultado["Aniadido"] = gestorUsuario.getMyGestorUsuario(self.db).aniadirAmigo(nombreUsuario)
 
         return resultado
 

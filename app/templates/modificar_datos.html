@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Datos</title>
+    <style>
+        /* --- ESTILOS CSS (Estilo Neo-brutalismo) --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #ffffff; /* Fondo blanco liso */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .window {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border: 4px solid #000;
+            border-radius: 25px;
+            overflow: hidden;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Cabecera Rosa */
+        .window-header {
+            background-color: #ff5eb9;
+            padding: 15px 20px;
+            border-bottom: 4px solid #000;
+            display: flex;
+            gap: 8px;
+            height: 60px;
+            align-items: center;
+        }
+
+        .dot { width: 22px; height: 22px; border-radius: 50%; border: 3px solid #000; }
+        .dot.red { background-color: #ff3b30; }
+        .dot.yellow { background-color: #ffcc00; }
+        .dot.green { background-color: #28cd41; }
+
+        /* Cuerpo */
+        .window-body {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            justify-content: space-between; /* Separa formulario y botón guardar */
+            position: relative;
+        }
+
+        /* COLUMNA FORMULARIO */
+        .form-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            width: 50%;
+        }
+
+        /* Estilo de los Inputs (Cajas Grises) */
+        .input-group {
+            background-color: #cccccc; /* Gris de la imagen */
+            border: 3px solid #000;
+            border-radius: 10px;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            height: 55px;
+            font-size: 1.1rem;
+        }
+
+        .input-label {
+            margin-right: 10px;
+            color: #000;
+            white-space: nowrap;
+        }
+
+        .styled-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #333;
+            width: 100%;
+            font-family: inherit;
+        }
+
+        /* COLUMNA BOTONES */
+        .button-area {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-end; /* Alinear a la derecha */
+            width: 40%;
+        }
+
+        /* Botón Guardar */
+        .btn-guardar {
+            background-color: #efe6dc; /* Beige */
+            border: 3px solid #000;
+            border-radius: 12px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #0a1f44;
+            cursor: pointer;
+            box-shadow: 6px 6px 0px #000;
+            transition: all 0.1s;
+        }
+
+        .btn-guardar:active {
+            transform: translate(3px, 3px);
+            box-shadow: 3px 3px 0px #000;
+        }
+
+        /* Botón Volver */
+        .btn-volver {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            background-color: #efe6dc;
+            border: 3px solid #000;
+            border-radius: 10px;
+            padding: 10px 25px;
+            font-size: 1rem;
+            font-weight: 800;
+            box-shadow: 4px 4px 0px #000;
+            cursor: pointer;
+        }
+
+        .btn-volver:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+        @media (max-width: 600px) {
+            .window-body { flex-direction: column; gap: 40px; }
+            .form-column, .button-area { width: 100%; align-items: center; }
+            .btn-volver { position: static; margin-top: 20px; align-self: flex-end; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="window-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+        </div>
+
+        <div class="window-body">
+
+            <div class="form-column">
+                <div class="input-group">
+                    <label class="input-label">Nombre:</label>
+                    <input type="text" id="inputNombre" class="styled-input" autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Apellidos:</label>
+                    <input type="text" id="inputApellidos" class="styled-input" autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <label class="input-label">Nombre Usuario:</label>
+                    <input type="text" id="inputUser" class="styled-input" autocomplete="off">
+                </div>
+            </div>
+
+            <div class="button-area">
+                <button class="btn-guardar" onclick="guardarCambios()">Guardar</button>
+            </div>
+
+            <button class="btn-volver" onclick="volver()">Volver</button>
+
+        </div>
+    </div>
+
+    <script>
+        // --- LÓGICA JAVASCRIPT ---
+
+        // Al cargar la página, recuperamos los datos
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarDatosUsuario();
+        });
+
+        function cargarDatosUsuario() {
+            // 1. Obtener la ID del usuario que queremos editar (guardada previamente)
+            const idEditar = localStorage.getItem('idUsuarioAEditar');
+
+            if (idEditar && usuariosJSON) {
+                const usuarios = JSON.parse(usuariosJSON);
+
+                if (usuario) {
+                    // Rellenar los campos
+                    document.getElementById('inputNombre').value = usuario.nombreReal || '';
+                    document.getElementById('inputApellidos').value = usuario.apellidos || '';
+                    document.getElementById('inputUser').value = usuario.nombre || ''; // El "username"
+                }
+            } else {
+                alert("No hay usuario seleccionado. Volviendo...");
+                window.location.href = 'administrador_gestionar.html';
+            }
+        }
+
+        function guardarCambios() {
+            const idEditar = localStorage.getItem('idUsuarioAEditar');
+
+            //TODO IR A LA BASE DE DATOS A MODIFICAR
+            // idEditar es el nombre antigu0
+            // usuarios[indice].nombreReal el nombre nuevo
+            // usuarios[indice].apellidos los apellidos nuevos
+            // usuarios[indice].nombre el nombre de Usuario nuevo
+
+                    alert("¡Datos guardados correctamente!");
+        }
+
+        function volver() {
+            window.location.href = 'administrador_gestionar.html';
+        }
+    </script>
+
+</body>
+</html>

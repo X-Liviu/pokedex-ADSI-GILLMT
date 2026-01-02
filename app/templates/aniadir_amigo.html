@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Añadir Amigos</title>
+    <style>
+        /* --- ESTILOS CSS --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            user-select: none;
+        }
+
+        .window {
+            width: 100%;
+            max-width: 800px;
+            background-color: white;
+            border: 4px solid #000;
+            border-radius: 25px;
+            overflow: hidden;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative; /* Para posicionar el botón volver */
+        }
+
+        /* Cabecera (Rosa) */
+        .window-header {
+            background-color: #ff5eb9;
+            padding: 15px 20px;
+            border-bottom: 4px solid #000;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .traffic-lights { display: flex; gap: 8px; }
+        .dot { width: 22px; height: 22px; border-radius: 50%; border: 3px solid #000; }
+        .dot.red { background-color: #ff3b30; }
+        .dot.yellow { background-color: #ffcc00; }
+        .dot.green { background-color: #28cd41; }
+        .window-title { font-size: 1.5rem; color: #000; padding-left: 10px; }
+
+        /* Cuerpo Principal */
+        .window-body {
+            display: flex;
+            flex-direction: column; /* Cambiamos a columna para poner el buscador arriba */
+            padding: 30px 40px;
+            min-height: 550px;
+        }
+
+        /* BARRA DE BÚSQUEDA */
+        .search-container {
+            margin-bottom: 25px;
+            position: relative;
+            width: 100%;
+            max-width: 400px; /* Que no ocupe todo el ancho */
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px; /* Espacio a la izq para el icono */
+            border: 3px solid #000;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            font-family: inherit;
+            font-style: italic; /* Estilo como en la imagen */
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        /* CONTENEDOR DE COLUMNAS (LISTA Y BOTÓN) */
+        .content-area {
+            display: flex;
+            gap: 40px;
+            flex: 1;
+        }
+
+        /* LISTA DE USUARIOS */
+        .user-list-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            overflow-y: auto;
+            max-height: 400px;
+            padding-right: 10px;
+        }
+
+        .user-item {
+            background-color: #cc5c86; /* Color frambuesa */
+            height: 50px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            color: #3b0d1e;
+            font-size: 1.1rem;
+            cursor: pointer;
+            border: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .user-icon {
+            width: 20px;
+            height: 20px;
+            background-color: #6d1b36;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .user-status {
+            margin-left: auto;
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+
+        /* Estados de selección */
+        .user-item:hover { filter: brightness(1.1); }
+
+        .user-item.selected {
+            background-color: #ffcc00;
+            border-color: #000;
+            color: #000;
+            box-shadow: 4px 4px 0px #000;
+            transform: translate(-2px, -2px);
+        }
+
+        /* COLUMNA DERECHA (BOTONES) */
+        .action-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 200px;
+            position: relative;
+        }
+
+        .retro-btn {
+            background-color: #efe6dc;
+            border: 3px solid #000;
+            border-radius: 12px;
+            padding: 15px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0a1f44;
+            cursor: pointer;
+            box-shadow: 6px 6px 0px #000;
+            transition: all 0.1s;
+            text-align: center;
+        }
+
+        .retro-btn:active {
+            transform: translate(3px, 3px);
+            box-shadow: 3px 3px 0px #000;
+        }
+
+        .retro-btn:disabled {
+            background-color: #ddd;
+            color: #777;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: translate(3px, 3px);
+            border-color: #777;
+        }
+
+        /* Botón Volver (Estilo pequeño abajo derecha) */
+        .btn-volver {
+            margin-top: auto; /* Empujar al fondo */
+            background-color: #efe6dc;
+            border: 3px solid #000;
+            border-radius: 10px;
+            padding: 8px 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 4px 4px 0px #000;
+            cursor: pointer;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+        }
+
+        .btn-volver:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="window-header">
+            <div class="traffic-lights">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <h1 class="window-title">Amigos</h1>
+        </div>
+
+        <div class="window-body">
+
+            <div class="search-container">
+                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="text" class="search-input" id="buscador" placeholder="Introduce un nombre de Usuario" onkeyup="filtrarUsuarios()">
+            </div>
+
+            <div class="content-area">
+                <div class="user-list-container" id="listaUsuarios">
+                    </div>
+
+                <div class="action-column">
+                    <button class="retro-btn" id="btnAnadir" onclick="anadirAmigo()" disabled>
+                        Añadir<br>Amigo
+                    </button>
+
+                    <button class="btn-volver" onclick="alert('Volviendo al menú anterior...')">
+                        Volver
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- 1. BASE DE DATOS SIMULADA ---
+        let usuariosDB = [
+            //TODO AQUI TODOS LOS AMIGOS DE LA BASE DE DATOS
+            { id: 1, nombre: 'Usuario1', esAmigo: false },
+            { id: 2, nombre: 'Usuario2', esAmigo: true },
+            { id: 3, nombre: 'Usuario3', esAmigo: false },
+            { id: 4, nombre: 'Gamer_Pro', esAmigo: false },
+            { id: 5, nombre: 'Maria_Dev', esAmigo: false },
+            { id: 6, nombre: 'Pixel_Artist', esAmigo: false },
+            { id: 7, nombre: 'Juan.Code', esAmigo: true },
+            { id: 8, nombre: 'Ana_Design', esAmigo: false },
+            { id: 9, nombre: 'Roberto99', esAmigo: false },
+            { id: 10, nombre: 'Luisa_M', esAmigo: false },
+        ];
+
+        let usuarioSeleccionadoId = null;
+
+        // --- 2. RENDERIZADO ---
+        function renderizarLista(filtro = "") {
+            const listaElement = document.getElementById('listaUsuarios');
+            listaElement.innerHTML = '';
+
+            // Filtrar usuarios según lo que escriba el usuario
+            // TODO LO HACE EL PROPIO HTML, no sé si lo habías pensado así
+            const usuariosFiltrados = usuariosDB.filter(u =>
+                u.nombre.toLowerCase().includes(filtro.toLowerCase())
+            );
+
+            usuariosFiltrados.forEach(usuario => {
+                const div = document.createElement('div');
+                div.className = 'user-item';
+
+                // Marcar si está seleccionado
+                if (usuario.id === usuarioSeleccionadoId) {
+                    div.classList.add('selected');
+                }
+
+                div.onclick = () => seleccionarUsuario(usuario.id);
+
+                // Texto adicional si ya es amigo
+                let textoExtra = usuario.esAmigo ? '(Ya es amigo)' : '';
+
+                div.innerHTML = `
+                    <div class="user-icon"></div>
+                    <span>${usuario.nombre}</span>
+                    <span class="user-status">${textoExtra}</span>
+                `;
+
+                listaElement.appendChild(div);
+            });
+
+            actualizarBoton();
+        }
+
+        // --- 3. LÓGICA DE INTERACCIÓN ---
+
+        function filtrarUsuarios() {
+            const texto = document.getElementById('buscador').value;
+            renderizarLista(texto);
+        }
+
+        function seleccionarUsuario(id) {
+            // Toggle selección
+            if (usuarioSeleccionadoId === id) {
+                usuarioSeleccionadoId = null;
+            } else {
+                usuarioSeleccionadoId = id;
+            }
+            // Mantenemos el filtro actual al renderizar de nuevo
+            const textoFiltro = document.getElementById('buscador').value;
+            renderizarLista(textoFiltro);
+        }
+
+        function actualizarBoton() {
+            const btn = document.getElementById('btnAnadir');
+
+            if (usuarioSeleccionadoId === null) {
+                // Nadie seleccionado
+                btn.disabled = true;
+                btn.innerHTML = "Añadir<br>Amigo";
+                return;
+            }
+
+            const usuario = usuariosDB.find(u => u.id === usuarioSeleccionadoId);
+
+            if (usuario.esAmigo) {
+                // Ya es amigo, deshabilitar botón
+                btn.disabled = true;
+                btn.innerHTML = "Ya sois<br>Amigos";
+            } else {
+                // Se puede añadir
+                btn.disabled = false;
+                btn.innerHTML = "Añadir<br>Amigo";
+            }
+        }
+
+        // --- 4. ACCIÓN DE AÑADIR ---
+        function anadirAmigo() {
+            if (!usuarioSeleccionadoId) return;
+
+            const usuario = usuariosDB.find(u => u.id === usuarioSeleccionadoId);
+
+            if (usuario && !usuario.esAmigo) {
+                // TODO petición a Base de Datos
+                usuario.esAmigo = true;
+
+                alert(`¡Genial! Ahora ${usuario.nombre} está en tu lista de amigos.`);
+
+                // Limpiar selección y refrescar
+                usuarioSeleccionadoId = null;
+                renderizarLista();
+            }
+        }
+
+        // Inicializar
+        renderizarLista();
+
+    </script>
+</body>
+</html>

@@ -50,7 +50,7 @@ class gestorUsuario:
             #)
 
             # 2. Creamos el gestor pasándole el objeto completo
-            cls._instancias_usuarios[nombre_usuario] = cls(db, Usuario)
+            cls._instancias_usuarios[nombre_usuario] = cls(db, usuario)
 
         return cls._instancias_usuarios[nombre_usuario]
 

@@ -127,19 +127,19 @@
         </div>
 
         <div class="menu-area">
-            <a href="lista_pokemon.html" class="menu-btn btn-top-center">Lista Pokémon</a>
+            <a href="{{ url_for('lista_pokemon') }}" class="menu-btn btn-top-center">Lista Pokémon</a>
 
-            <a href="crear_equipo.html" class="menu-btn btn-left-top">Crear Equipo</a>
-            <a href="mis_equipos.html" class="menu-btn btn-left-mid">Mis Equipos</a>
-            <a href="ver_amigos.html" class="menu-btn btn-left-bot">Mis Amigos</a>
+            <a href="{{ url_for('crear_equipo') }}" class="menu-btn btn-left-top">Crear Equipo</a>
+            <a href="{{ url_for('mis_equipos') }}" class="menu-btn btn-left-mid">Mis Equipos</a>
+            <a href="{{ url_for('ver_amigos') }}" class="menu-btn btn-left-bot">Mis Amigos</a>
 
-            <img src="imagenes/logo.png" alt="Marcodex Logo" class="center-logo-img">
+            <img src="{{ url_for('templates', filename='imagenes/logo.png') }}" alt="Marcodex Logo" class="center-logo-img">
 
-            <a href="chatbot.html" class="menu-btn btn-right-top">Chatbot</a>
-            <a href="ranking.html" class="menu-btn btn-right-mid">Ranking</a>
-            <a href="changelog.html" class="menu-btn btn-right-bot">Changelog</a>
+            <a href="{{ url_for('chatbot') }}" class="menu-btn btn-right-top">Chatbot</a>
+            <a href="{{ url_for('ranking') }}" class="menu-btn btn-right-mid">Ranking</a>
+            <a href="{{ url_for('changelog') }}" class="menu-btn btn-right-bot">Changelog</a>
 
-            <a href="perfil_usuario.html" class="menu-btn btn-bottom-center-large">Modificar Datos<br>Personales</a>
+            <a href="{{ url_for('modificar_datos') }}" class="menu-btn btn-bottom-center-large">Modificar Datos<br>Personales</a>
         </div>
     </div>
 

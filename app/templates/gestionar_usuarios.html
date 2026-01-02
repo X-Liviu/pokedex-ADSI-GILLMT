@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Admin - Base de Datos</title>
+    <style>
+        /* --- TUS ESTILOS CSS (Sin cambios, solo optimizados) --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            user-select: none;
+        }
+        .window {
+            width: 100%; max-width: 850px; background-color: white;
+            border: 4px solid #000; border-radius: 25px; overflow: hidden;
+            font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        .window-header {
+            background-color: #ff5eb9; padding: 15px 20px; border-bottom: 4px solid #000;
+            display: flex; align-items: center; gap: 15px;
+        }
+        .traffic-lights { display: flex; gap: 8px; }
+        .dot { width: 22px; height: 22px; border-radius: 50%; border: 3px solid #000; }
+        .dot.red { background-color: #ff3b30; }
+        .dot.yellow { background-color: #ffcc00; }
+        .dot.green { background-color: #28cd41; }
+        .window-title { font-size: 1.5rem; color: #000; padding-left: 10px; }
+
+        .window-body { display: flex; padding: 40px; gap: 50px; min-height: 500px; }
+        .user-list-container { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .list-header { display: flex; justify-content: space-between; padding: 0 15px; margin-bottom: 5px; font-size: 0.9rem; color: #666; text-transform: uppercase; }
+
+        .user-list {
+            list-style: none; display: flex; flex-direction: column; gap: 12px;
+            overflow-y: auto; max-height: 450px; padding-right: 5px;
+        }
+
+        /* Fila de usuario */
+        .user-item {
+            background-color: #cc5c86; height: 55px; border-radius: 25px;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 20px; color: #3b0d1e; font-size: 1.1rem; cursor: pointer;
+            transition: all 0.2s; border: 3px solid transparent;
+        }
+        .user-info-left { display: flex; align-items: center; gap: 15px; }
+        .user-icon { width: 20px; height: 20px; background-color: #6d1b36; border-radius: 50%; }
+        .user-role { font-size: 0.9rem; background-color: rgba(255,255,255,0.3); padding: 4px 10px; border-radius: 10px; border: 2px solid rgba(0,0,0,0.1); }
+
+        .user-item:hover { transform: scale(1.02); filter: brightness(1.1); }
+
+        /* ESTILO SELECCIONADO */
+        .user-item.selected {
+            background-color: #ffcc00; border-color: #000; color: #000;
+            box-shadow: 4px 4px 0px #000; transform: translate(-2px, -2px);
+        }
+
+        /* Botones */
+        .actions-column { display: flex; flex-direction: column; gap: 30px; justify-content: center; align-items: center; min-width: 240px; }
+        .retro-btn {
+            background-color: #efe6dc; border: 4px solid #000; border-radius: 12px;
+            padding: 15px 20px; width: 100%; font-size: 1.1rem; font-weight: 800;
+            color: #0a1f44; cursor: pointer; box-shadow: 8px 8px 0px #000;
+            line-height: 1.2; transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .retro-btn:active { transform: translate(4px, 4px); box-shadow: 4px 4px 0px #000; }
+        .retro-btn:disabled { opacity: 0.5; cursor: not-allowed; background-color: #ccc; box-shadow: none; transform: translate(4px, 4px); }
+
+        @media (max-width: 700px) { .window-body { flex-direction: column; padding: 20px; } }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="window-header">
+            <div class="traffic-lights">
+                <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            </div>
+            <h1 class="window-title">Base de Datos: Usuarios</h1>
+        </div>
+
+        <div class="window-body">
+
+            <div class="user-list-container">
+                <div class="list-header">
+                    <span>Nombre de Usuario</span>
+                    <span>Estado / Rol</span>
+                </div>
+
+                <ul class="user-list" id="listaUsuarios">
+                    {% for usuario in usuarios %}
+                    <li class="user-item"
+                        onclick="seleccionarUsuario(this, '{{ usuario.id }}')"
+                        id="user-row-{{ usuario.id }}">
+
+                        <div class="user-info-left">
+                            <div class="user-icon"></div>
+                            <span>{{ usuario.nombre }}</span>
+                        </div>
+                        <span class="user-role">{{ usuario.rol }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="actions-column">
+                <form id="formAprobar" method="POST" action="">
+                    <button class="retro-btn" id="btnAprobar" disabled>
+                        Aprobar<br>Cuenta
+                    </button>
+                </form>
+
+                <form id="formBorrar" method="POST" action="">
+                    <button class="retro-btn" id="btnBorrar" disabled>
+                        Borrar<br>cuenta
+                    </button>
+                </form>
+
+                <button class="retro-btn" id="btnModificar" disabled>
+                    Modificar Datos<br>de Cuenta
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let usuarioSeleccionadoId = null;
+
+        function seleccionarUsuario(elementoHtml, id) {
+            // 1. Quitar selección visual anterior
+            const todosLosItems = document.querySelectorAll('.user-item');
+            todosLosItems.forEach(item => item.classList.remove('selected'));
+
+            // 2. Comprobar si estamos deseleccionando el mismo
+            if (usuarioSeleccionadoId === id) {
+                usuarioSeleccionadoId = null;
+                actualizarBotones();
+                return;
+            }
+
+            // 3. Seleccionar nuevo
+            usuarioSeleccionadoId = id;
+            elementoHtml.classList.add('selected');
+
+            // 4. Actualizar las acciones de los botones
+            // Esto cambia a dónde apuntan los formularios dinámicamente
+            document.getElementById('formAprobar').action = "/aprobar_usuario/" + id;
+            document.getElementById('formBorrar').action = "/borrar_usuario/" + id;
+
+            actualizarBotones();
+        }
+
+        function irAModificar() {
+            if (usuarioSeleccionadoId) {
+                window.location.href = "/modificar_usuario/" + usuarioSeleccionadoId;
+            }
+        }
+
+        function actualizarBotones() {
+            const haySeleccion = usuarioSeleccionadoId !== null;
+            document.getElementById('btnAprobar').disabled = !haySeleccion;
+            document.getElementById('btnBorrar').disabled = !haySeleccion;
+            document.getElementById('btnModificar').disabled = !haySeleccion;
+        }
+    </script>
+</body>
+</html>

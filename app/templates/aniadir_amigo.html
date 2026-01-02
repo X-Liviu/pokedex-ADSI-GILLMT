@@ -245,20 +245,7 @@
     </div>
 
     <script>
-        // --- 1. BASE DE DATOS SIMULADA ---
-        let usuariosDB = [
-            //TODO AQUI TODOS LOS AMIGOS DE LA BASE DE DATOS
-            { id: 1, nombre: 'Usuario1', esAmigo: false },
-            { id: 2, nombre: 'Usuario2', esAmigo: true },
-            { id: 3, nombre: 'Usuario3', esAmigo: false },
-            { id: 4, nombre: 'Gamer_Pro', esAmigo: false },
-            { id: 5, nombre: 'Maria_Dev', esAmigo: false },
-            { id: 6, nombre: 'Pixel_Artist', esAmigo: false },
-            { id: 7, nombre: 'Juan.Code', esAmigo: true },
-            { id: 8, nombre: 'Ana_Design', esAmigo: false },
-            { id: 9, nombre: 'Roberto99', esAmigo: false },
-            { id: 10, nombre: 'Luisa_M', esAmigo: false },
-        ];
+
 
         let usuarioSeleccionadoId = null;
 
@@ -341,25 +328,6 @@
             }
         }
 
-        // --- 4. ACCIÓN DE AÑADIR ---
-        function anadirAmigo() {
-            if (!usuarioSeleccionadoId) return;
-
-            const usuario = usuariosDB.find(u => u.id === usuarioSeleccionadoId);
-
-            if (usuario && !usuario.esAmigo) {
-                // TODO petición a Base de Datos
-                usuario.esAmigo = true;
-
-                alert(`¡Genial! Ahora ${usuario.nombre} está en tu lista de amigos.`);
-
-                // Limpiar selección y refrescar
-                usuarioSeleccionadoId = null;
-                renderizarLista();
-            }
-        }
-
-        // Inicializar
         renderizarLista();
 
     </script>

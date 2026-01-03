@@ -19,43 +19,37 @@ class Equipo:
         return len(self.lista_pokemon) == 6
 
     def addPokemon(self, nombreEspecie, nombrePokemon):
-        # 1. Obtenemos el JSON de la Pokedex
-        # Asumimos que get_info ya devuelve un diccionario o hacemos el parse
-        def addPokemon(self, nombreEspecie, nombrePokemon):
-            # 1. Obtenemos la especie desde el Singleton PokeDex
-            especie_obj = PokeDex.get_instance().buscarEspecie(nombreEspecie)
+        # 1. Obtenemos la especie desde el Singleton PokeDex
+        especie_obj = PokeDex.get_instance().buscarEspecie(nombreEspecie)
 
-            if not especie_obj:
-                print(f"Error: La especie {nombreEspecie} no existe.")
-                return -1  # Especie no encontrada en la PokeDex
+        if not especie_obj:
+            print(f"Error: La especie {nombreEspecie} no existe.")
+            return -1  # Especie no encontrada en la PokeDex
 
-            # Obtenemos el diccionario/JSON de la especie
-            info_especie = especie_obj.getInfo()
-            datos = json.loads(info_especie) if isinstance(info_especie, str) else info_especie
+        # Obtenemos el diccionario de la especie
+        datos = especie_obj.getInfo()
+        # 2. Generamos el ID único (Tu lógica de concatenar numEquipo + contador)
+        self.ultimo_id_pokemon += 1
+        nuevoId = int(str(self.numEquipo) + str(self.ultimo_id_pokemon))
 
-            # 2. Generamos el ID único (Tu lógica de concatenar numEquipo + contador)
-            self.ultimo_id_pokemon += 1
-            nuevoId = int(str(self.numEquipo) + str(self.ultimo_id_pokemon))
+        # 3. Probabilidad Shiny (10%)
+        es_shiny = random.random() < 0.1
 
-            # 3. Probabilidad Shiny (10%)
-            es_shiny = random.random() < 0.1
+        # 4. Creación del objeto Pokemon
+        newPokemon = Pokemon(
+            pokemon_id=nuevoId,
+            nombre_custom=nombrePokemon,
+            rareza=datos.get("rareza", "Común"),
+            shiny=es_shiny,
+            altura=datos.get("alturaMedia", 0.0),
+            peso=datos.get("pesoMedio", 0.0),
+            especie=nombreEspecie,
+            imagen=datos.get("imagen", ""),
+            db=self.db
+        )
 
-            # 4. Creación del objeto Pokemon
-            newPokemon = Pokemon(
-                pokemon_id=nuevoId,
-                nombre_custom=nombrePokemon,
-                rareza=datos.get("rareza", "Común"),
-                shiny=es_shiny,
-                altura=datos.get("altura", 0.0),
-                peso=datos.get("peso", 0.0),
-                especie=nombreEspecie,
-                # Seleccionamos imagen basándonos en el azar del shiny
-                imagen=datos.get("imagen_shiny") if es_shiny else datos.get("imagen_normal"),
-                db=self.db
-            )
-
-            self.lista_pokemon.append(newPokemon)
-            return 1  # Éxito
+        self.lista_pokemon.append(newPokemon)
+        return 1  # Éxito
 
     def guardarEquipo(self, numEquipo: int, nombre_usuario: str) :
         self.db.insert(

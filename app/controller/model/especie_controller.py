@@ -4,7 +4,7 @@ from app.controller.model.gestorEfectos_controller import GestorEfectos
 
 
 class Especie:
-    def __init__(self, nombre: str, descripcion: str, legendario: bool, alturaMedia: float, pesoMedio : float, movimientos: list, tipos: list):
+    def __init__(self, nombre: str, descripcion: str, legendario: bool, alturaMedia: float, pesoMedio : float, movimientos: list, tipos: list, imagen: str):
         self.nombre = nombre
         self.descripcion = descripcion
         self.legendario = legendario
@@ -12,6 +12,7 @@ class Especie:
         self.pesoMedio = pesoMedio
         self.movimientos = movimientos
         self.tipos = tipos
+        self.imagen = imagen
 
     def esEsta(self, nombreEspecie):
         return self.nombre == nombreEspecie
@@ -36,7 +37,8 @@ class Especie:
             "alturaMedia": self.alturaMedia,
             "pesoMedio": self.pesoMedio,
             "movimientos": self.movimientos,
-            "tipos": [t.to_dict() for t in self.tipos]
+            "tipos": [t.to_dict() for t in self.tipos],
+            "imagen": self.imagen
         }
         return datos
         #json.dumps(datos, indent=4)

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Pokémon Dinámico</title>
+    <title>Chatbot Pokémon - Multi-Método</title>
     <style>
         :root {
             --window-border: #000;
@@ -23,8 +23,8 @@
         }
 
         .window {
-            width: 600px;
-            height: 500px;
+            width: 800px;
+            height: 550px;
             background-color: var(--bg-white);
             border: 3px solid var(--window-border);
             border-radius: 25px;
@@ -64,12 +64,7 @@
             gap: 15px;
         }
 
-        .bot-msg {
-            color: #000;
-            font-size: 1.1em;
-            line-height: 1.5;
-        }
-
+        .bot-msg { color: #000; font-size: 1.1em; line-height: 1.5; }
         .user-msg {
             align-self: flex-end;
             background-color: #eee;
@@ -80,12 +75,7 @@
             margin: 5px 0;
         }
 
-        .input-area {
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
-
+        .input-area { padding: 20px; display: flex; justify-content: center; }
         .input-container {
             width: 90%;
             background-color: var(--input-gray);
@@ -96,26 +86,10 @@
             border: 3px solid #000;
         }
 
-        input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            padding: 10px;
-            font-size: 18px;
-        }
-
-        .send-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
-
-        .send-icon {
-            width: 28px;
-            height: 28px;
-            fill: #000;
-        }
+        input { flex: 1; background: transparent; border: none; outline: none; padding: 10px; font-size: 18px; }
+        .send-btn { background: none; border: none; cursor: pointer; }
+        .send-icon { width: 28px; height: 28px; fill: #000; }
+        hr { width: 100%; border: 0; border-top: 1px solid #ccc; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -127,8 +101,7 @@
         <div class="dot dot-green"></div>
     </div>
 
-    <div class="chat-content" id="chatBox">
-        </div>
+    <div class="chat-content" id="chatBox"></div>
 
     <div class="input-area">
         <div class="input-container">
@@ -147,7 +120,6 @@
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
 
-    // Estados: 'MENU' o 'WAITING_PARAM'
     let currentState = 'MENU';
     let selectedOption = null;
 
@@ -161,10 +133,7 @@
             5-Volver
         </div>`;
 
-    // Inicializar chat
-    window.onload = () => {
-        chatBox.innerHTML = menuHTML;
-    };
+    window.onload = () => { chatBox.innerHTML = menuHTML; };
 
     function appendMessage(text, isUser = false) {
         const div = document.createElement('div');
@@ -174,69 +143,71 @@
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
+    // --- AQUÍ CONECTARÍAS CON TUS MÉTODOS DE PYTHON ---
+    const ejecutarMetodoPython = (opcion, parametro) => {
+        <!-- appendMessage(`<i>Llamando al método de la Opción ${opcion} para el parámetro: ${parametro}...</i>`); -->
+
+        switch(opcion) {
+            case "1":
+                // Lógica para: Ver mejor Pokémon del equipo (parametro = ID equipo)
+                appendMessage("<b>[Resultado Método 1]:</b> El mejor Pokémon de tu equipo es Garchomp.");
+                break;
+            case "2":
+                // Lógica para: Tipos fuertes (parametro = Nombre Pokémon)
+                appendMessage(`<b>[Resultado Método 2]:</b> ${parametro} es fuerte contra tipos Fuego y Volador.`);
+                break;
+            case "3":
+                // Lógica para: Cadena evolutiva
+                appendMessage(`<b>[Resultado Método 3]:</b> La cadena de ${parametro} es: Pichu > Pikachu > Raichu.`);
+                break;
+            case "4":
+                // Lógica para: Habilidades y stats
+                appendMessage(`<b>[Resultado Método 4]:</b> Mostrando estadísticas base de ${parametro}...`);
+                break;
+        }
+    };
+
     function handleInput() {
         const input = userInput.value.trim();
         if (!input) return;
 
-        appendMessage(input, true); // Mostrar lo que puso el usuario
+        appendMessage(input, true);
         userInput.value = "";
 
         if (currentState === 'MENU') {
-            processMenuSelection(input);
-        } else if (currentState === 'WAITING_PARAM') {
-            processParameter(input);
+            if (input === "5") {
+                appendMessage("Saliendo del sistema...");
+                setTimeout(() => { window.location.href = "tu_pagina_principal.html"; }, 1000);
+            } else if (["1", "2", "3", "4"].includes(input)) {
+                selectedOption = input;
+                currentState = 'WAITING_PARAM';
+                const prompts = {
+                    "1": "Introduce el <b>ID del equipo</b>:",
+                    "2": "Introduce el <b>nombre del Pokémon</b> para ver los tipos contra los que es fuerte y débil:",
+                    "3": "Introduce el <b>nombre del Pokémon</b> para ver su cadena evolutiva:",
+                    "4": "Introduce el <b>nombre del Pokémon</b> para sus estadísticas:"
+                };
+                setTimeout(() => appendMessage(prompts[input]), 400);
+            } else {
+                setTimeout(() => appendMessage("Por favor, selecciona un número válido (1-5)."), 400);
+            }
         }
-    }
+        else if (currentState === 'WAITING_PARAM') {
+            // Se ejecuta el método correspondiente
+            ejecutarMetodoPython(selectedOption, input);
 
-    function processMenuSelection(choice) {
-        if (choice === "5") {
-            appendMessage("Redirigiendo...");
+            // Tras ejecutar, volvemos al menú
             setTimeout(() => {
-                window.location.href = "tu_otra_interfaz.html"; // Cambia esto
-            }, 1000);
-            return;
-        }
-
-        const options = {
-            "1": "Introduce el número identificador del equipo:",
-            "2": "Introduce el nombre del Pokémon para ver sus fortalezas:",
-            "3": "Introduce el nombre del Pokémon para ver su evolución:",
-            "4": "Introduce el nombre del Pokémon para ver sus estadísticas:"
-        };
-
-        if (options[choice]) {
-            selectedOption = choice;
-            currentState = 'WAITING_PARAM';
-            setTimeout(() => {
-                appendMessage(`<strong>Opción ${choice}:</strong> ${options[choice]}`);
-            }, 500);
-        } else {
-            setTimeout(() => {
-                appendMessage("Opción no válida. Por favor, elige un número del 1 al 5.");
-            }, 500);
-        }
-    }
-
-    function processParameter(param) {
-        // Aquí es donde en el futuro llamarías a tu método Python
-        setTimeout(() => {
-            appendMessage(`<i>Ejecutando proceso para: ${param}...</i>`);
-            appendMessage("<b>¡Proceso completado!</b>");
-
-            // Volver al menú inicial
-            setTimeout(() => {
-                appendMessage("<hr>"); // Separador visual opcional
+                appendMessage("<hr>");
                 appendMessage(menuHTML);
                 currentState = 'MENU';
                 selectedOption = null;
-            }, 1000);
-        }, 500);
+            }, 1500);
+        }
     }
 
     sendBtn.addEventListener('click', handleInput);
-    userInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') handleInput();
-    });
+    userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleInput(); });
 </script>
 
 </body>

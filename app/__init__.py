@@ -8,6 +8,9 @@ from app.controller.model.gestorUsuario_controller import gestorUsuario
 from app.controller.model.marcoDex_controller import MarcoDex
 from app.controller.model.ranking_controller import Ranking
 from app.model.usuario import Usuario
+from app.controller.model.especie_controller import Especie
+from app.controller.model.tipo_controller import Tipo
+from app.controller.model.pokeDex_controller import PokeDex
 
 # Custom UI
 from app.controller.ui.verRanking_controller import ranking_blueprint
@@ -15,6 +18,7 @@ from app.controller.ui.changelog_controller import changelog_blueprint
 from app.controller.ui.verEquipos_controller import ver_equipos_blueprint
 from app.controller.ui.detallesEquipo_controller import detalles_equipo_blueprint
 from app.controller.ui.crearEquipo_controller import crear_equipo_blueprint
+from app.controller.ui.lista_pokemon_controller import lista_pokemon_blueprint
 
 # Tipos de datos
 from config import Config
@@ -61,6 +65,21 @@ def create_app():
     # Crear conexión a la base de datos
     db = Connection()
 
+    ## --- DATOS DE PRUEBA (MOCK) ---
+    ## Creamos un par de tipos
+    #t_fuego = Tipo("Fuego","es fueguito")
+    #t_planta = Tipo("Planta", "es plantita")
+    #t_elec = Tipo("Electrico", "es electrico")
+    ## Creamos un par de especies según tu constructor
+    ## (nombre, descripcion, legendario, altura, peso, tipos, region)
+    #p1 = Especie("Bulbasaur", "Un Pokémon semilla.", False, 0.7, 6.9, ["latigo cepa"], [t_planta])
+    #p2 = Especie("Charmander", "Prefiere las cosas calientes.", False, 0.6, 8.5, ["lanzallamas"], [t_fuego])
+    #p3 = Especie("Pikachu", "Ratón eléctrico.", False, 0.4, 6.0, ["impactrueno"], [t_elec])
+
+    ## Inicializamos el Singleton con esta lista
+    #PokeDex.get_instance([p1, p2, p3])
+    ## ------------------------------
+
     """
     app.register_blueprint(user_blueprint(db))
     app.register_blueprint(book_blueprint(db))
@@ -71,6 +90,8 @@ def create_app():
     app.register_blueprint(ver_equipos_blueprint(db))
     app.register_blueprint(detalles_equipo_blueprint(db))
     app.register_blueprint(crear_equipo_blueprint(db))
+    app.register_blueprint(changelog_blueprint(db))
+    app.register_blueprint(lista_pokemon_blueprint(db))
 
     """
     Esto es para que se redireccione a otra
@@ -80,6 +101,6 @@ def create_app():
 
     @app.route('/')
     def index() -> str:
-        return app.redirect("/mis-equipos")
+        return app.redirect("/lista_pokemon")
 
     return app

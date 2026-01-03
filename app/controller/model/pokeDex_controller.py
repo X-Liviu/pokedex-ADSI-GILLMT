@@ -1,3 +1,6 @@
+import json
+from app.controller.model.especie_controller import Especie
+
 class PokeDex:
     _instance = None  # Aquí guardaremos la instancia única
 
@@ -25,3 +28,30 @@ class PokeDex:
             if especie.esEsta(nombreEspecie):
                 return especie
         return None
+
+    def mostrarPokedex(self) -> str:
+        lista_final = []
+        for especie in self.listaEspecies:
+            lista_final.append(especie.getInfo())
+
+        return json.dumps(lista_final, indent=4)
+
+    def getInfo(self, nombreEspecie: str) -> str:
+        """
+        Busca un Pokémon específico y devuelve su JSON
+        """
+        # Paso 3.1.1: getInfo(nombreEspecie)
+        especie = self.buscarEspecie(nombreEspecie)
+        if especie:
+            # Paso 3.1.1.1: getInfo() de la entidad
+            return json.dumps(especie.getInfo(), indent=4)
+        return json.dumps({"error": "Pokémon no encontrado"})
+
+    def filtrarPokedex(self, filtro: str, valor: str) -> str:
+        lista_filtrada = []
+        #bucle para cada especie pokemon
+        for especie in self.listaEspecies:
+            if especie.comprobarFiltroValor(filtro, valor):
+                lista_filtrada.append(especie.getInfo())
+
+        return json.dumps(lista_filtrada, indent=4)

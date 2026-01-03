@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Marcodex - Pokédex</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap');
+
+        :root {
+            --pink-header: #ff66c4;
+            --pink-item: #d65db1;
+            --border: 3px solid #000;
+            --shadow: 4px 4px 0px #000;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .window {
+            width: 800px;
+            height: 550px;
+            background: white;
+            border: var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .window-header {
+            height: 50px;
+            background: var(--pink-header);
+            border-bottom: var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
+        .red { background: #ff4d4d; }
+        .yellow { background: #ffcc00; }
+        .green { background: #00cc00; }
+
+        .content { padding: 30px; flex: 1; display: flex; flex-direction: column; }
+
+        .pokemon-list-container { flex: 1; overflow-y: auto; padding-right: 10px; }
+        .pokemon-list { display: flex; flex-direction: column; gap: 10px; }
+
+        .pokemon-item {
+            width: fit-content;
+            min-width: 280px;
+            background: var(--pink-item);
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            padding: 8px 20px;
+            color: black;
+            border: 2px solid transparent;
+            text-decoration: none;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+
+        .pokemon-item:hover {
+            border: 2px solid black;
+            transform: translateX(10px);
+        }
+
+        .pokemon-icon {
+            width: 30px; height: 30px;
+            background: rgba(0,0,0,0.2);
+            border-radius: 50%;
+            margin-right: 15px;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* Buscador actualizado con selector */
+        .search-bar {
+            width: 550px; /* Un poco más ancho para el selector */
+            border: 2px solid black;
+            border-radius: 20px;
+            padding: 5px 15px;
+            display: flex;
+            align-items: center;
+            background: white;
+            margin-bottom: 20px;
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+        }
+
+        .filter-select {
+            border: none;
+            background: #f2e9e4;
+            border-right: 2px solid black;
+            margin-right: 10px;
+            padding: 5px;
+            font-family: inherit;
+            font-weight: bold;
+            cursor: pointer;
+            outline: none;
+        }
+
+        .search-input { border: none; outline: none; flex: 1; font-family: inherit; font-weight: bold; }
+
+        .btn-back { position: absolute; bottom: 20px; right: 30px; background: #f2e9e4; border: var(--border); padding: 10px 30px; border-radius: 12px; font-weight: bold; box-shadow: var(--shadow); cursor: pointer; text-decoration: none; color: black; }
+        .btn-back:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="window-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+            <span style="margin-left: 10px;">Pokédex</span>
+        </div>
+
+        <div class="content">
+            <form action="{{ url_for('lista_pokemon.lista_pokemon') }}" method="GET" class="search-bar">
+
+                <select name="filtro" class="filter-select">
+                    <option value="nombre">Nombre</option>
+                    <option value="tipo">Tipo</option>
+                </select>
+
+                <input type="text" name="valor" class="search-input" placeholder="Escribe para buscar...">
+
+                <button type="submit" style="background:none; border:none; cursor:pointer;">🔍</button>
+            </form>
+
+            <div class="pokemon-list-container">
+                <div class="pokemon-list">
+                    {% for pokemon in lista_pokemon %}
+                    <a href="{{ url_for('lista_pokemon.lista_pokemon', nombre=pokemon.nombre) }}" class="pokemon-item">
+                        <div class="pokemon-icon">🐾</div>
+                        <span class="pokemon-name">{{ pokemon.nombre }}</span>
+                    </a>
+                    {% endfor %}
+
+                    {% if not lista_pokemon %}
+                        <div style="text-align: center; margin-top: 50px; font-style: italic;">
+                            No se encontraron Pokémon. Prueba con otro filtro.
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <a href="/" class="btn-back">Volver</a>
+    </div>
+
+</body>
+</html>

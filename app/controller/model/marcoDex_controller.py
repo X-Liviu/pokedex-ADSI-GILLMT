@@ -1,4 +1,5 @@
 from app.controller.model.gestorPokeDex_controller import gestorPokeDex
+from app.controller.model.pokeDex_controller import PokeDex
 from app.controller.model.ranking_controller import Ranking
 from app.model.utils.custom_types import Custom_types
 from app.database.connection import Connection
@@ -105,6 +106,15 @@ class MarcoDex:
     def getNombreUsuario(self):
         #TODO
         return
+
+    def mostrarPokedex(self) -> str:
+        return PokeDex.get_instance().mostrarPokedex()
+
+    def mostrarInfo(self, nombreEspecie: str) -> str:
+        return PokeDex.get_instance().mostrarInfo(nombreEspecie)
+
+    def aplicarFiltro(self, filtro: str, valor: str) -> str:
+        return PokeDex.get_instance().filtrarPokedex(filtro, valor)
 
 if __name__ == "__main__":
     pass

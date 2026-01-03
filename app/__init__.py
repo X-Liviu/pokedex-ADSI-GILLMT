@@ -7,6 +7,7 @@ from app.controller.model.gestorUsuario_controller import gestorUsuario
 # MAEs
 from app.controller.model.marcoDex_controller import MarcoDex
 from app.controller.model.ranking_controller import Ranking
+from app.controller.ui.chatbot_controller import chatbot_blueprint
 from app.model.usuario import Usuario
 from app.controller.model.especie_controller import Especie
 from app.controller.model.tipo_controller import Tipo
@@ -92,6 +93,7 @@ def create_app():
     app.register_blueprint(crear_equipo_blueprint(db))
     app.register_blueprint(changelog_blueprint(db))
     app.register_blueprint(lista_pokemon_blueprint(db))
+    app.register_blueprint(chatbot_blueprint(db))
 
     """
     Esto es para que se redireccione a otra
@@ -101,6 +103,6 @@ def create_app():
 
     @app.route('/')
     def index() -> str:
-        return app.redirect("/lista_pokemon")
+        return app.redirect("/chatbot")
 
     return app

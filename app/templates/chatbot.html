@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Pokémon Dinámico</title>
+    <style>
+        :root {
+            --window-border: #000;
+            --header-pink: #ff79c6;
+            --bg-white: #ffffff;
+            --input-gray: #d9d9d9;
+        }
+
+        body {
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .window {
+            width: 600px;
+            height: 500px;
+            background-color: var(--bg-white);
+            border: 3px solid var(--window-border);
+            border-radius: 25px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .window-header {
+            background-color: var(--header-pink);
+            height: 45px;
+            border-bottom: 3px solid var(--window-border);
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+            flex-shrink: 0;
+        }
+
+        .dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid #000;
+        }
+        .dot-red { background-color: #ff5f56; }
+        .dot-yellow { background-color: #ffbd2e; }
+        .dot-green { background-color: #27c93f; }
+
+        .chat-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .bot-msg {
+            color: #000;
+            font-size: 1.1em;
+            line-height: 1.5;
+        }
+
+        .user-msg {
+            align-self: flex-end;
+            background-color: #eee;
+            padding: 8px 15px;
+            border-radius: 15px;
+            border: 2px solid #333;
+            font-weight: bold;
+            margin: 5px 0;
+        }
+
+        .input-area {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .input-container {
+            width: 90%;
+            background-color: var(--input-gray);
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            padding: 5px 20px;
+            border: 3px solid #000;
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        .send-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .send-icon {
+            width: 28px;
+            height: 28px;
+            fill: #000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="window">
+    <div class="window-header">
+        <div class="dot dot-red"></div>
+        <div class="dot dot-yellow"></div>
+        <div class="dot dot-green"></div>
+    </div>
+
+    <div class="chat-content" id="chatBox">
+        </div>
+
+    <div class="input-area">
+        <div class="input-container">
+            <input type="text" id="userInput" placeholder="Escribe aquí..." autocomplete="off">
+            <button class="send-btn" id="sendBtn">
+                <svg class="send-icon" viewBox="0 0 24 24">
+                    <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
+                </svg>
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const chatBox = document.getElementById('chatBox');
+    const userInput = document.getElementById('userInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // Estados: 'MENU' o 'WAITING_PARAM'
+    let currentState = 'MENU';
+    let selectedOption = null;
+
+    const menuHTML = `
+        <div class="bot-msg">
+            <strong>Para elegir introduce un número:</strong><br>
+            1-Ver mejor Pokémon de un equipo.<br>
+            2-Ver contra qué tipos es fuerte un Pokémon.<br>
+            3-Ver cadena evolutiva de un Pokémon.<br>
+            4-Ver Habilidades y estadísticas de un Pokémon.<br>
+            5-Volver
+        </div>`;
+
+    // Inicializar chat
+    window.onload = () => {
+        chatBox.innerHTML = menuHTML;
+    };
+
+    function appendMessage(text, isUser = false) {
+        const div = document.createElement('div');
+        div.className = isUser ? 'user-msg' : 'bot-msg';
+        div.innerHTML = text;
+        chatBox.appendChild(div);
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function handleInput() {
+        const input = userInput.value.trim();
+        if (!input) return;
+
+        appendMessage(input, true); // Mostrar lo que puso el usuario
+        userInput.value = "";
+
+        if (currentState === 'MENU') {
+            processMenuSelection(input);
+        } else if (currentState === 'WAITING_PARAM') {
+            processParameter(input);
+        }
+    }
+
+    function processMenuSelection(choice) {
+        if (choice === "5") {
+            appendMessage("Redirigiendo...");
+            setTimeout(() => {
+                window.location.href = "tu_otra_interfaz.html"; // Cambia esto
+            }, 1000);
+            return;
+        }
+
+        const options = {
+            "1": "Introduce el número identificador del equipo:",
+            "2": "Introduce el nombre del Pokémon para ver sus fortalezas:",
+            "3": "Introduce el nombre del Pokémon para ver su evolución:",
+            "4": "Introduce el nombre del Pokémon para ver sus estadísticas:"
+        };
+
+        if (options[choice]) {
+            selectedOption = choice;
+            currentState = 'WAITING_PARAM';
+            setTimeout(() => {
+                appendMessage(`<strong>Opción ${choice}:</strong> ${options[choice]}`);
+            }, 500);
+        } else {
+            setTimeout(() => {
+                appendMessage("Opción no válida. Por favor, elige un número del 1 al 5.");
+            }, 500);
+        }
+    }
+
+    function processParameter(param) {
+        // Aquí es donde en el futuro llamarías a tu método Python
+        setTimeout(() => {
+            appendMessage(`<i>Ejecutando proceso para: ${param}...</i>`);
+            appendMessage("<b>¡Proceso completado!</b>");
+
+            // Volver al menú inicial
+            setTimeout(() => {
+                appendMessage("<hr>"); // Separador visual opcional
+                appendMessage(menuHTML);
+                currentState = 'MENU';
+                selectedOption = null;
+            }, 1000);
+        }, 500);
+    }
+
+    sendBtn.addEventListener('click', handleInput);
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleInput();
+    });
+</script>
+
+</body>
+</html>

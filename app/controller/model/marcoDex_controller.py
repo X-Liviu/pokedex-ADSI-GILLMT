@@ -1,3 +1,4 @@
+from app.controller.model.chatbot_controller import ChatBot
 from app.controller.model.gestorPokeDex_controller import gestorPokeDex
 from app.controller.model.pokeDex_controller import PokeDex
 from app.controller.model.ranking_controller import Ranking
@@ -84,6 +85,12 @@ class MarcoDex:
     def descartarCambios(self, numEquipo,nombre_usuario):
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.descartarCambios(numEquipo)
+
+    def mostrarOpciones(self):
+        ChatBot.mostrarOpciones()
+
+    def mejorPokemon(self, numEquipo):
+        return gestorUsuario.mejorPokemon(numEquipo)
 
     def obtenerEfectos(self, nombreEspecie) :
         return gestorPokeDex.obtenerEfectos(nombreEspecie)

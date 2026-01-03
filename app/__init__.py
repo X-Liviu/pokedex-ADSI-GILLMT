@@ -103,6 +103,6 @@ def create_app():
 
     @app.route('/')
     def index() -> str:
-        return app.redirect("/chatbot")
+        return app.redirect("/changelog")
 
     return app

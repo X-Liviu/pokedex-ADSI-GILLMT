@@ -118,7 +118,7 @@ class MarcoDex:
         return PokeDex.get_instance().mostrarPokedex()
 
     def mostrarInfo(self, nombreEspecie: str) -> str:
-        return PokeDex.get_instance().mostrarInfo(nombreEspecie)
+        return PokeDex.get_instance().getInfo(nombreEspecie)
 
     def aplicarFiltro(self, filtro: str, valor: str) -> str:
         return PokeDex.get_instance().filtrarPokedex(filtro, valor)

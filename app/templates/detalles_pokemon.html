@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Marcodex - Detalle de {{ pokemon.nombre }}</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap');
+
+        :root {
+            --pink-header: #ff66c4;
+            --pink-item: #d65db1;
+            --border: 3px solid #000;
+            --shadow: 4px 4px 0px #000;
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .window {
+            width: 800px;
+            height: 550px;
+            background: white;
+            border: var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .window-header {
+            height: 50px;
+            background: var(--pink-header);
+            border-bottom: var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
+        .red { background: #ff4d4d; }
+        .yellow { background: #ffcc00; }
+        .green { background: #00cc00; }
+
+        .content {
+            padding: 30px;
+            flex: 1;
+            display: flex;
+            gap: 40px;
+            overflow: hidden;
+        }
+
+        .info-col {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .visual-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-left: 2px dashed #ddd;
+        }
+
+        h1 { margin: 0; font-size: 2.5rem; text-transform: capitalize; }
+        .description { font-style: italic; color: #444; line-height: 1.4; }
+
+        .label {
+            font-weight: bold;
+            color: var(--pink-item);
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .tag-list { display: flex; flex-wrap: wrap; gap: 8px; }
+        .tag {
+            background: var(--pink-item);
+            border: 2px solid black;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .image-placeholder {
+            width: 220px;
+            height: 220px;
+            background: #eee;
+            border: var(--border);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5rem;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-back {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            background: #f2e9e4;
+            border: var(--border);
+            padding: 10px 30px;
+            border-radius: 12px;
+            font-weight: bold;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            text-decoration: none;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="window-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+            <span style="margin-left: 10px;">Pokédex - Información Detallada</span>
+        </div>
+
+        <div class="content">
+            <div class="info-col">
+                <h1>{{ pokemon.nombre }}</h1>
+                <p class="description">{{ pokemon.descripcion }}</p>
+
+                <div>
+                    <span class="label">Tipos</span>
+                    <div class="tag-list">
+                        {% for tipo in pokemon.tipos %}
+                            <span class="tag">{{ tipo.nombre }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div>
+                    <span class="label">Dimensiones</span>
+                    <div style="display: flex; gap: 20px;">
+                        <p> <b>Altura:</b> {{ pokemon.alturaMedia }} m</p>
+                        <p> <b>Peso:</b> {{ pokemon.pesoMedio }} kg</p>
+                    </div>
+                </div>
+
+                <div>
+                    <span class="label">Clasificación</span>
+                    <p> <b>Legendario:</b>
+                        <span style="color: {{ '#d65db1' if pokemon.legendario else '#555' }}; font-weight: bold;">
+                            {{ 'Si' if pokemon.legendario else 'No' }}
+                        </span>
+                    </p>
+                </div>
+
+                <div>
+                    <span class="label">Movimientos</span>
+                    <div class="tag-list">
+                        {% for mov in pokemon.movimientos %}
+                            <span class="tag" style="background: white;">{{ mov }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="visual-col">
+                <div class="image-placeholder">🐾</div>
+                <h2 style="margin-top: 20px; letter-spacing: 2px;">{{ pokemon.nombre.upper() }}</h2>
+            </div>
+        </div>
+
+        <a href="{{ url_for('lista_pokemon.lista_pokemon') }}" class="btn-back">Volver</a>
+    </div>
+
+</body>
+</html>

@@ -1,6 +1,5 @@
 # Flask y herramientas
 from flask import Blueprint, render_template, session, redirect, url_for
-import json
 # Tus clases y tipos
 from app.controller.model.marcoDex_controller import MarcoDex
 from app.database.connection import Connection
@@ -28,11 +27,11 @@ def ver_equipos_blueprint(db: Connection) -> Blueprint:
             return render_template("error_no_equipos.html", nombre=nombre_sesion)
 
         # 3. Cargamos la lista
-        json_completo = mDex.getListaEquipos(nombre_sesion)
-        datos_diccionario = json.loads(json_completo)
+        datos = mDex.getListaEquipos(nombre_sesion)
+
         # 4. Renderizamos
         return render_template("mis_equipos.html",
                                usuario_nombre=nombre_sesion,
-                               equipos=datos_diccionario["equipos"])
+                               equipos=datos["equipos"])
 
     return bp_ver_equipos

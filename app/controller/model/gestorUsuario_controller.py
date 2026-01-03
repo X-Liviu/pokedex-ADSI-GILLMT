@@ -86,7 +86,7 @@ class gestorUsuario:
         return self.usuario.tieneEquipos()
 
     def getListaEquipos(self) :
-        return self.usuario.exportarEquiposJSON()
+        return self.usuario.getListaEquipos()
 
     def mostrarInfoEquipo(self, numEquipo) :
         equipo = self.usuario.buscarEquipo(numEquipo)

@@ -1,4 +1,3 @@
-import json
 from app.controller.model.equipo_controller import Equipo
 
 class Usuario:
@@ -48,7 +47,7 @@ class Usuario:
 
         return numeros_id
 
-    def exportarEquiposJSON(self):
+    def getListaEquipos(self):
         equipos_info = []
 
         # Recorremos la lista de objetos Equipo que tiene el usuario
@@ -74,8 +73,9 @@ class Usuario:
             "equipos": equipos_info
         }
 
+        return datos
         # Convertimos a cadena JSON con sangría para que sea legible
-        return json.dumps(datos, indent=4)
+        #return json.dumps(datos, indent=4)
 
     def mejorPokemon(self, numEquipo):
         elEquipo = self.buscarEquipo(numEquipo)

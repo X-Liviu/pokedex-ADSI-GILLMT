@@ -54,9 +54,7 @@ class Equipo:
     def mostrarInfoEquipo(self):
         resumen_equipo = []
         for pokemon in self.lista_pokemon:
-            json_pokemon = pokemon.getInfo()
-
-            info_completa = json.loads(json_pokemon)
+            info_completa = pokemon.getInfo()
 
             info_filtrada = {
                 "pokemon id": info_completa["pokemon id"],
@@ -67,7 +65,8 @@ class Equipo:
 
             resumen_equipo.append(info_filtrada)
 
-        return json.dumps(resumen_equipo)
+        return resumen_equipo
+        #return json.dumps(resumen_equipo)
 
     def borrarPokemon(self, idPokemon):
         self.lista_pokemon = [p for p in self.lista_pokemon if p.pokemon_id != idPokemon]

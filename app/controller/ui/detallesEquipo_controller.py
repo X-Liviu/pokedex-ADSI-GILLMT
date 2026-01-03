@@ -19,13 +19,12 @@ def detalles_equipo_blueprint(db: Connection) -> Blueprint:
 
         # Pedimos a MarcoDex la info de ese equipo concreto
         # mDex usará el nombre de usuario para buscar en su gestorUsuario
-        json_str = mDex.mostrarInfoEquipo(num, nombre_sesion)
+        equipo = mDex.mostrarInfoEquipo(num, nombre_sesion)
 
-        if not json_str or json_str == "[]":
+        if not equipo:
             # Si el equipo no existe o no es de ese usuario, volvemos a la lista
             return redirect(url_for('ver_equipos.ver_equipos'))
 
-        equipo = json.loads(json_str)
         return render_template("detalles_equipo.html",
                                equipo=equipo,
                                usuario=nombre_sesion)

@@ -51,6 +51,7 @@ CREATE TABLE IF NOT EXISTS Pokemon (
     Altura REAL,
     Peso REAL,
     NombreEspecie TEXT,
+    Imagen TEXT,
     FOREIGN KEY (NombreEspecie) REFERENCES EspeciePokemon(Nombre)
 );
 

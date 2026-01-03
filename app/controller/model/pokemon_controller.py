@@ -26,15 +26,8 @@ class Pokemon:
             "especie": self.especie,
             "imagen": self.imagen
         }
-        return json.dumps(datos, indent=4)
-
-    def guardarPokemon(self, numEquipo: int):
-        self.db.insert(
-            sentence="INSERT INTO Pokemon (idPokemon, NombreCustom, Rareza, Shiny, Altura, Peso, NombreEspecie) VALUES (%self.pokemon_id%, %self.nombre_custom%, %self.rareza%, %self.shiny%, %self.altura%, %self.peso%, %self.especie%)"
-        )
-        self.db.insert(
-            sentence="INSERT INTO PokemonEnEquipo (idEquipo, idPokemon) VALUES (%numEquipo%, %self.pokemon_id%)"
-        )
+        return datos
+        #return json.dumps(datos, indent=4)
 
     def clonarPokemon(self):
         return Pokemon(

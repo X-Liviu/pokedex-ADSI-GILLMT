@@ -1,6 +1,5 @@
 import sqlite3
 from app.controller.model.gestorCopiasEquipo_controller import gestorCopiasEquipo
-from app.model.usuario import Usuario
 
 class gestorUsuario:
     _instancias_usuarios = {}
@@ -65,7 +64,23 @@ class gestorUsuario:
             return -1
 
     def guardarEquipo(self, numEquipo):
-        self.usuario.guardarEquipo(numEquipo)
+        equipo = self.usuario.buscarEquipo(numEquipo)
+        if equipo:
+            self.db.insert(
+                sentence="INSERT INTO Equipo (idEquipo, NombreUsuario) VALUES (?,?)",
+                parameters=(numEquipo, self.usuario.nombre_usuario)
+            )
+
+        for pokemon in self.lista_pokemon:
+            info = pokemon.getInfo()
+            self.db.insert(
+                sentence="INSERT INTO Pokemon (idPokemon, NombreCustom, Rareza, Shiny, Altura, Peso, NombreEspecie, Imagen) VALUES (?,?,?,?,?,?,?,?)",
+                parameters=(info[0], info[1], info[2], info[3], info[4], info[5],info[6], info[7], info[8])
+            )
+            self.db.insert(
+                sentence="INSERT INTO PokemonEnEquipo (idEquipo, idPokemon) VALUES (?,?)",
+                parameters=(numEquipo, info[0])
+            )
 
     def tieneEquipos(self) :
         return self.usuario.tieneEquipos()

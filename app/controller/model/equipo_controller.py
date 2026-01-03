@@ -51,15 +51,6 @@ class Equipo:
         self.lista_pokemon.append(newPokemon)
         return 1  # Éxito
 
-    def guardarEquipo(self, numEquipo: int, nombre_usuario: str) :
-        self.db.insert(
-            sentence="INSERT INTO Equipo (idEquipo, NombreUsuario) VALUES (?,?)",
-            parameters=(numEquipo, nombre_usuario)
-        )
-
-        for pokemon in self.lista_pokemon:
-            pokemon.guardarPokemon(numEquipo)
-
     def mostrarInfoEquipo(self):
         resumen_equipo = []
         for pokemon in self.lista_pokemon:

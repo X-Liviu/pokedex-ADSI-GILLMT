@@ -1,24 +1,112 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>MarcoDex - Crear Equipo</title>
     <style>
-        /* Reutilizamos tu estilo de botones retro */
-        .boton-retro {
-            background: #EAE3D9; border: 3px solid black; padding: 15px 30px;
-            border-radius: 15px; font-weight: bold; color: #1A2B44;
-            text-decoration: none; box-shadow: 6px 6px 0 black;
-            display: inline-block; cursor: pointer;
+        body { font-family: sans-serif; background: white; padding: 40px; }
+
+        /* El marco rosa de la ventana */
+        .ventana {
+            border: 5px solid black;
+            border-radius: 30px;
+            overflow: hidden;
+            max-width: 1000px;
+            margin: auto;
         }
+        .barra-superior {
+            background: #FF69B4; /* Rosa fuerte */
+            padding: 15px;
+            border-bottom: 5px solid black;
+            display: flex;
+            gap: 10px;
+        }
+        .circulo { width: 25px; height: 25px; border-radius: 50%; border: 3px solid black; }
+
+        .contenido { display: flex; padding: 40px; gap: 60px; justify-content: center; }
+
+        /* Filas Rosas Estilo Píldora */
+        .pildora {
+            background: #D06084;
+            color: white;
+            border-radius: 50px;
+            padding: 10px 20px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            width: 300px;
+            font-weight: bold;
+        }
+
+        .icono-oscuro {
+            width: 35px;
+            height: 35px;
+            background: #5D2E46; /* El morado de tu dibujo */
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* Botones con Sombra Negra (como tu dibujo) */
+        .btn-retro {
+            background: white;
+            border: 4px solid black;
+            border-radius: 15px;
+            padding: 10px 25px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 5px 5px 0px black; /* LA SOMBRA NEGRA */
+            transition: 0.1s;
+        }
+        .btn-retro:active { box-shadow: 0px 0px 0px black; transform: translate(5px, 5px); }
     </style>
 </head>
-<body style="text-align: center; padding-top: 50px;">
-    <h1>Configura tu nuevo equipo</h1>
-    <p>Próximamente: Buscador de Pokémon aquí...</p>
+<body>
 
-    <div style="margin-top: 50px;">
-        <a href="{{ url_for('ver_equipos.ver_equipos') }}" class="boton-retro">Cancelar y Volver</a>
+<div class="ventana">
+    <div class="barra-superior">
+        <div class="circulo" style="background: #FF4D4D;"></div>
+        <div class="circulo" style="background: #FFD700;"></div>
+        <div class="circulo" style="background: #32CD32;"></div>
     </div>
+
+    <div class="contenido">
+        <div>
+            <h3>Lista Pokémon:</h3>
+            {% for esp in especies %}
+            <form method="POST" class="pildora">
+                <div class="icono-oscuro">
+                    <img src="{{ esp['imagen'] }}" width="25">
+                </div>
+                <span style="flex-grow: 1;">{{ esp['nombre'] }}</span>
+                <input type="hidden" name="accion" value="aniadir">
+                <input type="hidden" name="especie" value="{{ esp['nombre'] }}">
+                <button type="submit" style="background:none; border:none; color:white; cursor:pointer; font-weight:bold;">+</button>
+            </form>
+            {% endfor %}
+        </div>
+
+        <div>
+            <h3>Pokémon seleccionados:</h3>
+            {% for p in equipo %}
+            <div class="pildora">
+                <div class="icono-oscuro"><img src="{{ p['imagen'] }}" width="25"></div>
+                <span>{{ p['nombre_custom'] }}</span>
+            </div>
+            {% endfor %}
+
+            {% for i in range(6 - equipo|length) %}
+            <div class="pildora" style="opacity: 0.7;">
+                <div class="icono-oscuro"></div>
+                <span>...</span>
+            </div>
+            {% endfor %}
+
+            <div style="margin-top: 30px; display: flex; flex-direction: column; gap: 20px;">
+                <form method="POST"><input type="hidden" name="accion" value="guardar"><button class="btn-retro">Guardar</button></form>
+                <form method="POST"><input type="hidden" name="accion" value="cancelar"><button class="btn-retro" style="align-self: flex-end;">Cancelar</button></form>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

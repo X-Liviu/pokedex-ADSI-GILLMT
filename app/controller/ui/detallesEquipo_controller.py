@@ -27,6 +27,7 @@ def detalles_equipo_blueprint(db: Connection) -> Blueprint:
 
         return render_template("detalles_equipo.html",
                                equipo=equipo,
-                               usuario=nombre_sesion)
+                               usuario=nombre_sesion,
+                               num_equipo=num)
 
     return bp_detalles

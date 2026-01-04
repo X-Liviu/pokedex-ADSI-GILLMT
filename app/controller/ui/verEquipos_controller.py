@@ -16,8 +16,8 @@ def ver_equipos_blueprint(db: Connection) -> Blueprint:
         # 1. Identificamos al usuario
         nombre_sesion = session.get('username')
         #PRUEBA TATA
-        #if not session.get('username'):
-            #session['username'] = 'Tata'
+        # if not session.get('username'):
+        #     session['username'] = 'Tata'
 
         if not nombre_sesion:
             return redirect(url_for('iniciar_sesion')) # Redirección si no hay sesión

@@ -1,6 +1,6 @@
 import sqlite3
 from app.controller.model.gestorCopiasEquipo_controller import gestorCopiasEquipo
-from app.model import usuario
+from app.model.usuario import Usuario
 
 
 class gestorUsuario:
@@ -16,16 +16,17 @@ class gestorUsuario:
             # 1. Creamos el objeto Usuario completo primero
             usuario = db.getUsuario(nombre_usuario)
 
-            #PRUEBA TATA
-            #from app.model.usuario import Usuario
-            #from app.controller.model.equipo_controller import Equipo
-            #from app.controller.model.pokemon_controller import Pokemon
+            # #PRUEBAS TATA
+            # from app.model.pokemon import Pokemon
+            # from app.model.equipo import Equipo
+            # # 1. Creamos un par de Pokémon de prueba
             # p1 = Pokemon(
             #     pokemon_id=1,
             #     nombre_custom="Pika-Tata",
             #     especie="Pikachu",
             #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
             #     db=db)
+            #
             # p2 = Pokemon(
             #     pokemon_id=2,
             #     nombre_custom="Repollito",
@@ -33,23 +34,23 @@ class gestorUsuario:
             #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
             #     db=db
             # )
-
-            # Creamos el equipo y le metemos los Pokémon
-            #equipo_test = Equipo(numEquipo=1, db=db)
-            #equipo_test.lista_pokemon = [p1, p2]
-
-            # Creamos el objeto Usuario con los 6 argumentos que pide tu clase
-            #usuario_obj = Usuario(
-            #    "Tata",  # nombre
-            #    "Batata",  # apellido
-            #    "nombre_usuario",  # nombre_usuario
-            #    "tata@pokedex.com",  # correo
-            #    "1234",  # contrasena
-            #    "usuario",  # rol
-            #    [equipo_test],  # lista_equipos (metemos el objeto equipo_test directamente)
-            #    db  # db
-            #)
-
+            #
+            # # 2. Creamos un equipo y le metemos esos Pokémon
+            # equipo_test = Equipo(numEquipo=1, db=db)
+            # equipo_test.lista_pokemon = [p1, p2]
+            #
+            # # 3. Creamos el objeto Usuario con los datos de prueba
+            # # (Asegúrate de que el orden de los argumentos sea el de tu clase Usuario)
+            # usuario = Usuario(
+            #     nombre="Tata",
+            #     apellido="Batata",
+            #     nombre_usuario=nombre_usuario,
+            #     correo="tata@pokedex.com",
+            #     contrasena="1234",
+            #     rol="usuario",
+            #     lista_equipos=[equipo_test],  # Le pasamos el equipo con los 2 pokémon
+            #     db=db
+            # )
             # 2. Creamos el gestor pasándole el objeto completo
             cls._instancias_usuarios[nombre_usuario] = cls(db, usuario)
 
@@ -115,7 +116,7 @@ class gestorUsuario:
         gestorCopiasEquipo.clonarEquipo(self.usuario, numEquipo)
 
     def borrarEquipo(self, numEquipo) :
-        return usuario.borrarEquipo(numEquipo)
+        return self.usuario.borrarEquipo(numEquipo)
 
     def borrarPokemon(self, numEquipo, idPokemon):
         equipo = self.usuario.buscarEquipo(numEquipo)

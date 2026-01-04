@@ -1,29 +1,158 @@
-<div class="contenedor-detalles" style="text-align: center; padding: 40px;">
-    <h2>Equipo {{ equipo.numEquipo }}:</h2>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Detalles del Equipo - PokeDex</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #FFFFFF;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
 
-    <div class="lista-pokemon-centrada" style="display: inline-block; width: 350px;">
+        /* Contenedor Principal con el borde rosa de tus dibujos */
+        .contenedor-detalles {
+            position: relative;
+            width: 500px;
+            text-align: center;
+            padding: 60px 40px;
+            border: 8px solid #F2A7C3;
+            border-radius: 40px;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: #333;
+            font-size: 2em;
+            margin-bottom: 30px;
+        }
+
+        .lista-pokemon-centrada {
+            display: inline-block;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        /* Estilo Píldora Rosa */
+        .fila-rosa {
+            background: #D06084;
+            color: white;
+            margin: 12px 0;
+            padding: 12px 25px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 2px -2px rgba(0,0,0,0.1);
+        }
+
+        /* Círculo oscuro para el icono */
+        .circulo-icono-oscuro {
+            width: 40px;
+            height: 40px;
+            background-color: #5D2E46;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+
+        .nombre-pokemon {
+            font-weight: bold;
+            font-size: 1.1em;
+            letter-spacing: 0.5px;
+        }
+
+        /* BOTONES RETRO CON SOMBRA NEGRA SÓLIDA */
+        .boton-retro {
+            background: white;
+            color: black;
+            border: 3px solid black;
+            border-radius: 15px;
+            padding: 12px 30px;
+            font-weight: bold;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 1em;
+            cursor: pointer;
+
+            /* La sombra negra característica de tu diseño */
+            box-shadow: 6px 6px 0px 0px black;
+
+            transition: all 0.1s ease;
+            margin-top: 20px;
+        }
+
+        /* Efecto al hacer clic */
+        .boton-retro:active {
+            box-shadow: 0px 0px 0px 0px black;
+            transform: translate(6px, 6px);
+        }
+
+        /* Botón Volver en la esquina inferior */
+        .btn-volver {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            padding: 8px 25px;
+            font-size: 0.9em;
+        }
+
+        /* Estilo para los huecos vacíos */
+        .hueco-vacio {
+            background: #D06084;
+            opacity: 0.5;
+        }
+
+        .texto-vacio {
+            color: rgba(255, 255, 255, 0.6);
+            font-style: italic;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+<div class="contenedor-detalles">
+    <h2>Equipo #{{ num_equipo }}</h2>
+
+    <div class="lista-pokemon-centrada">
         {% for pokemon in equipo %}
-        <div class="fila-rosa" style="background: #D06084; margin: 10px 0; padding: 10px 20px; border-radius: 40px; display: flex; align-items: center;">
-            <img src="{{ pokemon['imagen'] }}" style="width: 35px; margin-right: 15px;" alt="{{ pokemon['especie'] }}">
-            <span style="font-weight: bold;">{{ pokemon['nombre_custom'] }}</span>
+        <div class="fila-rosa">
+            <div class="circulo-icono-oscuro">
+                <img src="{{ pokemon['imagen'] }}" style="width: 28px;" alt="{{ pokemon['especie'] }}">
+            </div>
+            <span class="nombre-pokemon">{{ pokemon['nombre_custom'] }}</span>
         </div>
         {% endfor %}
 
-        {# Para los huecos vacíos: como 'equipo' es la lista, usamos su longitud #}
         {% if equipo|length < 6 %}
             {% for i in range(6 - equipo|length) %}
-            <div class="fila-rosa" style="background: #D06084; opacity: 0.6; margin: 10px 0; padding: 10px 20px; border-radius: 40px;">
-                <div style="width: 25px; height: 25px; background: rgba(0,0,0,0.2); border-radius: 50%;"></div>
+            <div class="fila-rosa hueco-vacio">
+                <div class="circulo-icono-oscuro" style="background: rgba(0,0,0,0.2);"></div>
+                <span class="texto-vacio">Disponible</span>
             </div>
             {% endfor %}
         {% endif %}
     </div>
 
-    <div style="margin-top: 30px;">
-        <a href="#" class="boton-retro">Modificar Equipo</a>
+    <div style="margin-top: 40px;">
+        <a href="{{ url_for('crear_equipo.crear_equipo') }}" class="boton-retro">
+            Modificar Equipo
+        </a>
     </div>
 
-    <a href="{{ url_for('ver_equipos.ver_equipos') }}" class="boton-retro" style="position: absolute; bottom: 40px; right: 40px; padding: 10px 30px;">
+    <a href="{{ url_for('ver_equipos.ver_equipos') }}" class="boton-retro btn-volver">
         Volver
     </a>
 </div>
+
+</body>
+</html>

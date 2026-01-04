@@ -1,8 +1,6 @@
-import json
 import random
-import sqlite3
 
-from app.controller.model.pokemon_controller import Pokemon
+from app.model.pokemon import Pokemon
 from app.controller.model.pokeDex_controller import PokeDex
 
 class Equipo:

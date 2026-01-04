@@ -16,7 +16,7 @@ class gestorUsuario:
             # 1. Creamos el objeto Usuario completo primero
             usuario = db.getUsuario(nombre_usuario)
 
-            #PRUEBA
+            #PRUEBA TATA
             #from app.model.usuario import Usuario
             #from app.controller.model.equipo_controller import Equipo
             #from app.controller.model.pokemon_controller import Pokemon
@@ -68,21 +68,38 @@ class gestorUsuario:
     def guardarEquipo(self, numEquipo):
         equipo = self.usuario.buscarEquipo(numEquipo)
         if equipo:
+            # 1. Guardamos el Equipo
             self.db.insert(
                 sentence="INSERT INTO Equipo (idEquipo, NombreUsuario) VALUES (?,?)",
                 parameters=(numEquipo, self.usuario.nombre_usuario)
             )
 
-        for pokemon in self.lista_pokemon:
-            info = pokemon.getInfo()
-            self.db.insert(
-                sentence="INSERT INTO Pokemon (idPokemon, NombreCustom, Rareza, Shiny, Altura, Peso, NombreEspecie, Imagen) VALUES (?,?,?,?,?,?,?,?)",
-                parameters=(info[0], info[1], info[2], info[3], info[4], info[5],info[6], info[7], info[8])
-            )
-            self.db.insert(
-                sentence="INSERT INTO PokemonEnEquipo (idEquipo, idPokemon) VALUES (?,?)",
-                parameters=(numEquipo, info[0])
-            )
+            # 2. Guardamos cada Pokémon del equipo
+            for pokemon in equipo.lista_pokemon:  # Usamos la lista del equipo encontrado
+                info = pokemon.getInfo()  # Esto devuelve un diccionario
+
+                # Usamos las llaves del diccionario para los parámetros
+                self.db.insert(
+                    sentence="""INSERT INTO Pokemon
+                                (idPokemon, NombreCustom, Rareza, Shiny, Altura, Peso, NombreEspecie, Imagen)
+                                VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                    parameters=(
+                        info["pokemon id"],
+                        info["nombre_custom"],
+                        info["rareza"],
+                        1 if info["shiny"] else 0,  # Convertimos True/False a 1/0 para SQL
+                        info["altura"],
+                        info["peso"],
+                        info["especie"],
+                        info["imagen"]
+                    )
+                )
+
+                # 3. Relacionamos el Pokémon con el Equipo
+                self.db.insert(
+                    sentence="INSERT INTO PokemonEnEquipo (idEquipo, idPokemon) VALUES (?,?)",
+                    parameters=(numEquipo, info["pokemon id"])
+                )
 
     def tieneEquipos(self) :
         return self.usuario.tieneEquipos()

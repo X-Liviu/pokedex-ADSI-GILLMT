@@ -25,8 +25,8 @@ class MarcoDex:
             MarcoDex(db)
         return cls.myMarcoDex
 
-    def mostrarUsuarios(self) -> Custom_types.Ranking.Usuarios:
-        return Ranking.getMyRanking(self.db).mostrarUsuarios()
+    def mostrarRanking(self) -> Custom_types.Ranking.Usuarios:
+        return Ranking.getMyRanking(self.db).mostrarRanking()
 
     def mostrarUsuario(self, pNombreUsuario: str) -> Custom_types.Ranking.Usuario:
         return Ranking.getMyRanking(self.db).mostrarUsuario(pNombreUsuario)

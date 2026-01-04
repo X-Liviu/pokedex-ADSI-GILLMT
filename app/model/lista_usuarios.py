@@ -34,8 +34,28 @@ class ListaUsuarios:
 
                 self.usuarios.append(nuevo)
 
+    def get_index(self, p_nombre: str) -> int:
+        resultado: int = -1
+        indice: int = 0
+        longitud: int = len(self.usuarios)
+
+        while indice < longitud and resultado == -1:
+            usuario_actual = self.usuarios[indice]
+
+            if usuario_actual.es_mi_nombre(p_nombre):
+                resultado = indice
+            else:
+                indice += 1
+
+        return resultado
+
     def to_dict(self, p_nombre: str) -> Custom_types.Ranking.Usuarios:
-        return {
-            p_nombre:
-            [usuario.to_dict() for usuario in self.usuarios]
-        }
+        resultado: Custom_types.Ranking = {p_nombre: []}
+
+        for indice, usuario in enumerate(self.usuarios):
+            usuario_diccionario = usuario.to_dict()
+            usuario_actual = { "nombre" : usuario_diccionario["nombre"], "rareza" : usuario_diccionario["rareza"], "puesto" : indice + 1 }
+
+            resultado[p_nombre].append(usuario_actual)
+
+        return resultado

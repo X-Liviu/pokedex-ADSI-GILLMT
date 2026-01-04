@@ -25,30 +25,32 @@ class Ranking:
             Ranking(db)
         return cls.myRanking
 
-    def mostrarUsuarios(self) -> Custom_types.Ranking.Usuarios:
+    def mostrarRanking(self) -> Custom_types.Ranking.Usuarios:
         """
         pre:
         post: Devuelve un diccionario con todos los usuarios existentes
         en la base de datos en orden de mas rareza a menos rareza
         """
-        resultado: Custom_types.Ranking.Usuarios = None
+        return self._get_lista_usuarios().to_dict("usuarios")
 
+    def _get_lista_usuarios(self) -> ListaUsuarios:
         sentence: str = """
-        SELECT Usuario.NombreUsuario, Pokemon.Rareza
-        from Usuario
-        inner join Equipo
-        on Usuario.NombreUsuario = Equipo.NombreUsuario
-        inner join PokemonEnEquipo
-        on Equipo.idEquipo = PokemonEnEquipo.idEquipo
-        inner join Pokemon
-        on Pokemon.idPokemon = PokemonEnEquipo.idPokemon
-        Order By Usuario.NombreUsuario;
-        """
+                        SELECT Usuario.NombreUsuario, Pokemon.Rareza
+                        from Usuario
+                                 inner join Equipo
+                                            on Usuario.NombreUsuario = Equipo.NombreUsuario
+                                 inner join PokemonEnEquipo
+                                            on Equipo.idEquipo = PokemonEnEquipo.idEquipo
+                                 inner join Pokemon
+                                            on Pokemon.idPokemon = PokemonEnEquipo.idPokemon
+                        Order By Usuario.NombreUsuario; \
+                        """
 
         resultado_sql: List[sqlite3.Row] = self.bd.select(sentence)
+        resultado: ListaUsuarios = None
 
         if len(resultado_sql) > 0:
-            lista_usuarios_actual = ListaUsuarios()
+            resultado = ListaUsuarios()
 
             usuario_actual: UsuarioRanking = UsuarioRanking("", 0)
 
@@ -56,16 +58,19 @@ class Ranking:
 
                 if not usuario_actual.es_mi_nombre(fila["NombreUsuario"]):
                     if not usuario_actual.es_mi_nombre(""):
-                        lista_usuarios_actual.insercion_ordenada(usuario_actual)
+                        resultado.insercion_ordenada(usuario_actual)
 
                     usuario_actual = UsuarioRanking(fila["NombreUsuario"], 0)
 
                 usuario_actual.add_rareza(int(fila["Rareza"]))
 
-            lista_usuarios_actual.insercion_ordenada(usuario_actual)
-            resultado = lista_usuarios_actual.to_dict("usuarios")
+            resultado.insercion_ordenada(usuario_actual)
 
         return resultado
+
+    def _get_puesto_by_nombre(self, nombre: str) -> int:
+        lista_actual: ListaUsuarios = self._get_lista_usuarios()
+        return ( lista_actual.get_index(nombre) + 1)
 
     def mostrarUsuario(self, pNombreUsuario: str) -> Custom_types.Ranking.Usuario:
         """
@@ -91,7 +96,8 @@ class Ranking:
         resultado_sql: List[sqlite3.Row] = self.bd.select(sentence, (pNombreUsuario,))
 
         if len(resultado_sql) > 0:
-            resultado = {"nombre": pNombreUsuario, "equipoEspecie": [], "equipoCustom": []}
+            puesto_actual: int = self._get_puesto_by_nombre(pNombreUsuario)
+            resultado = {"nombre": pNombreUsuario, "equipoEspecie": [], "equipoCustom": [], "puesto": puesto_actual}
 
             for fila in resultado_sql:
                 resultado["equipoEspecie"].append(fila["NombreEspecie"])

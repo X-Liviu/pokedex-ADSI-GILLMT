@@ -16,6 +16,6 @@ def ranking_blueprint(db: Connection) -> Blueprint:
 
     @bp_ranking.route(f"/{nombre_direccion_ranking}", methods=['GET'])
     def ranking() -> str:
-        return render_template("ranking.html", usuarios = marcodex_service.mostrarUsuarios())
+        return render_template("ranking.html", usuarios = marcodex_service.mostrarRanking())
 
     return bp_ranking

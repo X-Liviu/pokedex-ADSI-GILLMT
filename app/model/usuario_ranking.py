@@ -22,7 +22,7 @@ class UsuarioRanking:
     def add_rareza(self, rareza: int) -> None:
         self.rareza += rareza
 
-    def to_dict(self) -> Custom_types.Ranking.Usuario:
+    def to_dict(self) -> Custom_types.Ranking.CalificacionUsuario:
         return {
             "nombre": self.nombre,
             "rareza": self.rareza

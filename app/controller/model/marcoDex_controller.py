@@ -82,6 +82,10 @@ class MarcoDex:
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.compararCopias(numEquipo)
 
+    def borrarEquipo(self,numEquipo, nombre_usuario):
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
+        return gestor.borrarEquipo(numEquipo)
+
     def descartarCambios(self, numEquipo,nombre_usuario):
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.descartarCambios(numEquipo)

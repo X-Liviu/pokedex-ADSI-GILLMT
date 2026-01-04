@@ -1,5 +1,7 @@
 import sqlite3
 from app.controller.model.gestorCopiasEquipo_controller import gestorCopiasEquipo
+from app.model import usuario
+
 
 class gestorUsuario:
     _instancias_usuarios = {}
@@ -94,6 +96,9 @@ class gestorUsuario:
 
     def clonarEquipo(self, numEquipo) :
         gestorCopiasEquipo.clonarEquipo(self.usuario, numEquipo)
+
+    def borrarEquipo(self, numEquipo) :
+        return usuario.borrarEquipo(numEquipo)
 
     def borrarPokemon(self, numEquipo, idPokemon):
         equipo = self.usuario.buscarEquipo(numEquipo)

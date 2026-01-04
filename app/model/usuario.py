@@ -34,6 +34,13 @@ class Usuario:
         equipo = self.buscarEquipo(numEquipo)
         equipo.guardarEquipo(numEquipo, self.nombre_usuario)
 
+    def borrarEquipo(self, numEquipo):
+        equipo = self.buscarEquipo(numEquipo)
+        if equipo:
+            self.lista_equipos.remove(equipo)
+            return True
+        return False
+
     def tieneEquipos(self):
         if self.lista_equipos:
             return True

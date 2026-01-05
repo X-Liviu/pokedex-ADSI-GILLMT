@@ -30,10 +30,6 @@ class Usuario:
                 return equipo
         return None
 
-    def guardarEquipo(self, numEquipo: int):
-        equipo = self.buscarEquipo(numEquipo)
-        equipo.guardarEquipo(numEquipo, self.nombre_usuario)
-
     def borrarEquipo(self, numEquipo):
         equipo = self.buscarEquipo(numEquipo)
         if equipo:
@@ -46,13 +42,6 @@ class Usuario:
             return True
         else:
             return False
-
-    def obtenerEquipos(self):
-        numeros_id = []
-        for equipo in self.lista_equipos:
-            numeros_id.append(equipo.id)
-
-        return numeros_id
 
     def getListaEquipos(self):
         equipos_info = []

@@ -81,7 +81,6 @@ class Equipo:
                 return True
         return False
 
-
     def clonar(self):
         nuevoEquipo = Equipo(self.numEquipo)
         nuevoEquipo.ultimo_id_pokemon = self.ultimo_id_pokemon

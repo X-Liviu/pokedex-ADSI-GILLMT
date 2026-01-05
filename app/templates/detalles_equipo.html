@@ -71,14 +71,14 @@
     </div>
 
     <div style="margin-top: 40px;">
-        <a href="{{ url_for('crear_equipo.crear_equipo') }}" class="boton-retro">
+        <a href="{{ url_for('modificar_equipo.modificar_equipo', num_equipo=num_equipo) }}" class="boton-retro">
             Modificar Equipo
         </a>
     </div>
 
-    <a href="{{ url_for('ver_equipos.ver_equipos') }}" class="boton-retro btn-volver">
-        Volver
-    </a>
+        <a href="{{ url_for('ver_equipos.ver_equipos') }}" class="boton-retro btn-volver">
+            Volver
+        </a>
 </div>
 
 </body>

@@ -3,8 +3,7 @@ import sqlite3
 
 class Pokemon:
     def __init__(self, pokemon_id=0, nombre_custom="", rareza=0.0,
-                 shiny=False, altura=0.0, peso=0.0, especie="", imagen="",
-                 db=None):
+                 shiny=False, altura=0.0, peso=0.0, especie="", imagen=""):
         self.pokemon_id = pokemon_id
         self.nombre_custom = nombre_custom
         self.rareza = rareza
@@ -13,7 +12,6 @@ class Pokemon:
         self.peso = peso
         self.especie = especie
         self.imagen = imagen
-        self.db = db
 
     def getInfo(self):
         datos = {
@@ -33,10 +31,5 @@ class Pokemon:
         return Pokemon(
             self.pokemon_id, self.nombre_custom, self.rareza,
             self.shiny, self.altura, self.peso, self.especie,
-            self.imagen, self.db
-        )
-
-    def borrarPokemonBD(self):
-        self.db.delete(
-            sentence="DELETE FROM Pokemon * WHERE idPokemon = %self.idPokemon%"
+            self.imagen
         )

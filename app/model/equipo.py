@@ -4,11 +4,10 @@ from app.model.pokemon import Pokemon
 from app.controller.model.pokeDex_controller import PokeDex
 
 class Equipo:
-    def __init__(self, numEquipo: int, db):
+    def __init__(self, numEquipo: int):
         self.numEquipo = numEquipo
         self.lista_pokemon = []
         self.ultimo_id_pokemon = 0
-        self.db = db
 
     def esEsteEquipo(self, num):
         return self.numEquipo == num
@@ -49,7 +48,6 @@ class Equipo:
             peso=datos.get("pesoMedio", 0.0),
             especie=nombreEspecie,
             imagen=datos.get("imagen", ""),
-            db=self.db
         )
 
         self.lista_pokemon.append(newPokemon)
@@ -85,7 +83,7 @@ class Equipo:
 
 
     def clonar(self):
-        nuevoEquipo = Equipo(self.numEquipo,self.db)
+        nuevoEquipo = Equipo(self.numEquipo)
         nuevoEquipo.ultimo_id_pokemon = self.ultimo_id_pokemon
         for pokemon in self.lista_pokemon:
             nuevoPokemon = pokemon.clonarPokemon()
@@ -96,7 +94,6 @@ class Equipo:
     def restaurarEquipo(self, equipo):
         self.numEquipo = equipo.numEquipo
         self.ultimo_id_pokemon = equipo.ultimo_id_pokemon
-        self.db = equipo.db
         self.lista_pokemon = []
         for pokemon in equipo.lista_pokemon:
             self.lista_pokemon.append(pokemon.clonarPokemon())

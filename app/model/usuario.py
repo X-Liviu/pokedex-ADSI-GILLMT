@@ -20,7 +20,7 @@ class Usuario:
         else:
             numEquipo = 1
 
-        nuevo_equipo = Equipo(numEquipo,self.db)
+        nuevo_equipo = Equipo(numEquipo)
         self.lista_equipos.append(nuevo_equipo)
         return nuevo_equipo.numEquipo
 

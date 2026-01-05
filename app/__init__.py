@@ -20,6 +20,7 @@ from app.controller.ui.verEquipos_controller import ver_equipos_blueprint
 from app.controller.ui.detallesEquipo_controller import detalles_equipo_blueprint
 from app.controller.ui.crearEquipo_controller import crear_equipo_blueprint
 from app.controller.ui.lista_pokemon_controller import lista_pokemon_blueprint
+from app.controller.ui.modificar_equipo_controller import modificar_equipo_blueprint
 
 # Tipos de datos
 from config import Config
@@ -94,6 +95,7 @@ def create_app():
     app.register_blueprint(changelog_blueprint(db))
     app.register_blueprint(lista_pokemon_blueprint(db))
     app.register_blueprint(chatbot_blueprint(db))
+    app.register_blueprint(modificar_equipo_blueprint(db))
 
     """
     Esto es para que se redireccione a otra

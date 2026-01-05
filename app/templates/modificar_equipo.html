@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Crear Equipo - PokeDex</title>
+    <title>Modificar Equipo - PokeDex</title>
     <style>
         body { font-family: sans-serif; background: white; padding: 40px; }
 
@@ -104,7 +104,7 @@
         <div class="circulo"></div>
         <div class="circulo"></div>
         <h2 style="color: white; margin: 0; font-size: 1.2em; margin-left: 20px;">
-            CREAR NUEVO EQUIPO
+            MODIFICANDO EQUIPO #{{ num_equipo }}
         </h2>
     </div>
 
@@ -161,7 +161,7 @@
             <div style="margin-top: 30px; display: flex; flex-direction: column; gap: 20px;">
                 <form method="POST">
                     <input type="hidden" name="accion" value="guardar">
-                    <button class="btn-retro" style="width: 100%;">GUARDAR EQUIPO</button>
+                    <button class="btn-retro" style="width: 100%;">ACTUALIZAR EQUIPO</button>
                 </form>
                 <form method="POST">
                     <input type="hidden" name="accion" value="cancelar">

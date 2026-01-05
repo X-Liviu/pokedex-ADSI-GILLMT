@@ -8,6 +8,7 @@ class gestorUsuario:
     def __init__(self, db, usuario) :
         self.db = db
         self.usuario = usuario
+        self.g_copias = gestorCopiasEquipo()
         pass
 
     @classmethod
@@ -24,15 +25,14 @@ class gestorUsuario:
             #     pokemon_id=11,
             #     nombre_custom="Pika-Tata",
             #     especie="Pikachu",
-            #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
-            #     db=db)
+            #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
+            # )
             #
             # p2 = Pokemon(
             #     pokemon_id=12,
             #     nombre_custom="Repollito",
             #     especie="Bulbasaur",
-            #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-            #     db=db
+            #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"
             # )
             #
             # p3 = Pokemon(
@@ -40,14 +40,13 @@ class gestorUsuario:
             #     nombre_custom="tataCerdo",
             #     shiny=True,
             #     especie="Spearow",
-            #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/21.png",
-            #     db=db
+            #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/shiny/21.png"
             # )
             #
             # # 2. Creamos un equipo y le metemos esos Pokémon
-            # equipo_test = Equipo(numEquipo=1, db=db)
+            # equipo_test = Equipo(numEquipo=1)
             # equipo_test.lista_pokemon = [p1, p2]
-            # equipo_test2 = Equipo(numEquipo=2, db=db)
+            # equipo_test2 = Equipo(numEquipo=2)
             # equipo_test2.lista_pokemon = [p1, p3]
             #
             # # 3. Creamos el objeto Usuario con los datos de prueba
@@ -116,7 +115,7 @@ class gestorUsuario:
         return equipo.mostrarInfoEquipo()
 
     def clonarEquipo(self, numEquipo) :
-        gestorCopiasEquipo.clonarEquipo(self.usuario, numEquipo)
+        self.g_copias.clonarEquipo(self.usuario, numEquipo)
 
     def borrarEquipo(self, numEquipo) :
         return self.usuario.borrarEquipo(numEquipo)
@@ -127,12 +126,12 @@ class gestorUsuario:
             equipo.borrarPokemon(idPokemon)
 
     def compararCopias(self,numEquipo) :
-        gestorCopiasEquipo.compararCopiasEliminar(self.usuario, numEquipo)
-        gestorCopiasEquipo.compararCopiasAniadir(self.usuario, numEquipo)
-        gestorCopiasEquipo.finalizarEdicion(self.usuario.nombre_usuario)
+        self.g_copias.compararCopiasEliminar(self.usuario, numEquipo, self.db)
+        self.g_copias.compararCopiasAniadir(self.usuario, numEquipo, self.db)
+        self.g_copias.finalizarEdicion(self.usuario.nombre_usuario)
 
     def descartarCambios(self, numEquipo) :
-        gestorCopiasEquipo.descartarCambios(self.usuario, numEquipo)
+        self.g_copias.descartarCambios(self.usuario, numEquipo)
 
     def mejorPokemon(self, numEquipo) :
         return self.usuario.mejorPokemon(numEquipo)

@@ -15,12 +15,13 @@ def ver_equipos_blueprint(db: Connection) -> Blueprint:
     def ver_equipos():
         # 1. Identificamos al usuario
         nombre_sesion = session.get('username')
-        #PRUEBA TATA
-        # if not session.get('username'):
-        #     session['username'] = 'Tata'
 
-        if not nombre_sesion:
-            return redirect(url_for('iniciar_sesion')) # Redirección si no hay sesión
+        #PRUEBA TATA
+        if not session.get('username'):
+            session['username'] = 'Tata'
+
+        #if not nombre_sesion:
+        #    return redirect(url_for('iniciar_sesion')) # Redirección si no hay sesión
 
         # 2. Comprobamos si tiene equipos
         if not mDex.tieneEquipos(nombre_sesion):

@@ -24,6 +24,12 @@ class Equipo:
             print(f"Error: La especie {nombreEspecie} no existe.")
             return -1  # Especie no encontrada en la PokeDex
 
+        for pokemon in self.lista_pokemon:
+            if pokemon.nombre_custom == nombrePokemon :
+                return -2
+            elif pokemon.especie == nombreEspecie :
+                return -3
+
         # Obtenemos el diccionario de la especie
         datos = especie_obj.getInfo()
         # 2. Generamos el ID único (Tu lógica de concatenar numEquipo + contador)

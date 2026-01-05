@@ -37,7 +37,7 @@ class Especie:
             "alturaMedia": self.alturaMedia,
             "pesoMedio": self.pesoMedio,
             "movimientos": self.movimientos,
-            "tipos": [t.to_dict() for t in self.tipos],
+            "tipos": self.tipos,
             "imagen": self.imagen
         }
         return datos

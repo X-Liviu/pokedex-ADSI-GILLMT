@@ -40,6 +40,10 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
                 resultado = mDex.aniadirPokemon(especie, nombre_custom, num_equipo, nombre_sesion)
                 if resultado == -1:
                     flash("¡El equipo ya está completo (máximo 6)!")
+                elif resultado == -2:
+                    flash("Ya tienes un Pokemon que se llama así!!")
+                elif resultado == -3:
+                    flash("Esta especie ya está en tu equipo")
 
             elif accion == "guardar":
                 # Persistencia final en la Base de Datos

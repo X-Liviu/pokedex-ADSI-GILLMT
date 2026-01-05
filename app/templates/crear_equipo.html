@@ -23,6 +23,19 @@
 
         .contenido { display: flex; padding: 40px; gap: 60px; justify-content: center; }
 
+        /* Estilo para las Alertas Flash */
+        .alerta-error {
+            background: #FF4D4D; /* Rojo vibrante */
+            color: white;
+            border: 3px solid black;
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: bold;
+            box-shadow: 4px 4px 0px black; /* Sombra sólida marca Tata */
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
         /* Filas Rosas Estilo Píldora */
         .pildora {
             background: #D06084;
@@ -33,19 +46,20 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            width: 300px;
+            width: 330px; /* Un poco más ancho para que quepa el input */
             font-weight: bold;
         }
 
         .icono-oscuro {
             width: 35px;
             height: 35px;
-            background: #5D2E46; /* El morado de tu dibujo */
+            background: #5D2E46;
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
+            flex-shrink: 0;
         }
 
-        /* Botones con Sombra Negra (como tu dibujo) */
+        /* Botones con Sombra Negra */
         .btn-retro {
             background: white;
             border: 4px solid black;
@@ -53,7 +67,7 @@
             padding: 10px 25px;
             font-weight: bold;
             cursor: pointer;
-            box-shadow: 5px 5px 0px black; /* LA SOMBRA NEGRA */
+            box-shadow: 5px 5px 0px black;
             transition: 0.1s;
         }
         .btn-retro:active { box-shadow: 0px 0px 0px black; transform: translate(5px, 5px); }
@@ -68,45 +82,78 @@
         <div class="circulo" style="background: #32CD32;"></div>
     </div>
 
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="contenedor-flashes" style="padding: 20px 40px 0 40px;">
+          {% for message in messages %}
+            <div class="alerta-error">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+
     <div class="contenido">
         <div>
             <h3>Lista Pokémon:</h3>
             {% for esp in especies %}
-            <form method="POST" class="pildora">
-                <div class="icono-oscuro">
-                    <img src="{{ esp['imagen'] }}" width="25">
-                </div>
-                <span style="flex-grow: 1;">{{ esp['nombre'] }}</span>
-                <input type="hidden" name="accion" value="aniadir">
-                <input type="hidden" name="especie" value="{{ esp['nombre'] }}">
-                <button type="submit" style="background:none; border:none; color:white; cursor:pointer; font-weight:bold;">+</button>
-            </form>
+            <div style="display: flex; flex-direction: column;">
+                <form method="POST" class="pildora">
+                    <div class="icono-oscuro">
+                        <img src="{{ esp['imagen'] }}" width="25">
+                    </div>
+                    <span style="flex-grow: 1;">{{ esp['nombre'] }}</span>
+
+                    <input type="hidden" name="accion" value="aniadir">
+                    <input type="hidden" name="especie" value="{{ esp['nombre'] }}">
+
+                    <input type="text"
+                           name="nombre_custom"
+                           placeholder="Mote..."
+                           required
+                           style="width: 70px; border: 2px solid black; border-radius: 8px; padding: 2px 5px; font-size: 0.8em;">
+
+                    <button type="submit" style="background:none; border:none; color:white; cursor:pointer; font-weight:bold; font-size: 1.2em; padding-left: 10px;">+</button>
+                </form>
+            </div>
             {% endfor %}
         </div>
 
         <div>
-            <h3>Pokémon seleccionados:</h3>
+            <h3>Pokémon seleccionados ({{ equipo|length }}/6):</h3>
             {% for p in equipo %}
             <div class="pildora">
                 <div class="icono-oscuro"><img src="{{ p['imagen'] }}" width="25"></div>
                 <span>{{ p['nombre_custom'] }}</span>
+                <span style="font-size: 0.7em; opacity: 0.8; margin-left: auto;">{{ p['especie'] }}</span>
             </div>
             {% endfor %}
 
             {% for i in range(6 - equipo|length) %}
-            <div class="pildora" style="opacity: 0.7;">
-                <div class="icono-oscuro"></div>
-                <span>...</span>
+            <div class="pildora" style="opacity: 0.5; border: 2px dashed rgba(255,255,255,0.4); background: #b05070;">
+                <div class="icono-oscuro" style="background: rgba(0,0,0,0.1);"></div>
+                <span style="color: rgba(255,255,255,0.5);">...</span>
             </div>
             {% endfor %}
 
             <div style="margin-top: 30px; display: flex; flex-direction: column; gap: 20px;">
-                <form method="POST"><input type="hidden" name="accion" value="guardar"><button class="btn-retro">Guardar</button></form>
-                <form method="POST"><input type="hidden" name="accion" value="cancelar"><button class="btn-retro" style="align-self: flex-end;">Cancelar</button></form>
+                <form method="POST"><input type="hidden" name="accion" value="guardar"><button class="btn-retro" style="width: 100%;">Guardar Equipo</button></form>
+                <form method="POST"><input type="hidden" name="accion" value="cancelar"><button class="btn-retro" style="align-self: flex-end; font-size: 0.8em;">Cancelar</button></form>
             </div>
         </div>
     </div>
 </div>
-
+<script>
+    // Buscamos todas las alertas y las ocultamos tras 3 segundos
+    setTimeout(function() {
+        let alertas = document.querySelectorAll('.alerta-error');
+        alertas.forEach(function(a) {
+            a.style.transition = "opacity 0.5s ease";
+            a.style.opacity = "0";
+            setTimeout(() => a.remove(), 500); // Las borra del todo después del fade
+        });
+    }, 3000);
+</script>
 </body>
 </html>

@@ -8,8 +8,31 @@ class PokeDex:
         # Si ya existe una instancia, evitamos que se cree otra por error
         if PokeDex._instance is not None:
             raise Exception("Esta clase es un Singleton. Usa get_instance()")
+        especies_para_pokedex = [
+            Especie(
+                nombre="Pikachu",
+                descripcion="Mantiene su cola en alto...",
+                legendario=False,  # RECUERDA: 'legendario' en español
+                alturaMedia=0.4,
+                pesoMedio=6.0,
+                movimientos=["Impactrueno"],
+                tipos=["Eléctrico"],  # Palabras normales
+                imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
+            ),
 
-        self.listaEspecies = listaEspecies
+            Especie(
+                nombre="Eevee",
+                descripcion="Posee una estructura genética...",
+                legendario=False,  # CORREGIDO: de legendary a legendario
+                alturaMedia=0.3,
+                pesoMedio=6.5,
+                movimientos=["Refuerzo"],
+                tipos=["Normal"],
+                imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png"
+            )
+        ]
+
+        self.listaEspecies = especies_para_pokedex
         PokeDex._instance = self
 
     @classmethod

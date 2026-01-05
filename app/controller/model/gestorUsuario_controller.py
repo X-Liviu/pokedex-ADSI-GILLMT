@@ -14,43 +14,43 @@ class gestorUsuario:
     def getMyGestorUsuario(cls, nombre_usuario, db):
         if nombre_usuario not in cls._instancias_usuarios:
             # 1. Creamos el objeto Usuario completo primero
-            usuario = db.getUsuario(nombre_usuario)
+            #usuario = db.getUsuario(nombre_usuario)
 
             # #PRUEBAS TATA
-            # from app.model.pokemon import Pokemon
-            # from app.model.equipo import Equipo
-            # # 1. Creamos un par de Pokémon de prueba
-            # p1 = Pokemon(
-            #     pokemon_id=1,
-            #     nombre_custom="Pika-Tata",
-            #     especie="Pikachu",
-            #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
-            #     db=db)
-            #
-            # p2 = Pokemon(
-            #     pokemon_id=2,
-            #     nombre_custom="Repollito",
-            #     especie="Bulbasaur",
-            #     imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
-            #     db=db
-            # )
-            #
-            # # 2. Creamos un equipo y le metemos esos Pokémon
-            # equipo_test = Equipo(numEquipo=1, db=db)
-            # equipo_test.lista_pokemon = [p1, p2]
-            #
-            # # 3. Creamos el objeto Usuario con los datos de prueba
-            # # (Asegúrate de que el orden de los argumentos sea el de tu clase Usuario)
-            # usuario = Usuario(
-            #     nombre="Tata",
-            #     apellido="Batata",
-            #     nombre_usuario=nombre_usuario,
-            #     correo="tata@pokedex.com",
-            #     contrasena="1234",
-            #     rol="usuario",
-            #     lista_equipos=[equipo_test],  # Le pasamos el equipo con los 2 pokémon
-            #     db=db
-            # )
+            from app.model.pokemon import Pokemon
+            from app.model.equipo import Equipo
+            # 1. Creamos un par de Pokémon de prueba
+            p1 = Pokemon(
+                pokemon_id=1,
+                nombre_custom="Pika-Tata",
+                especie="Pikachu",
+                imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png",
+                db=db)
+
+            p2 = Pokemon(
+                pokemon_id=2,
+                nombre_custom="Repollito",
+                especie="Bulbasaur",
+                imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png",
+                db=db
+            )
+
+            # 2. Creamos un equipo y le metemos esos Pokémon
+            equipo_test = Equipo(numEquipo=1, db=db)
+            equipo_test.lista_pokemon = [p1, p2]
+
+            # 3. Creamos el objeto Usuario con los datos de prueba
+            # (Asegúrate de que el orden de los argumentos sea el de tu clase Usuario)
+            usuario = Usuario(
+                nombre="Tata",
+                apellido="Batata",
+                nombre_usuario=nombre_usuario,
+                correo="tata@pokedex.com",
+                contrasena="1234",
+                rol="usuario",
+                lista_equipos=[equipo_test],  # Le pasamos el equipo con los 2 pokémon
+                db=db
+            )
             # 2. Creamos el gestor pasándole el objeto completo
             cls._instancias_usuarios[nombre_usuario] = cls(db, usuario)
 

@@ -2,7 +2,7 @@ from flask import Blueprint, request, redirect, render_template, flash
 from app.database.connection import Connection
 
 
-def chatbot_blueprint(db: Connection) -> Blueprint:
+def chatbot_blueprint(db):
     bp_chatbot = Blueprint("chatbot", __name__)
 
     @bp_chatbot.route("/chatbot")

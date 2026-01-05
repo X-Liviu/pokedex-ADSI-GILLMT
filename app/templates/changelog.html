@@ -76,6 +76,7 @@
         .btn-filter:active { transform: translate(2px, 2px); box-shadow: none; }
 
         .event-list-container { flex: 1; overflow-y: auto; padding-right: 10px; }
+        /* Scrollbar personalizado */
         .event-list-container::-webkit-scrollbar { width: 10px; }
         .event-list-container::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 5px; }
         .event-list-container::-webkit-scrollbar-thumb { background: var(--pink-item); border-radius: 5px; border: 2px solid #000; }
@@ -92,6 +93,7 @@
 
         .empty-message { text-align: center; color: #777; font-style: italic; margin-top: 50px; font-size: 1.2rem; }
 
+        /* Botón Volver con url_for si usas flask, o href fijo */
         .btn-back { position: absolute; bottom: 20px; right: 30px; background: #f2e9e4; border: var(--border); padding: 10px 30px; border-radius: 12px; font-weight: bold; box-shadow: var(--shadow); cursor: pointer; text-decoration: none; color: black; }
         .btn-back:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
     </style>
@@ -109,66 +111,52 @@
         <div class="content">
             <div class="search-bar">
                 <span class="search-icon">🔍</span>
-                <input type="text" id="inputBusqueda" class="search-input" placeholder="Filtrar por Usuario">
-                <button class="btn-filter" id="btnFiltrar">Filtrar</button>
+                <input type="text" id="inputBusqueda" class="search-input" placeholder="Filtrar por Usuario" onkeyup="filtrarEventos()">
+                <button class="btn-filter" onclick="filtrarEventos()">Filtrar</button>
             </div>
 
             <div class="event-list-container">
                 <div id="listaEventos" class="event-list">
+
+                    {% if noticias %}
+                        {% for noticia in noticias %}
+                        <div class="event-item" data-usuario="{{ noticia.NombreUsuario | lower }}">
+                            <div class="event-header">
+                                <span class="user-name">{{ noticia.NombreUsuario }}</span>
+                                <span class="event-date">{{ noticia.FechaHora }}</span>
+                            </div>
+                            <div class="event-body">{{ noticia.contenido }}</div>
+                        </div>
+                        {% endfor %}
+
+                    {% else %}
+                        <div class="empty-message">
+                            No hay noticias recientes o no tienes amigos agregados.
+                        </div>
+                    {% endif %}
+
                     </div>
             </div>
         </div>
-        <a href="menu.html" class="btn-back">Volver</a>
+
+        <a href="{{ url_for('menu_principal') }}" class="btn-back">Volver</a>
     </div>
 
     <script>
-        window.onload = async function() {
-            // PASO 1: Llamada a tieneAmigos()
-            const usuarioTieneAmigos = await Marcodex.tieneAmigos();
+        function filtrarEventos() {
+            const texto = document.getElementById('inputBusqueda').value.toLowerCase();
+            const items = document.querySelectorAll('.event-item');
 
-            // PASO 2: Comprobar respuesta
-            if (usuarioTieneAmigos === false) {
+            items.forEach(item => {
+                // Buscamos el nombre del usuario dentro del elemento
+                const nombreUsuario = item.querySelector('.user-name').innerText.toLowerCase();
 
-                // PASO 3 (Rama False): Mostrar errorNoAmigos
-                mostrarPantallaError(contenedor);
-
-            } else {
-
-                // PASO 4 (Rama True): Llamar a mostrarChangeLog()
-                const noticiasJSON = await Marcodex.mostrarChangeLog(Marcodex.getNombreUsuario());
-
-                // PASO 5: Coger el JSON y mostrar noticias (El Loop)
-                if (noticiasJSON.length === 0) {
-                    contenedor.innerHTML = `<div class="empty-message">No hay noticias recientes.</div>`;
+                if (nombreUsuario.includes(texto)) {
+                    item.style.display = 'flex';
                 } else {
-                    noticiasJSON.forEach(noticia => {
-                        // Renderizar cada elemento del JSON: { nombreUsuario, fecha, contenido }
-                        pintarNoticia(noticia, contenedor);
-                    });
+                    item.style.display = 'none';
                 }
-            }
-        };
-
-        // Funciones auxiliares de renderizado (Solo pintan HTML)
-        function mostrarPantallaError(contenedor) {
-            contenedor.innerHTML = `<div class="empty-message">
-                No tienes amigos agregados.<br>Agrega amigos para ver sus novedades.
-            </div>`;
-        }
-
-        function pintarNoticia(datos, contenedor) {
-            const item = document.createElement('div');
-            item.className = 'event-item';
-
-            // Usamos las claves exactas del JSON que pediste
-            item.innerHTML = `
-                <div class="event-header">
-                    <span class="user-name">${datos.nombreUsuario}</span>
-                    <span class="event-date">${datos.fecha}</span>
-                </div>
-                <div class="event-body">${datos.contenido}</div>
-            `;
-            contenedor.appendChild(item);
+            });
         }
     </script>
 </body>

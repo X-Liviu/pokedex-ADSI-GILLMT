@@ -66,27 +66,27 @@ class MarcoDex:
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         return gestor.getListaEquipos()
 
-    def clonarEquipo(self, numEquipo, nombre_usuario):
+    def clonarEquipo(self, numEquipo: int, nombre_usuario: str):
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.clonarEquipo(numEquipo)
 
-    def mostrarInfoEquipo(self, numEquipo, nombre_usuario):
+    def mostrarInfoEquipo(self, numEquipo: int, nombre_usuario: str):
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         return gestor.mostrarInfoEquipo(numEquipo)
 
-    def borrarPokemon(self, numEquipo, idPokemon, nombre_usuario):
+    def borrarPokemon(self, numEquipo: int, idPokemon: int, nombre_usuario: str):
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.borrarPokemon(numEquipo, idPokemon)
 
-    def compararCopias(self,numEquipo, nombre_usuario):
+    def compararCopias(self,numEquipo: int, nombre_usuario: str):
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.compararCopias(numEquipo)
 
-    def borrarEquipo(self,numEquipo, nombre_usuario):
+    def borrarEquipo(self, numEquipo: int, nombre_usuario: str):
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         return gestor.borrarEquipo(numEquipo)
 
-    def descartarCambios(self, numEquipo,nombre_usuario):
+    def descartarCambios(self, numEquipo: int, nombre_usuario: str):
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         gestor.descartarCambios(numEquipo)
 

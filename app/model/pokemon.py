@@ -17,7 +17,7 @@ class Pokemon:
 
     def getInfo(self):
         datos = {
-            "pokemon id": self.pokemon_id,
+            "pokemon_id": self.pokemon_id,
             "nombre_custom": self.nombre_custom,
             "rareza": self.rareza,
             "shiny": self.shiny,

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <title>Crear Equipo - PokeDex</title>
     <style>
         body { font-family: sans-serif; background: white; padding: 40px; }
 
@@ -46,7 +48,8 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            width: 330px; /* Un poco más ancho para que quepa el input */
+            width: 350px;
+            /* Ajustado para que quepa /*
             font-weight: bold;
         }
 
@@ -60,17 +63,41 @@
         }
 
         /* Botones con Sombra Negra */
-        .btn-retro {
-            background: white;
-            border: 4px solid black;
-            border-radius: 15px;
-            padding: 10px 25px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 5px 5px 0px black;
-            transition: 0.1s;
+
+            .btn-retro {
+                background: white;
+                border: 4px solid black;
+                border-radius: 15px;
+                padding: 10px 25px;
+                font-weight: bold;
+                cursor: pointer;
+                box-shadow: 5px 5px 0px black;
+                transition: 0.1s;
+            }
+
+            .btn-retro:active {
+                box-shadow: 0px 0px 0px black;
+                transform: translate(5px, 5px);
+            }
+
+            /* Botón de borrar (X) */
+
+            .btn-borrar {
+                background: none;
+                border: none;
+                color: white;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 1.4em;
+                padding: 0 5px;
+                transition: transform 0.1s;
+            }
+
+            .btn-borrar:hover {
+                color: #FF4D4D;
+                transform: scale(1.2);
+            }
         }
-        .btn-retro:active { box-shadow: 0px 0px 0px black; transform: translate(5px, 5px); }
     </style>
 </head>
 <body>
@@ -125,15 +152,21 @@
             {% for p in equipo %}
             <div class="pildora">
                 <div class="icono-oscuro"><img src="{{ p['imagen'] }}" width="25"></div>
-                <span>{{ p['nombre_custom'] }}</span>
-                <span style="font-size: 0.7em; opacity: 0.8; margin-left: auto;">{{ p['especie'] }}</span>
+                <span style="flex-grow: 1;">{{ p['nombre_custom'] if p['nombre_custom'] else p['especie'] }}</span>
+                <span style="font-size: 0.7em; opacity: 0.8; margin-right: 10px;">{{ p['especie'] }}</span>
+
+                <form method="POST" style="margin: 0; display: flex; align-items: center;">
+                    <input type="hidden" name="accion" value="borrar">
+                    <input type="hidden" name="pokemon_id" value="{{ p['pokemon_id'] }}">
+                    <button type="submit" class="btn-borrar">×</button>
+                </form>
             </div>
             {% endfor %}
 
             {% for i in range(6 - equipo|length) %}
             <div class="pildora" style="opacity: 0.5; border: 2px dashed rgba(255,255,255,0.4); background: #b05070;">
                 <div class="icono-oscuro" style="background: rgba(0,0,0,0.1);"></div>
-                <span style="color: rgba(255,255,255,0.5);">...</span>
+                <span style="color: rgba(255,255,255,0.5);">Disponible...</span>
             </div>
             {% endfor %}
 
@@ -144,16 +177,18 @@
         </div>
     </div>
 </div>
+
 <script>
-    // Buscamos todas las alertas y las ocultamos tras 3 segundos
+    // Limpieza automática de alertas tras 3 segundos
     setTimeout(function() {
         let alertas = document.querySelectorAll('.alerta-error');
         alertas.forEach(function(a) {
             a.style.transition = "opacity 0.5s ease";
             a.style.opacity = "0";
-            setTimeout(() => a.remove(), 500); // Las borra del todo después del fade
+            setTimeout(() => a.remove(), 500);
         });
     }, 3000);
 </script>
+
 </body>
 </html>

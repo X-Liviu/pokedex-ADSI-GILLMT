@@ -61,8 +61,9 @@ class Equipo:
             info_completa = pokemon.getInfo()
 
             info_filtrada = {
-                "pokemon id": info_completa["pokemon id"],
+                "pokemon_id": info_completa["pokemon_id"],
                 "nombre_custom": info_completa["nombre_custom"],
+                "shiny": info_completa["shiny"],
                 "especie": info_completa["especie"],
                 "imagen": info_completa["imagen"]
             }
@@ -73,7 +74,8 @@ class Equipo:
         #return json.dumps(resumen_equipo)
 
     def borrarPokemon(self, idPokemon):
-        self.lista_pokemon = [p for p in self.lista_pokemon if p.pokemon_id != idPokemon]
+        # Convertimos ambos a string para asegurar que la comparación sea válida
+        self.lista_pokemon = [p for p in self.lista_pokemon if str(p.pokemon_id) != str(idPokemon)]
 
     def buscarPokemon(self, idPokemon):
         for pokemon in self.lista_pokemon:

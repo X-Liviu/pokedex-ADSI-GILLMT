@@ -24,7 +24,6 @@ class Connection:
         cursor.close()
         return rows
 
-
     def insert(self, sentence, parameters=None):
         cursor = self.connection.cursor()
         if parameters:
@@ -32,8 +31,12 @@ class Connection:
         else:
             cursor.execute(sentence)
         self.connection.commit()
-        cursor.close()
 
+        # ESTO ES LO QUE FALTA: Capturamos el ID generado
+        last_id = cursor.lastrowid
+
+        cursor.close()
+        return last_id  # Devolvemos el ID para usarlo en las otras tablas
 
     def update(self, sentence, parameters=None):
         cursor = self.connection.cursor()

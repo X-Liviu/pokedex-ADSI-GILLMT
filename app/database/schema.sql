@@ -57,7 +57,8 @@ CREATE TABLE IF NOT EXISTS Pokemon (
 
 -- 7. Tabla: Equipo
 CREATE TABLE IF NOT EXISTS Equipo (
-    idEquipo INTEGER PRIMARY KEY AUTOINCREMENT, -- TODO: IdEquipo
+    idEquipo INTEGER PRIMARY KEY AUTOINCREMENT, -- El ID real que usa SQLite
+    numEquipo INTEGER,                          -- El 1 o 2 que tú manejas
     NombreUsuario TEXT,
     FOREIGN KEY (NombreUsuario) REFERENCES Usuario(NombreUsuario)
 );
@@ -90,10 +91,10 @@ CREATE TABLE IF NOT EXISTS Publica (
 
 -- 11. PokemonEnEquipo
 CREATE TABLE IF NOT EXISTS PokemonEnEquipo (
-    idEquipo INTEGER,
+    idEquipoInterno INTEGER,
     idPokemon INTEGER,
-    PRIMARY KEY (idEquipo, idPokemon),
-    FOREIGN KEY (idEquipo) REFERENCES Equipo(idEquipo),
+    PRIMARY KEY (idEquipoInterno, idPokemon),
+    FOREIGN KEY (idEquipoInterno) REFERENCES Equipo(idInterno),
     FOREIGN KEY (idPokemon) REFERENCES Pokemon(idPokemon)
 );
 
@@ -147,27 +148,24 @@ CREATE TABLE IF NOT EXISTS Publica (
 -- Tata
 INSERT OR IGNORE INTO Usuario VALUES ("Tata430", "Tata", "Morente", "tata@hotmail.es", "5678tata", "activa", FALSE);
 
---Tate
-INSERT OR IGNORE INTO Usuario Values ( "Tate430", "Aco", "ElZapas", "marlartate@gmail.com", "1234tate", "activisimo", FALSE );
+-- Tate
+INSERT OR IGNORE INTO Usuario VALUES ("Tate430", "Aco", "ElZapas", "marlartate@gmail.com", "1234tate", "activisimo", FALSE);
 
-       --¿Aquí es donde habrá que conectar con el repo ese de github?
+-- Especie
 INSERT OR IGNORE INTO EspeciePokemon VALUES ("Pikachu", "Caca", FALSE, 1.75, 1.43, "Canto");
 
--- Tata
-INSERT OR IGNORE INTO Pokemon VALUES (NULL,"Jon", 1, FALSE, 1.5, 1.5, "Pikachu");
-INSERT OR IGNORE INTO Pokemon VALUES (NULL,"Laura", 8, FALSE, 1.1, 1.1, "Pikachu");
+-- Tata (Añadimos un "" al final para la columna Imagen)
+INSERT OR IGNORE INTO Pokemon VALUES (NULL, "Jon", 1, FALSE, 1.5, 1.5, "Pikachu", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png");
+INSERT OR IGNORE INTO Pokemon VALUES (NULL, "Laura", 8, FALSE, 1.1, 1.1, "Pikachu", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png");
 
--- Tate
-INSERT OR IGNORE INTO Pokemon VALUES (NULL, "Victor", 10, FALSE, 1.9, 1.5, "Pikachu");
+-- Tate (Añadimos la imagen al final)
+INSERT OR IGNORE INTO Pokemon VALUES (NULL, "Victor", 10, FALSE, 1.9, 1.5, "Pikachu", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png");
 
--- Tata
-INSERT OR IGNORE INTO Equipo VALUES (NULL, "Tata430");
--- Tate
-INSERT OR IGNORE INTO Equipo VALUES (NULL, "Tate430");
+-- Equipos
+INSERT OR IGNORE INTO Equipo VALUES (NULL, 1, "Tata430");
+INSERT OR IGNORE INTO Equipo VALUES (NULL, 2, "Tate430");
 
--- Tata
+-- Relaciones
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (1, 1);
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (1, 2);
-
--- Tate
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (2, 3);

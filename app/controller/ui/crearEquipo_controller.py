@@ -45,6 +45,13 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
                 elif resultado == -3:
                     flash("Esta especie ya está en tu equipo")
 
+            elif accion == "borrar":
+                # Recogemos el ID único del Pokémon dentro del equipo
+                pokemon_id = request.form.get("pokemon_id")
+                # Llamamos al modelo pasando ese ID
+                mDex.borrarPokemon(num_equipo, pokemon_id, nombre_sesion)
+                flash("Pokémon eliminado del equipo")
+
             elif accion == "guardar":
                 # Persistencia final en la Base de Datos
                 mDex.guardarEquipo(num_equipo, nombre_sesion)

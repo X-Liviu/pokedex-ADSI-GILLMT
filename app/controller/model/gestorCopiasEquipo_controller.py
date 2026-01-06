@@ -22,11 +22,11 @@ class gestorCopiasEquipo:
                 # Si el pokemon estaba en la copia pero NO en el editado, se borra
                 if not equipoEditado.buscarPokemon(pokemon.pokemon_id):
                     db.delete(
-                        sentence="DELETE FROM PokemonEnEquipo WHERE idPokemon = ?",
+                        sentence="DELETE FROM PokemonEnEquipo WHERE numPokemon = ?",
                         parameters=(pokemon.pokemon_id,)
                     )
                     db.delete(
-                        sentence="DELETE FROM Pokemon WHERE idPokemon = ?",
+                        sentence="DELETE FROM Pokemon WHERE numPokemon = ?",
                         parameters=(pokemon.pokemon_id,)
                     )
 

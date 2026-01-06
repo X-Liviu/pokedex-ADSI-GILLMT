@@ -91,7 +91,7 @@ class MarcoDex:
         gestor.descartarCambios(numEquipo)
 
     def mostrarOpciones(self):
-        ChatBot.mostrarOpciones()
+        return ChatBot.mostrarOpciones()
 
     def mejorPokemon(self, numEquipo):
         return gestorUsuario.mejorPokemon(numEquipo)

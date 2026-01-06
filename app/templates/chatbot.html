@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot Pokémon - Multi-Método</title>
+    <title>ChatBot</title>
     <style>
         :root {
             --window-border: #000;
@@ -22,8 +22,9 @@
             font-family: 'Arial', sans-serif;
         }
 
+        /* Estructura de la ventana principal */
         .window {
-            width: 800px;
+            width: 600px;
             height: 550px;
             background-color: var(--bg-white);
             border: 3px solid var(--window-border);
@@ -31,9 +32,10 @@
             overflow: hidden;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
 
+        /* Cabecera Rosa (Imagen original) */
         .window-header {
             background-color: var(--header-pink);
             height: 45px;
@@ -45,16 +47,14 @@
         }
 
         .dot {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            margin-right: 10px;
-            border: 2px solid #000;
+            width: 15px; height: 15px; border-radius: 50%;
+            margin-right: 10px; border: 2.5px solid #000;
         }
-        .dot-red { background-color: #ff5f56; }
-        .dot-yellow { background-color: #ffbd2e; }
-        .dot-green { background-color: #27c93f; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
 
+        /* Contenedor de mensajes */
         .chat-content {
             flex: 1;
             padding: 25px;
@@ -62,22 +62,35 @@
             display: flex;
             flex-direction: column;
             gap: 15px;
+            background-color: white;
         }
 
-        .bot-msg { color: #000; font-size: 1.1em; line-height: 1.5; }
-        .user-msg {
+        .msg-bot {
+            align-self: flex-start;
+            color: #000;
+            font-size: 1.1em;
+            line-height: 1.5;
+            max-width: 90%;
+        }
+
+        .msg-user {
             align-self: flex-end;
-            background-color: #eee;
-            padding: 8px 15px;
-            border-radius: 15px;
+            background-color: #f2f2f2;
+            padding: 8px 18px;
+            border-radius: 20px;
             border: 2px solid #333;
             font-weight: bold;
-            margin: 5px 0;
+            max-width: 75%;
         }
 
-        .input-area { padding: 20px; display: flex; justify-content: center; }
+        /* Barra de entrada inferior */
+        .input-form {
+            padding: 20px;
+            background-color: white;
+            border-top: 1px solid #eee;
+        }
+
         .input-container {
-            width: 90%;
             background-color: var(--input-gray);
             border-radius: 30px;
             display: flex;
@@ -86,10 +99,31 @@
             border: 3px solid #000;
         }
 
-        input { flex: 1; background: transparent; border: none; outline: none; padding: 10px; font-size: 18px; }
-        .send-btn { background: none; border: none; cursor: pointer; }
-        .send-icon { width: 28px; height: 28px; fill: #000; }
-        hr { width: 100%; border: 0; border-top: 1px solid #ccc; margin: 10px 0; }
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 18px;
+            color: #000;
+        }
+
+        .send-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .send-icon {
+            width: 30px;
+            height: 30px;
+            fill: #000;
+        }
+
+        hr { width: 100%; border: 0; border-top: 2px solid #eee; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -101,113 +135,35 @@
         <div class="dot dot-green"></div>
     </div>
 
-    <div class="chat-content" id="chatBox"></div>
+    <div class="chat-content" id="chatBox">
+        {% for mensaje in historial %}
+            <div class="msg-{{ mensaje.role }}">
+                {{ mensaje.content | safe }}
+            </div>
+            {% if mensaje.separador %}
+                <hr>
+            {% endif %}
+        {% endfor %}
+    </div>
 
-    <div class="input-area">
+    <form class="input-form" method="POST" action="{{ url_for('chatbot.chatbot_view') }}">
         <div class="input-container">
-            <input type="text" id="userInput" placeholder="Escribe aquí..." autocomplete="off">
-            <button class="send-btn" id="sendBtn">
+            <input type="text" name="mensaje" autocomplete="off" autofocus>
+            <button type="submit" class="send-btn">
                 <svg class="send-icon" viewBox="0 0 24 24">
                     <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
                 </svg>
             </button>
         </div>
-    </div>
+    </form>
 </div>
 
 <script>
-    const chatBox = document.getElementById('chatBox');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
-
-    let currentState = 'MENU';
-    let selectedOption = null;
-
-    const menuHTML = `
-        <div class="bot-msg">
-            <strong>Para elegir introduce un número:</strong><br>
-            1-Ver mejor Pokémon de un equipo.<br>
-            2-Ver contra qué tipos es fuerte un Pokémon.<br>
-            3-Ver cadena evolutiva de un Pokémon.<br>
-            4-Ver Habilidades y estadísticas de un Pokémon.<br>
-            5-Volver
-        </div>`;
-
-    window.onload = () => { chatBox.innerHTML = menuHTML; };
-
-    function appendMessage(text, isUser = false) {
-        const div = document.createElement('div');
-        div.className = isUser ? 'user-msg' : 'bot-msg';
-        div.innerHTML = text;
-        chatBox.appendChild(div);
+    // Mantener siempre el scroll al final al cargar mensajes
+    window.onload = function() {
+        var chatBox = document.getElementById('chatBox');
         chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    // --- AQUÍ CONECTARÍAS CON TUS MÉTODOS DE PYTHON ---
-    const ejecutarMetodoPython = (opcion, parametro) => {
-        <!-- appendMessage(`<i>Llamando al método de la Opción ${opcion} para el parámetro: ${parametro}...</i>`); -->
-
-        switch(opcion) {
-            case "1":
-                // Lógica para: Ver mejor Pokémon del equipo (parametro = ID equipo)
-                appendMessage("<b>[Resultado Método 1]:</b> El mejor Pokémon de tu equipo es Garchomp.");
-                break;
-            case "2":
-                // Lógica para: Tipos fuertes (parametro = Nombre Pokémon)
-                appendMessage(`<b>[Resultado Método 2]:</b> ${parametro} es fuerte contra tipos Fuego y Volador.`);
-                break;
-            case "3":
-                // Lógica para: Cadena evolutiva
-                appendMessage(`<b>[Resultado Método 3]:</b> La cadena de ${parametro} es: Pichu > Pikachu > Raichu.`);
-                break;
-            case "4":
-                // Lógica para: Habilidades y stats
-                appendMessage(`<b>[Resultado Método 4]:</b> Mostrando estadísticas base de ${parametro}...`);
-                break;
-        }
     };
-
-    function handleInput() {
-        const input = userInput.value.trim();
-        if (!input) return;
-
-        appendMessage(input, true);
-        userInput.value = "";
-
-        if (currentState === 'MENU') {
-            if (input === "5") {
-                appendMessage("Saliendo del sistema...");
-                setTimeout(() => { window.location.href = "tu_pagina_principal.html"; }, 1000);
-            } else if (["1", "2", "3", "4"].includes(input)) {
-                selectedOption = input;
-                currentState = 'WAITING_PARAM';
-                const prompts = {
-                    "1": "Introduce el <b>ID del equipo</b>:",
-                    "2": "Introduce el <b>nombre del Pokémon</b> para ver los tipos contra los que es fuerte y débil:",
-                    "3": "Introduce el <b>nombre del Pokémon</b> para ver su cadena evolutiva:",
-                    "4": "Introduce el <b>nombre del Pokémon</b> para sus estadísticas:"
-                };
-                setTimeout(() => appendMessage(prompts[input]), 400);
-            } else {
-                setTimeout(() => appendMessage("Por favor, selecciona un número válido (1-5)."), 400);
-            }
-        }
-        else if (currentState === 'WAITING_PARAM') {
-            // Se ejecuta el método correspondiente
-            ejecutarMetodoPython(selectedOption, input);
-
-            // Tras ejecutar, volvemos al menú
-            setTimeout(() => {
-                appendMessage("<hr>");
-                appendMessage(menuHTML);
-                currentState = 'MENU';
-                selectedOption = null;
-            }, 1500);
-        }
-    }
-
-    sendBtn.addEventListener('click', handleInput);
-    userInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') handleInput(); });
 </script>
 
 </body>

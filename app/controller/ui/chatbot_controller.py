@@ -4,12 +4,12 @@ from app.controller.model.marcoDex_controller import MarcoDex
 import json
 
 
-def crear_chatbot_blueprint(db: Connection) -> Blueprint:
+def chatbot_blueprint(db: Connection) -> Blueprint:
     nombre_bp = "chatbot"
     bp_chatbot = Blueprint(nombre_bp, __name__)
     mDex = MarcoDex.getMyMarcoDex(db)
 
-    @bp_chatbot.route('/interfaz', methods=['GET', 'POST'])
+    @bp_chatbot.route('/chatbot', methods=['GET', 'POST'])
     def chatbot_view():
         # 1. PRECARGA ÚNICA: Guardamos el JSON en la sesión para reutilizarlo
         if 'menu_json' not in session:

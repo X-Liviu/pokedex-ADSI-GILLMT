@@ -41,9 +41,9 @@ class gestorCopiasEquipo:
                     info = pokemon.getInfo()
                     id_poki_real = db.insert(
                         sentence="""INSERT INTO Pokemon
-                                        (NombreCustom, Rareza, Shiny, Altura, Peso, NombreEspecie, Imagen)
-                                    VALUES (?, ?, ?, ?, ?, ?, ?)""",
-                        parameters=(info["nombre_custom"], info["rareza"], 1 if info["shiny"] else 0,
+                                        (numPokemon, NombreCustom, Rareza, Shiny, Altura, Peso, NombreEspecie, Imagen)
+                                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)""",
+                        parameters=(info["pokemon_id"], info["nombre_custom"], info["rareza"], 1 if info["shiny"] else 0,
                                     info["altura"], info["peso"], info["especie"], info["imagen"])
                     )
 

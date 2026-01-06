@@ -44,7 +44,8 @@ CREATE TABLE IF NOT EXISTS Ataques (
 
 -- 6. Tabla: Pokémon (Instancia individual)
 CREATE TABLE IF NOT EXISTS Pokemon (
-    idPokemon INTEGER PRIMARY KEY AUTOINCREMENT,
+    idPokemon INTEGER PRIMARY KEY AUTOINCREMENT, --El ID real que usa SQLite
+    numPokemon INTEGER,                          --El id que usa objetos
     NombreCustom TEXT,
     Rareza INT, -- TODO: RAREZA
     Shiny BOOLEAN, -- TODO: SHINY

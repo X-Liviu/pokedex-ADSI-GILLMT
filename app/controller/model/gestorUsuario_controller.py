@@ -118,7 +118,11 @@ class gestorUsuario:
         self.g_copias.clonarEquipo(self.usuario, numEquipo)
 
     def borrarEquipo(self, numEquipo) :
-        return self.usuario.borrarEquipo(numEquipo)
+        equipo = self.usuario.buscarEquipo(numEquipo)
+        if equipo:
+            self.usuario.lista_equipos.remove(equipo)
+            return True
+        return False
 
     def borrarPokemon(self, numEquipo, idPokemon):
         equipo = self.usuario.buscarEquipo(numEquipo)

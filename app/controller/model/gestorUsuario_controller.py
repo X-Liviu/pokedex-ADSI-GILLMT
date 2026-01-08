@@ -152,12 +152,12 @@ class gestorUsuario:
 
         if resultado:
             comandosSQL: str = f"""
-             INSERT INTO Amigo_de (NombreUsuario1, NombreUsuario2)
-             VALUES ( {self.usuario.getName()}, {nombreUsuario} );
+                         INSERT INTO Amigo_de (NombreUsuario1, NombreUsuario2)
+                         VALUES (?, ?);
             """
 
             try:
-                self.db.insert(comandosSQL)
+                self.db.insert(comandosSQL, self.usuario.getName(), nombreUsuario)
             except sqlite3.Error:
                 resultado = not resultado
 

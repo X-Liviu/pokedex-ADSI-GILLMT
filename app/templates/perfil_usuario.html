@@ -16,6 +16,11 @@
                     {% endfor %}
                 </tr>
                 <tr>
+                    {% for enlace_actual in info_usuario.fotoPokemon%}
+                        <td> <img src="{{enlace_actual}}" alt="foto-pokemon"></td>
+                    {% endfor %}
+                </tr>
+                <tr>
                     {% for nombre_actual in info_usuario.equipoCustom %}
                         <td>{{nombre_actual}}</td>
                     {% endfor %}

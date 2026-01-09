@@ -37,7 +37,7 @@ def modificar_equipo_blueprint(db: Connection) -> Blueprint:
 
             elif accion == "borrar":
                 pokemon_id = request.form.get("pokemon_id")
-                mDex.borrarPokemon(num_equipo_activo, pokemon_id, nombre_sesion)
+                mDex.borrarPokemon(num_equipo_activo, int(pokemon_id), nombre_sesion)
 
             elif accion == "guardar":
                 # Guardamos los cambios de la copia en la BD y en el objeto real

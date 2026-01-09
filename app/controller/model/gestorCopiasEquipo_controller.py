@@ -21,14 +21,28 @@ class gestorCopiasEquipo:
             for pokemon in copia.lista_pokemon:
                 # Si el pokemon estaba en la copia pero NO en el editado, se borra
                 if not equipoEditado.buscarPokemon(pokemon.pokemon_id):
-                    db.delete(
-                        sentence="DELETE FROM PokemonEnEquipo WHERE numPokemon = ?",
-                        parameters=(pokemon.pokemon_id,)
-                    )
-                    db.delete(
-                        sentence="DELETE FROM Pokemon WHERE numPokemon = ?",
-                        parameters=(pokemon.pokemon_id,)
-                    )
+                    # 1. Obtenemos el ID único de la base de datos (idPokemon)
+                    res = db.select("SELECT idPokemon FROM Pokemon WHERE numPokemon = ? AND NombreCustom = ?",
+                                    (pokemon.pokemon_id, pokemon.nombre_custom))
+
+                    if res:
+                        id_pokemon_bd = res[0][0]
+
+                        # 2. Borramos la relación en el equipo específico
+                        # (Añadir idEquipoInterno sería lo ideal para estar 100% seguros)
+                        db.delete(
+                            sentence="DELETE FROM PokemonEnEquipo WHERE idPokemon = ?",
+                            parameters=(id_pokemon_bd,)  # <--- Coma añadida
+                        )
+
+                        # 3. Borramos el Pokémon de la tabla general
+                        db.delete(
+                            sentence="DELETE FROM Pokemon WHERE idPokemon = ?",
+                            # Usamos el ID de la BD, no el numPokemon
+                            parameters=(id_pokemon_bd,)  # <--- Coma añadida
+                        )
+                    else:
+                        print(f"Aviso: No se encontró el pokemon {pokemon.nombre_custom} en la base de datos.")
 
     def compararCopiasAniadir(self, usuario, numEquipo,db):
         equipoEditado = usuario.buscarEquipo(numEquipo)

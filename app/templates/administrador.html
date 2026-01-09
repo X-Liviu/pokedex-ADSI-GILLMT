@@ -130,19 +130,22 @@
 
             <a href="{{ url_for('lista_pokemon') }}" class="menu-btn btn-top-center">Lista Pokémon</a>
 
-            <a href="{{ url_for('crear_equipo') }}" class="menu-btn btn-left-top">Crear Equipo</a>
-            <a href="{{ url_for('mis_equipos') }}" class="menu-btn btn-left-mid">Mis Equipos</a>
-            <a href="{{ url_for('ver_amigos') }}" class="menu-btn btn-left-bot">Mis Amigos</a>
+            <a href="{{ url_for('lista_pokemon.lista_pokemon') }}" class="menu-btn btn-top-center">Lista Pokémon</a>
 
-            <img src="{{ url_for('templates', filename='imagenes/logo.png') }}" alt="Marcodex Logo" class="center-logo-img">
+            <a href="{{ url_for('crear_equipo.crear_equipo', origen='menu') }}" class="menu-btn btn-left-top">Crear Equipo</a>
+            <a href="{{ url_for('ver_equipos.ver_equipos') }}" class="menu-btn btn-left-mid">Mis Equipos</a>
+            <a href="{{ url_for('ver_amigos.ver_amigos') }}" class="menu-btn btn-left-bot">Ver Amigos</a>
+
+            <img src="{{ url_for('static', filename='imagenes/logo.png') }}" alt="Marcodex Logo" class="center-logo-img">
 
             <a href="{{ url_for('gestionar_usuarios') }}" class="menu-btn btn-center-below-logo">Ver Lista de<br>Usuarios</a>
 
-            <a href="{{ url_for('chatbot') }}" class="menu-btn btn-right-top">Chatbot</a>
-            <a href="{{ url_for('ranking') }}" class="menu-btn btn-right-mid">Ranking</a>
-            <a href="{{ url_for('changelog') }}" class="menu-btn btn-right-bot">Changelog</a>
+            <a href="{{ url_for('chatbot.chatbot_view') }}" class="menu-btn btn-right-top">Chatbot</a>
+            <a href="{{ url_for('ranking.ranking') }}" class="menu-btn btn-right-mid">Ranking</a>
+            <a href="{{ url_for('changelog.show_changelog') }}" class="menu-btn btn-right-bot">Changelog</a>
 
-            <a href="{{ url_for('modificar_datos') }}" class="menu-btn btn-bottom-center-large">Modificar Datos<br>Personales</a>
+            <a href="{{ url_for('modificar_datos.modificar_datos') }}" class="menu-btn btn-bottom-center-large">Modificar Datos</a>
+
 
         </div>
     </div>

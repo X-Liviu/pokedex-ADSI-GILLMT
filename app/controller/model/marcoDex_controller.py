@@ -1,3 +1,5 @@
+import string
+
 from app.controller.model.chatbot_controller import ChatBot
 from app.controller.model.gestorPokeDex_controller import gestorPokeDex
 from app.controller.model.pokeDex_controller import PokeDex
@@ -5,6 +7,8 @@ from app.controller.model.ranking_controller import Ranking
 from app.model.utils.custom_types import Custom_types
 from app.database.connection import Connection
 from app.controller.model.gestorUsuario_controller import gestorUsuario
+from app.controller.model.gestorNoticias_controller import gestorNoticias
+
 from typing import Dict
 
 class MarcoDex: pass # Es necesario sino, la linea 12 (myMarcoDex: MarcoDex = None) no funciona
@@ -112,11 +116,10 @@ class MarcoDex:
 
     def mostrar_changelog(self, usuario):
         #clase de gestor_noticia por crear
-        return self.gestor_noticias.getGestorNoticias.mostrar_changelog(usuario)
+        return gestorNoticias.getGestorNoticias.mostrar_changelog(usuario)
 
-    def getNombreUsuario(self):
-        #TODO
-        return
+    def getNombreUsuario(self) -> str:
+        return gestorUsuario.getMyGestorUsuario().getNombreUsuario()
 
     def mostrarPokedex(self) -> str:
         return PokeDex.get_instance().mostrarPokedex()
@@ -126,6 +129,9 @@ class MarcoDex:
 
     def aplicarFiltro(self, filtro: str, valor: str) -> str:
         return PokeDex.get_instance().filtrarPokedex(filtro, valor)
+
+    def tieneAmigos(self) -> bool:
+        return gestorUsuario.getMyGestorUsuario().tiene_amigos()
 
 if __name__ == "__main__":
     pass

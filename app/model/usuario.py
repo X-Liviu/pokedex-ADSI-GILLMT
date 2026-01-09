@@ -11,7 +11,7 @@ class Usuario:
         self.rol = rol
         self.lista_equipos = lista_equipos
         self.db = db
-        # self.amigos = []
+        self.amigos = []
 
     def addEquipo(self) :
         if self.tieneEquipos() :
@@ -94,3 +94,9 @@ class Usuario:
                 indice += 1
         return resultado
     """
+
+    def tieneAmigos(self) -> bool:
+        return self.amigos != []
+
+    def getNombreUsuario(self) -> str:
+        return self.nombre_usuario

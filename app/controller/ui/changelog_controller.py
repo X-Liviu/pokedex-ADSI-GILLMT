@@ -1,14 +1,21 @@
 from flask import Blueprint, render_template
 from app.database.connection import Connection
+from app.controller.model.marcoDex_controller import MarcoDex
 
 def changelog_blueprint(db):
     bp_changelog = Blueprint('changelog', __name__)
 
     @bp_changelog.route('/changelog')
     def show_changelog():
-        lista_noticias = [{'NombreUsuario': 'Machaca2000', 'FechaHora': '2026-01-05 14:30:00', 'contenido': 'Equipo de fuego terminado 🔥🔥🔥'},
-                    {'NombreUsuario': 'Sopórifero2', 'FechaHora': '2025-03-15 16:42:00', 'contenido': 'Pikachu capturado'}
-                    ]
-        return render_template('changelog.html', noticias= lista_noticias)
+        mDex = MarcoDex.getMyMarcoDex(db)
+
+        if mDex.tiene_amigos():
+
+            nombreUsuario = mDex.getNombreUsuario()
+            lista_noticias = mDex.mostrar_changelog(nombreUsuario)
+            return render_template('changelog.html', noticias=lista_noticias)
+        else:
+            return render_template('error_no_amigos.html')
+
 
     return bp_changelog

@@ -1,8 +1,18 @@
 from ...database.connection import Connection
 
+class gestorNoticias: pass
+
 class gestorNoticias:
+    myGestorNoticias: gestorNoticias = None
+
+
     def __init__(self):
         self.db = Connection()
+
+    @classmethod
+    def getGestorNoticias(cls, db: Connection):
+        return cls.myGestorNoticias
+
 
     def mostrar_changelog(self, usuario):
         sql = """
@@ -31,8 +41,8 @@ class gestorNoticias:
 
         for fila in filas:
             json_noticia.append({
-                "nombreUsuario": fila["NombreUsuario"],
-                "fecha": fila["FechaHora"],
+                "NombreUsuario": fila["NombreUsuario"],
+                "FechaHora": fila["FechaHora"],
                 "contenido": fila["Contenido"]
             })
 

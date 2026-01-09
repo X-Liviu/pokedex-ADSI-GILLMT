@@ -163,4 +163,8 @@ class gestorUsuario:
             except sqlite3.Error:
                 resultado = not resultado
 
-        return resultado
+    def tieneAmigos(self) -> bool:
+        return self.usuario.tieneAmigos()
+
+    def getNombreUsuario(self) -> str:
+        return self.usuario.getNombreUsuario()

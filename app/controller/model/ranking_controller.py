@@ -1,5 +1,6 @@
 import sqlite3
 from typing import List
+import pokebase
 
 from app.model.lista_usuarios import ListaUsuarios
 from app.model.usuario_ranking import UsuarioRanking
@@ -97,10 +98,12 @@ class Ranking:
 
         if len(resultado_sql) > 0:
             puesto_actual: int = self._get_puesto_by_nombre(pNombreUsuario)
-            resultado = {"nombre": pNombreUsuario, "equipoEspecie": [], "equipoCustom": [], "puesto": puesto_actual}
+            resultado = {"nombre": pNombreUsuario, "equipoEspecie": [], "equipoCustom": [], "fotoPokemon": [],"puesto": puesto_actual}
 
             for fila in resultado_sql:
                 resultado["equipoEspecie"].append(fila["NombreEspecie"])
                 resultado["equipoCustom"].append(fila["NombreCustom"])
+                sprite_actual = pokebase.pokemon(fila["NombreEspecie"]).sprites.front_default
+                resultado["fotoPokemon"].append(sprite_actual)
 
         return resultado

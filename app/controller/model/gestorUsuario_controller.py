@@ -15,7 +15,7 @@ class gestorUsuario:
     def getMyGestorUsuario(cls, nombre_usuario, db):
         if nombre_usuario not in cls._instancias_usuarios:
             # 1. Creamos el objeto Usuario completo primero
-            usuario = db.getUsuario(nombre_usuario)
+            #usuario = db.getUsuario(nombre_usuario) TODO getUsuario
 
             # # #PRUEBAS TATA
             # from app.model.pokemon import Pokemon
@@ -48,9 +48,9 @@ class gestorUsuario:
             # equipo_test.lista_pokemon = [p1, p2]
             # equipo_test2 = Equipo(numEquipo=2)
             # equipo_test2.lista_pokemon = [p3, p1, p2]
-            #
-            # # 3. Creamos el objeto Usuario con los datos de prueba
-            # # (Asegúrate de que el orden de los argumentos sea el de tu clase Usuario)
+
+            # 3. Creamos el objeto Usuario con los datos de prueba
+            # (Asegúrate de que el orden de los argumentos sea el de tu clase Usuario)
             # usuario = Usuario(
             #     nombre="Tata",
             #     apellido="Batata",

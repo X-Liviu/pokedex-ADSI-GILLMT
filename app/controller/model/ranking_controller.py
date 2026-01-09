@@ -41,7 +41,7 @@ class Ranking:
                                  inner join Equipo
                                             on Usuario.NombreUsuario = Equipo.NombreUsuario
                                  inner join PokemonEnEquipo
-                                            on Equipo.idEquipo = PokemonEnEquipo.idEquipo
+                                            on Equipo.idEquipo = PokemonEnEquipo.idEquipoInterno
                                  inner join Pokemon
                                             on Pokemon.idPokemon = PokemonEnEquipo.idPokemon
                         Order By Usuario.NombreUsuario; \
@@ -88,7 +88,7 @@ class Ranking:
         inner join Equipo
         on Usuario.NombreUsuario = Equipo.NombreUsuario
         inner join PokemonEnEquipo
-        on Equipo.idEquipo = PokemonEnEquipo.idEquipo
+        on Equipo.idEquipo = PokemonEnEquipo.idEquipoInterno
         inner join Pokemon
         on PokemonEnEquipo.idPokemon = Pokemon.idPokemon
         WHERE Usuario.NombreUsuario = ?;
@@ -103,6 +103,7 @@ class Ranking:
             for fila in resultado_sql:
                 resultado["equipoEspecie"].append(fila["NombreEspecie"])
                 resultado["equipoCustom"].append(fila["NombreCustom"])
+                print(fila["NombreEspecie"])
                 sprite_actual = pokebase.pokemon(fila["NombreEspecie"]).sprites.front_default
                 resultado["fotoPokemon"].append(sprite_actual)
 

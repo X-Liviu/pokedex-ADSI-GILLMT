@@ -17,7 +17,7 @@ class gestorUsuario:
             # 1. Creamos el objeto Usuario completo primero
             usuario = db.getUsuario(nombre_usuario)
 
-            # #PRUEBAS TATA
+            # # #PRUEBAS TATA
             # from app.model.pokemon import Pokemon
             # from app.model.equipo import Equipo
             # # 1. Creamos un par de Pokémon de prueba
@@ -47,7 +47,7 @@ class gestorUsuario:
             # equipo_test = Equipo(numEquipo=1)
             # equipo_test.lista_pokemon = [p1, p2]
             # equipo_test2 = Equipo(numEquipo=2)
-            # equipo_test2.lista_pokemon = [p1, p3]
+            # equipo_test2.lista_pokemon = [p3, p1, p2]
             #
             # # 3. Creamos el objeto Usuario con los datos de prueba
             # # (Asegúrate de que el orden de los argumentos sea el de tu clase Usuario)
@@ -58,7 +58,7 @@ class gestorUsuario:
             #     correo="tata@pokedex.com",
             #     contrasena="1234",
             #     rol="usuario",
-            #     lista_equipos=[equipo_test,equipo_test2],  # Le pasamos el equipo con los 2 pokémon
+            #     lista_equipos=[],  # Le pasamos el equipo con los 2 pokémon
             #     db=db
             # )
             # 2. Creamos el gestor pasándole el objeto completo

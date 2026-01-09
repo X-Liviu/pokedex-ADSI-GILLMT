@@ -24,30 +24,28 @@
         }
 
         .window {
-            width: 800px;
-            height: 550px;
+            width: 850px; /* Un poco más ancho para que respire */
+            height: 600px;
             background: white;
             border: var(--border);
-            border-radius: 20px;
+            border-radius: 30px;
             overflow: hidden;
             display: flex;
             flex-direction: column;
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.1);
         }
 
         .window-header {
-            height: 50px;
+            height: 55px;
             background: var(--pink);
             border-bottom: var(--border);
             display: flex;
             align-items: center;
-            padding: 0 15px;
-            gap: 10px;
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: black;
+            padding: 0 20px;
+            gap: 12px;
         }
 
-        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
+        .dot { width: 20px; height: 20px; border-radius: 50%; border: 3px solid black; }
         .red { background: #ff4d4d; }
         .yellow { background: #ffcc00; }
         .green { background: #00cc00; }
@@ -58,18 +56,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            background-image: radial-gradient(#eee 2px, transparent 2px);
+            background-size: 30px 30px;
         }
 
-        /* --- CAMBIO 1: Reducir el tamaño del logo --- */
+        /* --- LOGO CENTRADO --- */
         .center-logo-img {
-            height: 70px; /* Antes era 100px */
+            height: 80px;
             width: auto;
-            z-index: 10;
-            border: none;
-            outline: none;
-            /* Lo centramos un poco mejor verticalmente */
+            z-index: 5;
             position: absolute;
-            top: 200px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
 
         .menu-btn {
@@ -79,40 +78,38 @@
             padding: 12px 25px;
             font-size: 1.1rem;
             font-weight: bold;
-            border-radius: 12px;
+            border-radius: 15px;
             box-shadow: var(--shadow);
             cursor: pointer;
             text-align: center;
-            white-space: nowrap;
             color: black;
             text-decoration: none;
-            display: inline-block;
-            /* --- CAMBIO 2: Asegurar que los botones estén por encima --- */
             z-index: 20;
+            transition: 0.1s;
         }
 
         .menu-btn:active {
-            transform: translate(2px, 2px);
-            box-shadow: 3px 3px 0px #000;
+            transform: translate(5px, 5px);
+            box-shadow: 0px 0px 0px #000;
         }
 
-        /* --- Posiciones reajustadas --- */
+        /* --- POSICIONES --- */
         .btn-top-center { top: 40px; }
 
-        .btn-left-top { top: 100px; left: 80px; }
-        /* Ajuste de posición para 'Mis Equipos' */
-        .btn-left-mid { top: 190px; left: 20px; }
-        .btn-left-bot { bottom: 140px; left: 80px; }
+        .btn-left-top { top: 120px; left: 60px; }
+        .btn-left-mid { top: 250px; left: 30px; }
+        .btn-left-bot { bottom: 120px; left: 60px; }
 
-        .btn-right-top { top: 100px; right: 80px; }
-        /* Ajuste de posición para 'Ranking' */
-        .btn-right-mid { top: 190px; right: 20px; }
-        .btn-right-bot { bottom: 140px; right: 80px; }
+        .btn-right-top { top: 120px; right: 60px; }
+        .btn-right-mid { top: 250px; right: 30px; }
+        .btn-right-bot { bottom: 120px; right: 60px; }
 
-        /* Ajuste de posición para el botón central pequeño */
-        .btn-center-below-logo { top: 280px; font-size: 1rem; padding: 10px 20px; }
-
-        .btn-bottom-center-large { bottom: 40px; font-size: 1.3rem; padding: 15px 40px; }
+        .btn-bottom-center-large {
+            bottom: 40px;
+            font-size: 1.1rem;
+            padding: 15px 40px;
+            background: #fff;
+        }
 
     </style>
 </head>
@@ -123,23 +120,22 @@
             <div class="dot red"></div>
             <div class="dot yellow"></div>
             <div class="dot green"></div>
-            <span style="margin-left: 15px;">Menú Principal</span>
+            <span style="margin-left: 15px; font-weight: bold; font-size: 1.2rem;">Menú Principal</span>
         </div>
 
         <div class="menu-area">
-            <a href="{{ url_for('lista_pokemon') }}" class="menu-btn btn-top-center">Lista Pokémon</a>
+            <a href="{{ url_for('lista_pokemon.lista_pokemon') }}" class="menu-btn btn-top-center">Lista Pokémon</a>
 
-            <a href="{{ url_for('crear_equipo') }}" class="menu-btn btn-left-top">Crear Equipo</a>
-            <a href="{{ url_for('mis_equipos') }}" class="menu-btn btn-left-mid">Mis Equipos</a>
-            <a href="{{ url_for('ver_amigos') }}" class="menu-btn btn-left-bot">Mis Amigos</a>
+            <a href="{{ url_for('crear_equipo.crear_equipo', origen='menu') }}" class="menu-btn btn-left-top">Crear Equipo</a>
 
-            <img src="{{ url_for('templates', filename='imagenes/logo.png') }}" alt="Marcodex Logo" class="center-logo-img">
+            <a href="{{ url_for('ver_equipos.ver_equipos') }}" class="menu-btn btn-left-mid">Mis Equipos</a>
 
-            <a href="{{ url_for('chatbot') }}" class="menu-btn btn-right-top">Chatbot</a>
-            <a href="{{ url_for('ranking') }}" class="menu-btn btn-right-mid">Ranking</a>
-            <a href="{{ url_for('changelog') }}" class="menu-btn btn-right-bot">Changelog</a>
+            <img src="{{ url_for('static', filename='imagenes/logo.png') }}" alt="Marcodex Logo" class="center-logo-img">
 
-            <a href="{{ url_for('modificar_datos') }}" class="menu-btn btn-bottom-center-large">Modificar Datos<br>Personales</a>
+            <a href="{{ url_for('chatbot.chatbot_view') }}" class="menu-btn btn-right-top">Chatbot</a>
+            <a href="{{ url_for('ranking.ranking') }}" class="menu-btn btn-right-mid">Ranking</a>
+            <a href="{{ url_for('changelog.show_changelog') }}" class="menu-btn btn-right-bot">Changelog</a>
+
         </div>
     </div>
 

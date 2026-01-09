@@ -5,77 +5,170 @@
     <title>MarcoDex - Mis Equipos</title>
     <style>
         body {
-            background-color: #FFFFFF;
-            margin: 0; /* Eliminado 'px' redundante */
-            padding: 0;
-            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 40px;
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
         }
 
-        .contenedor-principal {
+        /* Ventana con TAMAÑO FIJO */
+        .ventana {
+            border: 5px solid black;
+            border-radius: 30px;
+            overflow: hidden;
+            width: 950px;
+            height: 650px; /* Altura fija para que no se estire */
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.1);
+        }
+
+        .barra-superior {
+            background: #FF69B4;
+            padding: 15px;
+            border-bottom: 5px solid black;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0; /* Evita que la barra se encoja */
+        }
+
+        .circulo {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid black;
+        }
+
+        .rojo { background-color: #FF4D4D; }
+        .amarillo { background-color: #FFD700; }
+        .verde { background-color: #2ECC71; }
+
+        .titulo-ventana {
+            color: white;
+            margin: 0;
+            font-size: 1.2em;
+            margin-left: 15px;
+            text-transform: uppercase;
+        }
+
+        .contenido {
             display: flex;
             padding: 40px;
-            justify-content: space-around;
-            align-items: flex-start;
+            gap: 40px;
+            flex-grow: 1; /* Ocupa el resto del espacio fijo */
+            overflow: hidden; /* Evita que el contenido se salga del marco */
         }
 
-        /* LADO IZQUIERDO: LISTA ROSA */
-        .columna-lista { width: 45%; }
+        /* LADO IZQUIERDO CON SCROLL */
+        .columna-lista {
+            width: 55%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lista-scroll {
+            overflow-y: auto; /* Permite scroll si hay muchos equipos */
+            padding-right: 15px;
+            height: 100%;
+        }
+
+        /* Estilo de la barra de scroll (opcional para que sea rosa) */
+        .lista-scroll::-webkit-scrollbar { width: 8px; }
+        .lista-scroll::-webkit-scrollbar-thumb { background: #D06084; border-radius: 10px; }
 
         .item-equipo {
             display: flex;
             align-items: center;
             background-color: #D06084;
-            color: black;
+            color: white;
             text-decoration: none;
-            padding: 12px 25px;
-            border-radius: 40px;
-            margin-bottom: 10px;
+            padding: 15px 25px;
+            border-radius: 50px;
+            margin-bottom: 15px;
             font-weight: bold;
+            border: 3px solid black; /* Toque retro extra */
+            box-shadow: 4px 4px 0px black;
         }
 
         .icono-contenedor {
-            width: 40px; height: 40px; background: rgba(0,0,0,0.15);
+            width: 45px; height: 45px; background: #5D2E46;
             border-radius: 50%; display: flex; justify-content: center;
             align-items: center; margin-right: 15px;
+            border: 2px solid black;
         }
 
-        /* LADO DERECHO: BOTONES RETRO */
+        /* LADO DERECHO: BOTONES */
+        .columna-acciones {
+            width: 45%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
         .boton-retro {
-            background: #EAE3D9; border: 3px solid black; padding: 20px 40px;
-            margin: 15px; border-radius: 15px; font-weight: bold; font-size: 1.3rem;
-            color: #1A2B44; text-align: center; text-decoration: none;
-            box-shadow: 7px 7px 0 black; /* Estilo de tu boceto */
-            display: inline-block;
-            min-width: 250px;
+            background: white;
+            border: 4px solid black;
+            padding: 20px;
+            border-radius: 15px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: black;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 7px 7px 0 black;
+            width: 80%;
+            transition: 0.1s;
+        }
+
+        .boton-retro:active {
+            box-shadow: 0px 0px 0px black;
+            transform: translate(7px, 7px);
         }
     </style>
 </head>
 <body>
-    <div class="contenedor-principal">
+
+<div class="ventana">
+    <div class="barra-superior">
+        <div class="circulo rojo"></div>
+        <div class="circulo amarillo"></div>
+        <div class="circulo verde"></div>
+        <h2 class="titulo-ventana">Mis Equipos</h2>
+    </div>
+
+    <div class="contenido">
         <div class="columna-lista">
-            <h2>Mis Equipos:</h2>
+            <h3 style="margin-top: 0;">Selecciona un equipo:</h3>
             <div class="lista-scroll">
                 {% for equipo in equipos %}
                 <a href="{{ url_for('ver_detalles.detalles', num=equipo['numEquipo']) }}" class="item-equipo">
                     <div class="icono-contenedor">
-                        {# Usamos 'foto_principal' que es la clave que definiste en exportarEquiposJSON #}
                         {% if equipo['foto_principal'] and equipo['foto_principal'] != "sin_imagen.png" %}
-                            <img src="{{ equipo['foto_principal'] }}" width="30" alt="Pokemon">
+                            <img src="{{ equipo['foto_principal'] }}" width="35">
                         {% else %}
-                            <div style="width: 20px; height: 20px; background: #5D2E46; border-radius: 50%;"></div>
+                            <div style="width: 20px; height: 20px; background: white; border-radius: 50%; opacity: 0.3;"></div>
                         {% endif %}
                     </div>
-                    {# Usamos corchetes para ser consistentes con el formato JSON/Diccionario #}
-                    <span>Equipo {{ equipo['numEquipo'] }}</span>
+                    <span>EQUIPO #{{ equipo['numEquipo'] }}</span>
                 </a>
                 {% endfor %}
             </div>
         </div>
 
-        <div class="columna-acciones" style="display: flex; flex-direction: column; align-items: center;">
-            <a href="{{ url_for('crear_equipo.crear_equipo') }}" class="boton-retro">Crear Equipo</a>
-            <a href="/" class="boton-retro">Volver al <br> Menú Principal</a>
+        <div class="columna-acciones">
+            <a href="{{ url_for('crear_equipo.crear_equipo', origen='mis_equipos') }}" class="boton-retro">
+                Crear mi primer equipo
+            </a>
+            <a href="/" class="boton-retro" style="background: #eee;">VOLVER AL MENÚ</a>
         </div>
     </div>
+</div>
+
 </body>
 </html>

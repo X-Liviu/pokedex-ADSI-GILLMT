@@ -4,22 +4,109 @@
     <meta charset="UTF-8">
     <title>Detalles del Equipo - PokeDex</title>
     <style>
-        /* ... Mantenemos tus estilos anteriores ... */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #FFFFFF; margin: 0; padding: 20px; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
-        .contenedor-detalles { position: relative; width: 550px; text-align: center; padding: 60px 40px; border: 8px solid #F2A7C3; border-radius: 40px; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
-        h2 { color: #333; font-size: 2em; margin-bottom: 30px; }
-        .lista-pokemon-centrada { display: inline-block; width: 100%; max-width: 420px; }
-        .fila-rosa { background: #D06084; color: white; margin: 12px 0; padding: 12px 25px; border-radius: 50px; display: flex; align-items: center; box-shadow: 0 4px 2px -2px rgba(0,0,0,0.1); position: relative; }
-        .circulo-icono-oscuro { width: 45px; height: 45px; background-color: #5D2E46; border-radius: 50%; display: flex; justify-content: center; align-items: center; margin-right: 20px; flex-shrink: 0; }
+        body {
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            justify-content: center;
+        }
 
-        /* Contenedor de nombres para que especie y mote queden bien */
+        /* Ventana con TAMAÑO FIJO igual que la lista */
+        .ventana {
+            border: 5px solid black;
+            border-radius: 30px;
+            overflow: hidden;
+            width: 850px; /* Un poco más estrecha que la lista para que quede elegante */
+            height: 650px;
+            background: white;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 15px 15px 0px rgba(0,0,0,0.1);
+        }
+
+        /* Barra superior con los 3 puntos */
+        .barra-superior {
+            background: #FF69B4;
+            padding: 15px;
+            border-bottom: 5px solid black;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+
+        .circulo {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid black;
+        }
+
+        .rojo { background-color: #FF4D4D; }
+        .amarillo { background-color: #FFD700; }
+        .verde { background-color: #2ECC71; }
+
+        .titulo-ventana {
+            color: white;
+            margin: 0;
+            font-size: 1.2em;
+            margin-left: 15px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .contenido {
+            display: flex;
+            padding: 30px 40px;
+            gap: 30px;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        /* LADO IZQUIERDO: LISTA DE POKEMON */
+        .columna-lista {
+            width: 60%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .lista-pokemon {
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .fila-rosa {
+            background: #D06084;
+            color: white;
+            margin-bottom: 12px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            border: 3px solid black;
+            box-shadow: 4px 4px 0px black;
+        }
+
+        .circulo-icono-oscuro {
+            width: 45px; height: 45px;
+            background-color: #5D2E46;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            border: 2px solid black;
+            flex-shrink: 0;
+        }
+
         .info-nombres { display: flex; flex-direction: column; text-align: left; flex-grow: 1; }
-        .nombre-pokemon { font-weight: bold; font-size: 1.1em; letter-spacing: 0.5px; }
+        .nombre-pokemon { font-weight: bold; font-size: 1.1em; }
         .nombre-especie { font-size: 0.85em; opacity: 0.9; font-style: italic; }
 
-        /* Estilo para el indicador Shiny */
         .badge-shiny {
-            background: #FFD700; /* Dorado */
+            background: #FFD700;
             color: #5D2E46;
             font-size: 0.7em;
             font-weight: bold;
@@ -29,56 +116,91 @@
             border: 1px solid black;
         }
 
-        .boton-retro { background: white; color: black; border: 3px solid black; border-radius: 15px; padding: 12px 30px; font-weight: bold; text-decoration: none; display: inline-block; font-size: 1em; cursor: pointer; box-shadow: 6px 6px 0px 0px black; transition: all 0.1s ease; margin-top: 20px; }
-        .boton-retro:active { box-shadow: 0px 0px 0px 0px black; transform: translate(6px, 6px); }
-        .btn-volver { position: absolute; bottom: 30px; right: 30px; padding: 8px 25px; font-size: 0.9em; }
-        .hueco-vacio { background: #D06084; opacity: 0.5; }
-        .texto-vacio { color: rgba(255, 255, 255, 0.6); font-style: italic; font-size: 0.9em; }
+        /* LADO DERECHO: ACCIONES */
+        .columna-acciones {
+            width: 40%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .boton-retro {
+            background: white;
+            color: black;
+            border: 3px solid black;
+            border-radius: 15px;
+            padding: 18px 25px;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 1em;
+            text-align: center;
+            width: 80%;
+            box-shadow: 6px 6px 0px 0px black;
+            transition: all 0.1s ease;
+        }
+
+        .boton-retro:active {
+            box-shadow: 0px 0px 0px 0px black;
+            transform: translate(6px, 6px);
+        }
+
+        .hueco-vacio { background: #D06084; opacity: 0.5; border: 2px dashed black; box-shadow: none; }
+        .texto-vacio { color: rgba(255, 255, 255, 0.7); font-style: italic; font-size: 0.9em; }
     </style>
 </head>
 <body>
 
-<div class="contenedor-detalles">
-    <h2>Equipo #{{ num_equipo }}</h2>
+<div class="ventana">
+    <div class="barra-superior">
+        <div class="circulo rojo"></div>
+        <div class="circulo amarillo"></div>
+        <div class="circulo verde"></div>
+        <h2 class="titulo-ventana">Detalles: Equipo #{{ num_equipo }}</h2>
+    </div>
 
-    <div class="lista-pokemon-centrada">
-        {% for pokemon in equipo %}
-        <div class="fila-rosa">
-            <div class="circulo-icono-oscuro">
-                <img src="{{ pokemon['imagen'] }}" style="width: 32px;" alt="{{ pokemon['especie'] }}">
-            </div>
+    <div class="contenido">
+        <div class="columna-lista">
+            <div class="lista-pokemon">
+                {% for pokemon in equipo %}
+                <div class="fila-rosa">
+                    <div class="circulo-icono-oscuro">
+                        <img src="{{ pokemon['imagen'] }}" style="width: 35px;" alt="{{ pokemon['especie'] }}">
+                    </div>
+                    <div class="info-nombres">
+                        <span class="nombre-pokemon">
+                            {{ pokemon['nombre_custom'] }}
+                            {% if pokemon['shiny'] %}
+                                <span class="badge-shiny">★ SHINY</span>
+                            {% endif %}
+                        </span>
+                        <span class="nombre-especie">Especie: {{ pokemon['especie'] }}</span>
+                    </div>
+                </div>
+                {% endfor %}
 
-            <div class="info-nombres">
-                <span class="nombre-pokemon">
-                    {{ pokemon['nombre_custom'] }}
-                    {% if pokemon['shiny'] %}
-                        <span class="badge-shiny">★ SHINY</span>
-                    {% endif %}
-                </span>
-                <span class="nombre-especie">Especie: {{ pokemon['especie'] }}</span>
+                {% if equipo|length < 6 %}
+                    {% for i in range(6 - equipo|length) %}
+                    <div class="fila-rosa hueco-vacio">
+                        <div class="circulo-icono-oscuro" style="background: rgba(0,0,0,0.2); border: none;"></div>
+                        <span class="texto-vacio">Espacio disponible</span>
+                    </div>
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
-        {% endfor %}
 
-        {% if equipo|length < 6 %}
-            {% for i in range(6 - equipo|length) %}
-            <div class="fila-rosa hueco-vacio">
-                <div class="circulo-icono-oscuro" style="background: rgba(0,0,0,0.2);"></div>
-                <span class="texto-vacio">Espacio disponible</span>
-            </div>
-            {% endfor %}
-        {% endif %}
+        <div class="columna-acciones">
+            <a href="{{ url_for('modificar_equipo.modificar_equipo', num_equipo=num_equipo) }}" class="boton-retro">
+                MODIFICAR EQUIPO
+            </a>
+
+            <a href="{{ url_for('ver_equipos.ver_equipos') }}" class="boton-retro" style="background: #eee;">
+                VOLVER AL LISTADO
+            </a>
+        </div>
     </div>
-
-    <div style="margin-top: 40px;">
-        <a href="{{ url_for('modificar_equipo.modificar_equipo', num_equipo=num_equipo) }}" class="boton-retro">
-            Modificar Equipo
-        </a>
-    </div>
-
-        <a href="{{ url_for('ver_equipos.ver_equipos') }}" class="boton-retro btn-volver">
-            Volver
-        </a>
 </div>
 
 </body>

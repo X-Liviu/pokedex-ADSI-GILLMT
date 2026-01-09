@@ -14,6 +14,7 @@ from app.controller.model.tipo_controller import Tipo
 from app.controller.model.pokeDex_controller import PokeDex
 
 # Custom UI
+from app.controller.ui import menu_principal_controller
 from app.controller.ui.verRanking_controller import ranking_blueprint
 from app.controller.ui.changelog_controller import changelog_blueprint
 from app.controller.ui.verEquipos_controller import ver_equipos_blueprint
@@ -21,6 +22,8 @@ from app.controller.ui.detallesEquipo_controller import detalles_equipo_blueprin
 from app.controller.ui.crearEquipo_controller import crear_equipo_blueprint
 from app.controller.ui.lista_pokemon_controller import lista_pokemon_blueprint
 from app.controller.ui.modificar_equipo_controller import modificar_equipo_blueprint
+from app.controller.ui.verAmigos_controller import ver_amigos_blueprint
+from app.controller.ui.modificarDatos_controller import modificar_datos_blueprint
 
 # Tipos de datos
 from config import Config
@@ -105,6 +108,6 @@ def create_app():
 
     @app.route('/')
     def index() -> str:
-        return app.redirect("/mis-equipos")
-
+        #return app.redirect("/mis-equipos")
+        return menu_principal_controller.mostrar_menu()
     return app

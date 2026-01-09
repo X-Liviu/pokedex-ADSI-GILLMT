@@ -11,6 +11,9 @@ from app.controller.ui import verRanking_controller
 from app.controller.ui import changelog_controller
 from app.controller.ui import modificarDatos_controller
 
+def mostrar_menu():
+    # Esta función simplemente carga el HTML de tu imagen menuPrincipal.jpg
+    return render_template('menu_principal.html')
 
 def lista_pokemon():
     db = Connection()

@@ -33,7 +33,7 @@ class PokeDex:
         #         imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png"
         #     )
         # ]
-        #self.listaEspecies = especies_para_pokedex
+        # self.listaEspecies = especies_para_pokedex
 
         self.listaEspecies = listaEspecies
         PokeDex._instance = self

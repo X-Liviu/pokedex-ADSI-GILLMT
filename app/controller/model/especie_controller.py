@@ -11,7 +11,7 @@ class Especie:
         self.alturaMedia = alturaMedia
         self.pesoMedio = pesoMedio
         self.movimientos = movimientos
-        self.tipos = tipos = [t.nombre if hasattr(t,'nombre') else str(t) for t in tipos]
+        self.tipos = [t.nombre if hasattr(t,'nombre') else str(t) for t in tipos]
         self.imagen = imagen
 
     def esEsta(self, nombreEspecie):

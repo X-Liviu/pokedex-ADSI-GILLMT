@@ -66,11 +66,9 @@ class PokeDex:
         """
         Busca un Pokémon específico y devuelve su JSON
         """
-        # Paso 3.1.1: getInfo(nombreEspecie)
-        especie = self.buscarEspecie(nombreEspecie)
-        if especie:
-            # Paso 3.1.1.1: getInfo() de la entidad
-            return json.dumps(especie.getInfo(), indent=4)
+        for especie in self.listaEspecies:
+            if especie.nombre.lower() == nombreEspecie.lower():
+                return json.dumps(especie.getInfo(), indent=4, ensure_ascii=False)
         return json.dumps({"error": "Pokémon no encontrado"})
 
     def filtrarPokedex(self, filtro: str, valor: str) -> str:

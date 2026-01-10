@@ -181,7 +181,14 @@
             </div>
 
             <div class="visual-col">
-                <div class="image-placeholder">🐾</div>
+                <div class="image-placeholder">
+                    {% if pokemon.imagen %}
+                        <img src="{{ pokemon.imagen }}" alt="{{ pokemon.nombre }}"
+                            style="width: 180px; height: 180px; object-fit: contain; image-rendering: pixelated;">
+                    {% else %}
+                        🐾
+                    {% endif %}
+                </div>
                 <h2 style="margin-top: 20px; letter-spacing: 2px;">{{ pokemon.nombre.upper() }}</h2>
             </div>
         </div>

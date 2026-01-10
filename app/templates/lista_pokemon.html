@@ -52,9 +52,9 @@
         .yellow { background: #ffcc00; }
         .green { background: #00cc00; }
 
-        .content { padding: 30px; flex: 1; display: flex; flex-direction: column; }
+        .content { padding: 30px; flex: 1; display: flex; flex-direction: column; overflow: hidden}
 
-        .pokemon-list-container { flex: 1; overflow-y: auto; padding-right: 10px; }
+        .pokemon-list-container { flex: 1; overflow-y: auto; padding-right: 10px; margin-bottom: 60px }
         .pokemon-list { display: flex; flex-direction: column; gap: 10px; }
 
         .pokemon-item {
@@ -144,12 +144,12 @@
                     {% for pokemon in lista_pokemon %}
                     <a href="{{ url_for('lista_pokemon.detalles_pokemon', nombre=pokemon.nombre) }}" class="pokemon-item">
                         <div class="pokemon-icon">
-                            <!-- {% if pokemon.imagen %}
+                            {% if pokemon.imagen %}
                                 <img src="{{ pokemon.imagen }}" alt="{{ pokemon.nombre }}"
                                     style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">
-                            {% else %} -->
+                            {% else %}
                                 🐾
-                            <!--{% endif %} -->
+                            {% endif %}
                         </div>
                         <span class="pokemon-name">{{ pokemon.nombre }}</span>
                     </a>

@@ -11,7 +11,7 @@ class PokeDex:
 
         #PRUEBAS TATA
         # especies_para_pokedex = [
-        #     Especie(
+        #      Especie(
         #         nombre="Pikachu",
         #         descripcion="Mantiene su cola en alto...",
         #         legendario=False,  # RECUERDA: 'legendario' en español
@@ -20,9 +20,9 @@ class PokeDex:
         #         movimientos=["Impactrueno"],
         #         tipos=["Eléctrico"],  # Palabras normales
         #         imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
-        #     ),
+        #      ),
         #
-        #     Especie(
+        #      Especie(
         #         nombre="Eevee",
         #         descripcion="Posee una estructura genética...",
         #         legendario=False,  # CORREGIDO: de legendary a legendario
@@ -31,7 +31,7 @@ class PokeDex:
         #         movimientos=["Refuerzo"],
         #         tipos=["Normal"],
         #         imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png"
-        #     )
+        #      )
         # ]
         # self.listaEspecies = especies_para_pokedex
 
@@ -78,4 +78,4 @@ class PokeDex:
             if especie.comprobarFiltroValor(filtro, valor):
                 lista_filtrada.append(especie.getInfo())
 
-        return json.dumps(lista_filtrada, indent=4)
+        return json.dumps(lista_filtrada, indent=4, ensure_ascii=False)

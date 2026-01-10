@@ -51,17 +51,23 @@ class Especie:
         """
         Implementación del paso 2.1.1 del diagrama de filtros
         """
-        # Pasamos la búsqueda a minúsculas para que no importe si escriben con mayúsculas
-        valor_busqueda = valor.lower()
+        # Pasamos la búsqueda a minúsculas para que no importe si escriben con mayúsculas y quitamos los espacios
+        valor_busqueda = valor.lower().strip()
+
+        #limpiar tildes del valor
+        valor_busqueda = valor_busqueda.replace("á", "a").replace("é", "e").replace("í","i").replace("ó","o").replace("ú","u")
 
         if filtro == "nombre":
+            nombre = self.nombre.lower().replace("á", "a").replace("é", "e").replace("í","i").replace("ó","o").replace("ú","u")
             # Comprueba si el texto buscado está dentro del nombre del Pokémon
             return valor_busqueda in self.nombre.lower()
 
         elif filtro == "tipo":
             # Comprueba si alguno de los tipos coincide con la búsqueda
-            valor_busqueda = valor_busqueda.lower()
-            return any(valor_busqueda == t.lower() for t in self.tipos)
+            for t in self.tipos:
+                tipos=t.lower().replace("á", "a").replace("é", "e").replace("í","i").replace("ó","o").replace("ú","u")
+                if valor_busqueda == tipos:
+                    return True
 
         return False
 

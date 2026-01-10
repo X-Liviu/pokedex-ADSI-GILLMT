@@ -11,7 +11,7 @@ class Especie:
         self.alturaMedia = alturaMedia
         self.pesoMedio = pesoMedio
         self.movimientos = movimientos
-        self.tipos = tipos
+        self.tipos = tipos = [t.nombre if hasattr(t,'nombre') else str(t) for t in tipos]
         self.imagen = imagen
 
     def esEsta(self, nombreEspecie):
@@ -61,7 +61,8 @@ class Especie:
 
         elif filtro == "tipo":
             # Comprueba si alguno de los tipos coincide con la búsqueda
-            return any(valor == t.nombre.lower() for t in self.tipos)
+            valor_busqueda = valor_busqueda.lower()
+            return any(valor_busqueda == t.lower() for t in self.tipos)
 
         return False
 

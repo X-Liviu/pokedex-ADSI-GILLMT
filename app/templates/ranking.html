@@ -9,10 +9,36 @@
     <!---
     <h2>Ranking</h2>
     ---->
-    <div class="first_place_container">
-        <div class="puesto_numero">{{usuarios.usuarios[0].puesto}}</div>
-        <div class="nombre_burbuja">{{usuarios.usuarios[0].nombre}}</div>
+
+    <div class="podium-wrapper">
+
+        {% if usuarios.usuarios|length >= 1 %}
+        <div class="first_place_container">
+            <div class="puesto_numero">{{usuarios.usuarios[0].puesto}}</div>
+            <a class="nombre_burbuja" href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuarios.usuarios[0].nombre)}} ">{{usuarios.usuarios[0].nombre}}</a>
+        </div>
+        {% endif %}
+
+        {% if usuarios.usuarios|length >= 2 %}
+        <div class="second_third_row">
+
+            <div class="first_place_container">
+                <div class="puesto_numero">{{usuarios.usuarios[1].puesto}}</div>
+                <a class="nombre_burbuja" href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuarios.usuarios[1].nombre)}} ">{{usuarios.usuarios[1].nombre}}</a>
+            </div>
+
+            {% if usuarios.usuarios|length >= 3 %}
+            <div class="first_place_container">
+                <div class="puesto_numero">{{usuarios.usuarios[2].puesto}}</div>
+                <a class="nombre_burbuja" href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuarios.usuarios[2].nombre)}} ">{{usuarios.usuarios[2].nombre}}</a>
+            </div>
+            {% endif %}
+
+        </div>
+        {% endif %}
+
     </div>
+
     <table>
         {% for usuario in usuarios.usuarios%}
         <tr>
@@ -24,6 +50,21 @@
         </tr>
         {% endfor %}
     </table>
+
+    <div class="ranking-scroll-container">
+    {% for usuario in usuarios.usuarios %}
+        {% if loop.index > 3 %}
+        <div class="ranking-list-item">
+            <div class="puesto-lista">{{ usuario.puesto }}</div>
+
+            <div class="nombre-lista-burbuja">
+                {{ usuario.nombre }}
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+    </div>
+
     <a href="/">volver</a>
 </body>
 </html>

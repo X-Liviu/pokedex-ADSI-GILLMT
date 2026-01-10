@@ -1,34 +1,90 @@
-.first_place_container {
-    /* 1. Centramos el contenedor completo */
-    position: relative;
-    left: 50%;
-    transform: translateX(-50%);
-    width: fit-content;
-
-    /* 2. Alineamos los textos uno encima de otro */
+/* Contenedor padre que agrupa todo */
+.podium-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    margin-bottom: 20px;
-
-    /* Añade esta línea */
-    margin-top: 75px; /* Ajusta los píxeles según cuánto quieras bajarlo */
-
+    width: 100%;
+    margin-top: 75px;
     font-family: 'Arial', sans-serif;
+}
+
+/* Estilo base para cada puesto */
+.first_place_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: fit-content;
 }
 
 .puesto_numero {
     font-size: 1.5rem;
     font-weight: bold;
-    margin-bottom: 5px; /* Espacio entre el número y el nombre */
+    margin-bottom: 5px;
 }
 
 .nombre_burbuja {
-    /* 3. Estilo solo para el nombre */
     background: #ce5888;
     color: black;
-    padding: 20% 150%;
-    border-radius: 50px; /* Esquinas totalmente redondas */
+    padding: 12px 45px; /* Tamaño de cápsula cómodo */
+    border-radius: 50px;
     font-weight: bold;
+    white-space: nowrap;
+    text-decoration: none; /* no underline */
+}
+
+/* FILA DE ABAJO (2º y 3º) */
+.second_third_row {
+    display: flex;
+    justify-content: center;
+
+    /* 1. SEPARACIÓN HORIZONTAL: Aumentada a 250px */
+    gap: 250px;
+
+    /* 2. SEPARACIÓN VERTICAL: Espacio respecto al primero */
+    margin-top: 60px;
+
+    width: 100%;
+}
+
+/* Contenedor que limita la vista a 4 filas */
+.ranking-scroll-container {
+    max-height: 220px; /* Ajustado para que quepan aprox 4 filas */
+    overflow-y: auto;  /* Activa el scroll vertical */
+    width: fit-content;
+    margin: 30px auto; /* Centra la lista en la página */
+    padding-right: 15px; /* Espacio para que el scroll no tape el texto */
+}
+
+/* Cada fila de la lista */
+.ranking-list-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;        /* Espacio entre número y nombre */
+    margin-bottom: 12px;
+    font-family: 'Arial', sans-serif;
+}
+
+.puesto-lista {
+    font-weight: bold;
+    font-size: 1.1rem;
+    min-width: 30px;  /* Asegura que los números no muevan el nombre */
+}
+
+.nombre-lista-burbuja {
+    background: #ce5888;
+    color: black;
+    padding: 8px 25px;
+    border-radius: 50px;
+    font-weight: bold;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* Personalización opcional de la barra de scroll para que sea fina */
+.ranking-scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+.ranking-scroll-container::-webkit-scrollbar-thumb {
+    background: #ce5888;
+    border-radius: 10px;
 }

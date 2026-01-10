@@ -41,11 +41,10 @@ class Especie:
             "imagen": self.imagen
         }
         return datos
-        #json.dumps(datos, indent=4)
 
     #TODO
     def cadenaEvolutiva(self):
-        #Hay que ver como es la descripcion del Pokemo
+        #Hay que ver como es la descripcion del Pokemon
         pass
 
     def comprobarFiltroValor(self, filtro: str, valor: str) -> bool:

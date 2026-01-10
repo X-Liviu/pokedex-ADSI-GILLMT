@@ -1,0 +1,34 @@
+.first_place_container {
+    /* 1. Centramos el contenedor completo */
+    position: relative;
+    left: 50%;
+    transform: translateX(-50%);
+    width: fit-content;
+
+    /* 2. Alineamos los textos uno encima de otro */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-bottom: 20px;
+
+    /* Añade esta línea */
+    margin-top: 75px; /* Ajusta los píxeles según cuánto quieras bajarlo */
+
+    font-family: 'Arial', sans-serif;
+}
+
+.puesto_numero {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px; /* Espacio entre el número y el nombre */
+}
+
+.nombre_burbuja {
+    /* 3. Estilo solo para el nombre */
+    background: #ce5888;
+    color: black;
+    padding: 20% 150%;
+    border-radius: 50px; /* Esquinas totalmente redondas */
+    font-weight: bold;
+}

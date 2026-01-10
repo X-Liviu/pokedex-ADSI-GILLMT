@@ -3,20 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Ranking</title>
+    <link rel="stylesheet" href={{ url_for("static", filename="ranking.css") }}>
 </head>
 <body>
+    <!---
     <h2>Ranking</h2>
+    ---->
+    <div class="first_place_container">
+        <div class="puesto_numero">{{usuarios.usuarios[0].puesto}}</div>
+        <div class="nombre_burbuja">{{usuarios.usuarios[0].nombre}}</div>
+    </div>
     <table>
-        <tr>
-            <th>Usuario</th>
-            <th>Rareza</th>
-            <th>Puesto</th>
-        </tr>
         {% for usuario in usuarios.usuarios%}
         <tr>
+            {% if usuario.puesto > 3 %}
             <td><a href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuario.nombre)}} "> {{usuario.nombre}}</a></td>
             <td>{{usuario.rareza}}</td>
             <td>{{usuario.puesto}}</td>
+            {% endif %}
         </tr>
         {% endfor %}
     </table>

@@ -32,8 +32,33 @@ class MarcoDex:
     def mostrarRanking(self) -> Custom_types.Ranking.Usuarios:
         return Ranking.getMyRanking(self.db).mostrarRanking()
 
-    def mostrarUsuario(self, pNombreUsuario: str) -> Custom_types.Ranking.Usuario:
-        return Ranking.getMyRanking(self.db).mostrarUsuario(pNombreUsuario)
+    """
+    def mostrarUsuario(self, pNombreUsuario: str, pNombreAmigo: str) -> Custom_types.MarcoDex.Usuario:
+        resultado_ranking: Custom_types.Ranking.Usuario = Ranking.getMyRanking(self.db).mostrarUsuario(pNombreAmigo)
+        resultado_gestor_usuario: Custom_types.GestorUsuario.EstadoAmigo = gestorUsuario.getMyGestorUsuario(pNombreUsuario, self.db).esMiAmigo(pNombreAmigo)
+    
+        return {
+            "nombre": resultado_ranking["nombre"],
+            "equipoEspecie": resultado_ranking["equipoEspecie"],
+            "equipoCustom": resultado_ranking["equipoCustom"],
+            "fotoPokemon": resultado_ranking["fotoPokemon"],
+            "puesto": resultado_ranking["puesto"],
+            "estado_amigo": resultado_gestor_usuario["estado_amigo"],
+        }
+    """
+
+    def mostrarUsuario(self, pNombreUsuario: str, pNombreAmigo: str) -> Custom_types.MarcoDex.Usuario:
+        resultado_ranking: Custom_types.Ranking.Usuario = Ranking.getMyRanking(self.db).mostrarUsuario(pNombreAmigo)
+        # resultado_gestor_usuario: Custom_types.GestorUsuario.EstadoAmigo = gestorUsuario.getMyGestorUsuario(pNombreUsuario, self.db).esMiAmigo(pNombreAmigo)
+
+        return {
+            "nombre": resultado_ranking["nombre"],
+            "equipoEspecie": resultado_ranking["equipoEspecie"],
+            "equipoCustom": resultado_ranking["equipoCustom"],
+            "fotoPokemon": resultado_ranking["fotoPokemon"],
+            "puesto": resultado_ranking["puesto"],
+            # "estado_amigo": resultado_gestor_usuario["estado_amigo"],
+        }
 
     def aniadirAmigo(self, nombreUsuario: str) -> Dict[str, bool]:
         resultado: Dict[str, bool] = {"Aniadido": False}

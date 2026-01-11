@@ -347,6 +347,38 @@ def test_borrar_pokemon_en_edicion(client):
         pytest.fail("No se encontró ID para borrar en edición")
 
 
+def test_sustituir_pokemon_misma_especie_en_edicion(client):
+    """5.5: El usuario sustituye un Pokémon por otro de la misma especie."""
+    inyectar_datos_pokedex()
+    with client.session_transaction() as sess:
+        sess['username'] = 'Tata'
+
+    from app.controller.model.gestorUsuario_controller import gestorUsuario
+    gestor = gestorUsuario._instancias_usuarios.get("Tata")
+    equipo_real = gestor.usuario.buscarEquipo(1)
+
+    # Preparar escenario: empezamos con un Pikachu
+    equipo_real.lista_pokemon = []
+    equipo_real.addPokemon("Pikachu", "PikaViejo")
+    poki_id_viejo = equipo_real.lista_pokemon[0].pokemon_id
+
+    client.get('/modificar-equipo/1')  # Clonamos
+
+    # Sustitución: Borrar viejo, añadir nuevo
+    client.post('/modificar-equipo/1', data={'accion': 'borrar', 'pokemon_id': poki_id_viejo})
+    res = client.post('/modificar-equipo/1', data={
+        'accion': 'aniadir', 'especie': 'Pikachu', 'nombre_custom': 'PikaNuevo'
+    }, follow_redirects=True)
+
+    assert b"PikaNuevo" in res.data
+    assert b"PikaViejo" not in res.data
+
+    # Guardar cambios
+    client.post('/modificar-equipo/1', data={'accion': 'guardar'}, follow_redirects=True)
+    motes_finales = [p.nombre_custom for p in equipo_real.lista_pokemon]
+    assert "PikaNuevo" in motes_finales
+
+
 def test_guardar_edicion_sin_cambios(client):
     """5.5: Usuario guarda sin haber hecho cambios."""
     res = client.post('/modificar-equipo/1', data={'accion': 'guardar'}, follow_redirects=True)

@@ -3,7 +3,6 @@ from flask import Blueprint, render_template, session, redirect, url_for, reques
 from app.controller.model.marcoDex_controller import MarcoDex
 from app.database.connection import Connection
 
-
 def crear_equipo_blueprint(db: Connection) -> Blueprint:
     nombre_direccion_crear_equipo: str = "crear_equipo"
     bp_crear_equipo = Blueprint(nombre_direccion_crear_equipo, __name__)

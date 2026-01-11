@@ -103,8 +103,8 @@ class Ranking:
             for fila in resultado_sql:
                 resultado["equipoEspecie"].append(fila["NombreEspecie"])
                 resultado["equipoCustom"].append(fila["NombreCustom"])
-                print(fila["NombreEspecie"])
                 sprite_actual = pokebase.pokemon(fila["NombreEspecie"]).sprites.front_default
+                # TODO: La linea sprite actual hay que cambiarla a una llamada de la Pokedex
                 resultado["fotoPokemon"].append(sprite_actual)
 
         return resultado

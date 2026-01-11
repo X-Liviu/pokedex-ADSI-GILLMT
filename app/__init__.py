@@ -99,6 +99,8 @@ def create_app():
     app.register_blueprint(lista_pokemon_blueprint(db))
     app.register_blueprint(chatbot_blueprint(db))
     app.register_blueprint(modificar_equipo_blueprint(db))
+    app.register_blueprint(ver_amigos_blueprint())
+    app.register_blueprint(modificar_datos_blueprint(db))
 
     """
     Esto es para que se redireccione a otra

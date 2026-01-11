@@ -165,6 +165,3 @@ class gestorUsuario:
 
     def tieneAmigos(self) -> bool:
         return self.usuario.tieneAmigos()
-
-    def getNombreUsuario(self) -> str:
-        return self.usuario.getNombreUsuario()

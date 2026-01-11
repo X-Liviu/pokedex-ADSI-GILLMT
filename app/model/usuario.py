@@ -97,6 +97,3 @@ class Usuario:
 
     def tieneAmigos(self) -> bool:
         return self.amigos != []
-
-    def getNombreUsuario(self) -> str:
-        return self.nombre_usuario

@@ -118,9 +118,6 @@ class MarcoDex:
         #clase de gestor_noticia por crear
         return gestorNoticias.getGestorNoticias.mostrar_changelog(usuario)
 
-    def getNombreUsuario(self) -> str:
-        return gestorUsuario.getMyGestorUsuario().getNombreUsuario()
-
     def mostrarPokedex(self) -> str:
         return PokeDex.get_instance().mostrarPokedex()
 

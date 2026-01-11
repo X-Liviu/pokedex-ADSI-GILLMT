@@ -1,5 +1,4 @@
-from flask import Blueprint, render_template
-from app.database.connection import Connection
+from flask import Blueprint, render_template, session
 from app.controller.model.marcoDex_controller import MarcoDex
 
 def changelog_blueprint(db):
@@ -10,8 +9,12 @@ def changelog_blueprint(db):
         mDex = MarcoDex.getMyMarcoDex(db)
 
         if mDex.tiene_amigos():
+            # PRUEBA
+            if not session.get('username'):
+                session['username'] = 'Horchata'
 
-            nombreUsuario = mDex.getNombreUsuario()
+            nombreUsuario = session.get('username')
+
             lista_noticias = mDex.mostrar_changelog(nombreUsuario)
             return render_template('changelog.html', noticias=lista_noticias)
         else:

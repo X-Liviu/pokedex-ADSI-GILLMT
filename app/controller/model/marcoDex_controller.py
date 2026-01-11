@@ -120,10 +120,10 @@ class MarcoDex:
         gestor.descartarCambios(numEquipo)
 
     def mostrarOpciones(self):
-        return ChatBot.mostrarOpciones()
+        return ChatBot.getChatBot(self.db).mostrarOpciones()
 
     def mejorPokemon(self, numEquipo):
-        return gestorUsuario.mejorPokemon(numEquipo)
+        return gestorUsuario.getMyGestorUsuario(self.db).mejorPokemon(numEquipo)
 
     def obtenerEfectos(self, nombreEspecie) :
         return gestorPokeDex.obtenerEfectos(nombreEspecie)

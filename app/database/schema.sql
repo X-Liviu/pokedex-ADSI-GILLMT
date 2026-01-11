@@ -154,6 +154,15 @@ CREATE TABLE EfectoTipo (
     FOREIGN KEY (NombreTipo2) REFERENCES Tipo(Nombre)
 );
 
+-- 16. Relacion evoluciones Pokémon
+CREATE TABLE Evolucion (
+    Evolucion TEXT,
+    Preevolucion TEXT,
+    PRIMARY KEY (Evolucion, Preevolucion),
+    FOREIGN KEY (Evolucion) REFERENCES EspeciePokemon(Nombre),
+    FOREIGN KEY (Preevolucion) REFERENCES EspeciePokemon(Nombre)
+);
+
 
 --- INSERTAR DATOS DE PRUEBA (Refactorizados) ---
 
@@ -172,6 +181,9 @@ VALUES ('LauraX', 'Laura', 'Calvo', 'laura@celeste.com', '1234', 'VERIF');
 
 INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol)
 VALUES ('MarcoX', 'Marco', 'Lartategui', 'marco@teamrocket.com', '1234', 'NOVERIF');
+
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol)
+VALUES ('IkerX', 'Iker', 'Fuente', 'iker@oak.net', '1234', 'VERIF');
 
 
 -- B. Datos necesarios para que los equipos funcionen (Región, Especie)
@@ -195,3 +207,6 @@ INSERT OR IGNORE INTO Equipo (idEquipo, numEquipo, NombreUsuario) VALUES (2, 1, 
 -- E. Relación Pokemon - Equipo
 INSERT OR IGNORE INTO PokemonEnEquipo (idEquipoInterno, idPokemon) VALUES (1, 1); -- Pikachu en equipo de Ash
 INSERT OR IGNORE INTO PokemonEnEquipo (idEquipoInterno, idPokemon) VALUES (2, 2); -- Eevee en equipo de Gary
+
+-- F. Opción ChatBot
+INSERT OR IGNORE INTO OpcionChatbot VALUES("1", "Dado un equipo Pokémon, devolver cual es el mejor.")

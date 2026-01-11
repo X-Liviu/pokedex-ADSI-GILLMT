@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Marcodex - Modificar Datos</title>
+    <style>
+        /* Importación de fuentes y variables (IGUAL QUE EL ORIGINAL) */
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap');
+        :root { --pink: #ff66c4; --cream: #f2e9e4; --border: 3px solid #000; --shadow: 4px 4px 0px #000; --grey-input: #c4c4c4; }
+        body { font-family: 'Fredoka', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
+
+        /* Estilos de la ventana (IGUAL QUE EL ORIGINAL) */
+        .window { width: 800px; height: 550px; background: white; border: var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
+        .window-header { height: 50px; background: var(--pink); border-bottom: var(--border); display: flex; align-items: center; padding-left: 15px; gap: 10px; }
+        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
+        .red { background: #ff4d4d; } .yellow { background: #ffcc00; } .green { background: #00cc00; }
+
+        /* Contenido principal - MODIFICADO para alineación */
+        .content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            /* Se cambia justify-content para que empiece desde arriba, no centrado verticalmente */
+            justify-content: flex-start;
+            padding-top: 70px; /* Espacio superior añadido para coincidir con la imagen */
+            position: relative;
+        }
+
+        /* Nuevo contenedor para el formulario para manejar el layout de columna única */
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            width: 85%; /* Ancho ajustado */
+        }
+
+        /* Estilos de Input - MODIFICADO */
+        input {
+            width: 100%;
+            padding: 15px 20px; /* Padding aumentado para que parezcan más grandes como en la foto */
+            border: 2px solid black;
+            background: var(--grey-input);
+            border-radius: 12px;
+            outline: none;
+            box-sizing: border-box;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem; /* Fuente ligeramente más grande */
+            color: black;
+        }
+
+        /* IMPORTANTE: Hacemos que el placeholder sea negro sólido para simular las etiquetas dentro de la caja */
+        input::placeholder {
+            color: black;
+            opacity: 1;
+        }
+
+        /* Contenedor para la última fila (input + botón guardar) */
+        .last-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 30px;
+        }
+
+        /* El último input no debe ocupar todo el ancho para dejar espacio al botón */
+        .last-row input {
+            flex-grow: 1; /* Ocupa el espacio restante */
+            max-width: 60%; /* O un ancho fijo aproximado para coincidir con la imagen */
+        }
+
+        /* Estilos de Botones (BASE ORIGINAL CON PEQUEÑOS AJUSTES) */
+        .btn { background: var(--cream); border: var(--border); border-radius: 10px; box-shadow: var(--shadow); cursor: pointer; font-weight: 700; font-family: inherit; text-decoration: none; color: black; text-align: center; display: inline-block; }
+        .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
+
+        .btn-save {
+            padding: 12px 35px;
+            font-size: 1.2rem;
+            /* Se eliminó align-self y margin-top del original */
+        }
+
+        .btn-back {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            padding: 10px 30px;
+            font-size: 1rem;
+        }
+
+        /* (Estilos de mensajes flash originales - se mantienen por si acaso) */
+        .flash-msg { text-align: center; color: red; font-weight: bold; margin-bottom: 20px; background: #ffe6e6; padding: 10px; border-radius: 10px; border: 2px solid red; width: 80%; margin: 0 auto; }
+    </style>
+</head>
+<body>
+    <div class="window">
+        <div class="window-header">
+            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+        </div>
+        <div class="content">
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}{% for message in messages %}<div class="flash-msg">{{ message }}</div>{% endfor %}{% endif %}
+            {% endwith %}
+
+            <form class="form-container" action="{{ url_for('modificar_datos.modificar_datos') }}" method="POST">
+
+                <input type="text" name="nombre" placeholder="Nombre:">
+
+                <input type="text" name="apellido" placeholder="Apellidos:">
+
+                <div class="last-row">
+                    <input type="text" name="usuario" placeholder="Nombre Usuario:">
+                    <button type="submit" class="btn btn-save">Guardar</button>
+                </div>
+
+            </form>
+
+            <a href="{{ url_for('index') }}" class="btn btn-back">Volver</a>
+        </div>
+    </div>
+</body>
+</html>

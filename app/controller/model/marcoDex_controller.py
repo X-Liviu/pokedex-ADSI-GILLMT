@@ -212,5 +212,34 @@ class MarcoDex:
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
         return gestor.usuario if gestor else None
 
+    def pedirUsuariosParaAdmin(self):
+        """
+        Paso 3 del flujo Aprobar/Borrar/Modificar
+        """
+        return gestorUsuario.obtenerUsuariosParaAdmin(self.db)
+
+    def procesarAprobadoUsuario(self, pNomUsuario: str) -> bool:
+        """
+        Paso 13 del flujo Aprobar
+        """
+        return gestorUsuario.aprobarUsuario(pNomUsuario, self.db)
+
+    def procesarBorradoUsuario(self, pNomUsuario: str):
+        """
+        Paso 13 del flujo Borrar. Retorna JSON/Lista actualizada.
+        """
+        return gestorUsuario.borrarUsuario(pNomUsuario, self.db)
+
+    def procesarModificarDatosAdmin(self, pNomUsuario, pNombre, pAp, pNomUsuarioModif) -> bool:
+        """
+        Paso 15 del flujo Modificar
+        """
+        try:
+            gestorUsuario.modificarUsuarioEnMemoriaPorAdmin(pNomUsuario, pNombre, pAp, pNomUsuarioModif, self.db)
+            return True
+        except Exception as e:
+            print(f"Error procesarModificar: {e}")
+            return False
+
 if __name__ == "__main__":
     pass

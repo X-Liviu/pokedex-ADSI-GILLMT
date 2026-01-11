@@ -95,16 +95,15 @@
 
                 <ul class="user-list" id="listaUsuarios">
                     {% for usuario in usuarios %}
-                    <li class="user-item"
-                        onclick="seleccionarUsuario(this, '{{ usuario.id }}')"
-                        id="user-row-{{ usuario.id }}">
-
-                        <div class="user-info-left">
-                            <div class="user-icon"></div>
-                            <span>{{ usuario.nombre }}</span>
-                        </div>
-                        <span class="user-role">{{ usuario.rol }}</span>
-                    </li>
+                        <li class="user-item"
+                        onclick="seleccionarUsuario(this, '{{ usuario.nomUsuario }}')"
+                        id="user-row-{{ usuario.nomUsuario }}">
+                            <div class="user-info-left">
+                                <div class="user-icon"></div>
+                                <span>{{ usuario.nombre }} {{ usuario.apellido }} ({{ usuario.nomUsuario }})</span>
+                            </div>
+                            <span class="user-role">{{ usuario.rol }}</span>
+                        </li>
                     {% endfor %}
                 </ul>
             </div>
@@ -159,9 +158,13 @@
 
         function irAModificar() {
             if (usuarioSeleccionadoId) {
-                window.location.href = "/modificar_usuario/" + usuarioSeleccionadoId;
+            // Redirige a una ruta que pinte la pantalla de la Fig. 10
+            // usuarioSeleccionadoId contiene el nombre_usuario
+            window.location.href = "/formulario_modificar_admin/" + usuarioSeleccionadoId;
             }
         }
+    // Vincula esto al botón #btnModificar en el HTML: onclick="irAModificar()"
+    document.getElementById('btnModificar').onclick = irAModificar;
 
         function actualizarBotones() {
             const haySeleccion = usuarioSeleccionadoId !== null;

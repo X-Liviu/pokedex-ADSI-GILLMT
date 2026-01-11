@@ -34,11 +34,11 @@ def registrarse_blueprint(db: Connection) -> Blueprint:
             elif resultado == 0:
                 # --- ÉXITO: VERIFICACIÓN ROBUSTA ---
                 # Intentamos iniciar sesión REALMENTE para asegurar que la BD está bien
-                if mi_marcodex.iniciarSesion(usuario, contrasena):
+                if mi_marcodex.iniciarSesion(pNomUsuario, pContrasena):
                     # Ahora sí, guardamos la sesión
-                    session['usuario'] = usuario
+                    session['usuario'] = pNomUsuario
 
-                    rol_real = mi_marcodex.getRol(usuario)
+                    rol_real = mi_marcodex.getRol(pNomUsuario)
                     session['rol'] = rol_real
 
                     # Redirección final

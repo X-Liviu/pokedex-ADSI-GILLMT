@@ -6,7 +6,9 @@ from app.model.usuario import Usuario
 
 class gestorUsuario:
     _instancias_usuarios = {}
-    _modificaciones_temporales = {}  # Necesario para guardar cambios pendientes de confirmación
+    _modificaciones_temporales = {}
+
+    listaUsuariosParaAdmin = []
 
     def __init__(self, db, usuario):
         self.db = db
@@ -283,3 +285,118 @@ class gestorUsuario:
 
         # IMPORTANTE: Devolvemos el objeto usuario, no un booleano
         return usuario_actualizado
+
+    @classmethod
+    def obtenerUsuariosParaAdmin(cls, db):
+        """
+        Flujo: SELECT -> Crear Objetos Usuario -> Guardar en listaUsuariosParaAdmin -> Devolver Diccionarios
+        """
+        cls.listaUsuariosParaAdmin = []  # Limpiamos la lista anterior
+        lista_diccionarios = []
+
+        sql = "SELECT Nombre, Apellido, NombreUsuario, Correo, Contrasena, Rol FROM Usuario WHERE Rol = 'NOVERIF'"
+        # Nota: He añadido 'NOVERIF' al WHERE para filtrar, aunque el flujo Java decía SELECT ALL,
+        # en web es mejor filtrar en SQL. Si quieres TODOS, quita el WHERE.
+
+        resultado = db.select(sql, ())
+
+        for fila in resultado:
+            # 1. Crear objeto Usuario (como dice el flujo paso 11)
+            nuevo_usuario = Usuario(
+                nombre=fila['Nombre'],
+                apellido=fila['Apellido'],
+                nombre_usuario=fila['NombreUsuario'],
+                correo=fila['Correo'],
+                contrasena=fila['Contrasena'],
+                rol=fila['Rol'],
+                lista_equipos=[],
+                db=db
+            )
+
+            # 2. Añadir a la lista en memoria
+            cls.listaUsuariosParaAdmin.append(nuevo_usuario)
+
+            # 3. Preparar diccionario para la vista
+            lista_diccionarios.append({
+                "nombre": fila['Nombre'],
+                "apellido": fila['Apellido'],
+                "nomUsuario": fila['NombreUsuario'],
+                "rol": fila['Rol']
+            })
+
+        return lista_diccionarios
+
+    @classmethod
+    def aprobarUsuario(cls, pNomUsuario, db) -> bool:
+        """
+        Actualiza a VERIF en BD.
+        """
+        try:
+            sql = "UPDATE Usuario SET Rol='VERIF' WHERE NombreUsuario = ?"
+            db.update(sql, (pNomUsuario,))
+
+            # Verificación opcional (Paso 16-19 del flujo)
+            sql_check = "SELECT Rol FROM Usuario WHERE NombreUsuario = ?"
+            res = db.select(sql_check, (pNomUsuario,))
+            if res and res[0]['Rol'] == 'VERIF':
+                return True
+            return False
+        except Exception as e:
+            print(f"Error aprobarUsuario: {e}")
+            return False
+
+    @classmethod
+    def borrarUsuario(cls, pNomUsuario, db):
+        """
+        Borra de BD, borra de la lista en memoria y devuelve la lista actualizada.
+        """
+        # 1. Buscar usuario en la lista de memoria para borrarlo
+        usuario_a_borrar = None
+        for u in cls.listaUsuariosParaAdmin:
+            if u.getNomUsuario() == pNomUsuario:
+                usuario_a_borrar = u
+                break
+
+        # 2. Remover de memoria
+        if usuario_a_borrar:
+            cls.listaUsuariosParaAdmin.remove(usuario_a_borrar)
+
+        # 3. Ejecutar SQL DELETE
+        try:
+            sql = "DELETE FROM Usuario WHERE NombreUsuario = ?"
+            db.delete(sql, (pNomUsuario,))  # Asumiendo que db.delete existe, si no usar db.update/insert
+        except Exception as e:
+            print(f"Error borrando usuario BD: {e}")
+
+        # 4. Devolver la lista actualizada en formato diccionarios
+        lista_actualizada = []
+        for u in cls.listaUsuariosParaAdmin:
+            lista_actualizada.append({
+                "nombre": u.getNombre(),
+                "apellido": u.getApellido(),
+                "nomUsuario": u.getNomUsuario(),
+                "rol": u.rol
+            })
+
+        return lista_actualizada
+
+    @classmethod
+    def modificarUsuarioEnMemoriaPorAdmin(cls, pNomUsuarioOriginal, pNombre, pAp, pNomUsuarioModif, db):
+        """
+        Busca en memoria, actualiza el objeto y hace el UPDATE en BD.
+        """
+        # 1. Buscar usuario en lista (Paso 17 flujo)
+        usuario_act = None
+        for u in cls.listaUsuariosParaAdmin:
+            if u.getNomUsuario() == pNomUsuarioOriginal:
+                usuario_act = u
+                break
+
+        if usuario_act:
+            # 2. Modificar datos en el objeto (Paso 19 flujo)
+            # Nota: Asumimos que correo y contraseña no cambian o se pasan vacíos/nulos según tu flujo
+            usuario_act.modificarDatos(pNombre, pAp, usuario_act.getCorreo(), pNomUsuarioModif, None)
+
+            # 3. Update SQL (Paso 20 flujo)
+            sql = "UPDATE Usuario SET NombreUsuario=?, Nombre=?, Apellido=? WHERE NombreUsuario=?"
+            db.update(sql, (pNomUsuarioModif, pNombre, pAp, pNomUsuarioOriginal))

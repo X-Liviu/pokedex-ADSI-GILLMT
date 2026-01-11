@@ -20,7 +20,7 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
         #    session['username'] = 'Tata'
 
         if not nombre_sesion:
-           return redirect(url_for('iniciar_sesion')) # Redirección si no hay sesión
+           return redirect(url_for('iniciar_sesion.iniciar_sesion')) # Redirección si no hay sesión
 
         # 2. CAPTURAR EL ORIGEN (Vital para saber a dónde volver)
         # Lo buscamos primero en el formulario (POST) y si no, en la URL (GET)

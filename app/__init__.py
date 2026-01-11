@@ -7,6 +7,7 @@ from app.controller.model.gestorUsuario_controller import gestorUsuario
 # MAEs
 from app.controller.model.marcoDex_controller import MarcoDex
 from app.controller.model.ranking_controller import Ranking
+from app.controller.ui.iniciarSesion_controller import iniciar_sesion_blueprint
 from app.controller.ui.chatbot_controller import chatbot_blueprint
 from app.model.usuario import Usuario
 from app.controller.model.especie_controller import Especie
@@ -15,6 +16,7 @@ from app.controller.model.pokeDex_controller import PokeDex
 
 # Custom UI
 from app.controller.ui import menu_principal_controller
+from app.controller.ui import iniciarSesion_controller
 from app.controller.ui.verRanking_controller import ranking_blueprint
 from app.controller.ui.changelog_controller import changelog_blueprint
 from app.controller.ui.verEquipos_controller import ver_equipos_blueprint
@@ -101,6 +103,8 @@ def create_app():
     app.register_blueprint(modificar_equipo_blueprint(db))
     app.register_blueprint(ver_amigos_blueprint())
     app.register_blueprint(modificar_datos_blueprint(db))
+    app.register_blueprint(iniciar_sesion_blueprint(db))
+
 
     """
     Esto es para que se redireccione a otra
@@ -111,5 +115,5 @@ def create_app():
     @app.route('/')
     def index() -> str:
         #return app.redirect("/mis-equipos")
-        return menu_principal_controller.mostrar_menu()
+        return iniciarSesion_controller.iniciar_sesion()
     return app

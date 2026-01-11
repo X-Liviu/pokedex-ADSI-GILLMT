@@ -11,21 +11,20 @@ def registrarse_blueprint(db: Connection) -> Blueprint:
         # --- ZONA POST (Procesar formulario) ---
         if request.method == 'POST':
             # 1. Recoger datos
-            nombre = request.form['nombre']
-            apellido = request.form['apellido']
-            correo = request.form['correo']
-            usuario = request.form['usuario']
-            contrasena = request.form['contrasena']
-            contrasena_rep = request.form['contrasena_rep']
+            pNom = request.form['nombre']
+            pAp = request.form['apellido']
+            pCorreo = request.form['correo']
+            pNomUsuario = request.form['usuario']
+            pContrasena = request.form['contrasena']
+            pContrasenaRep = request.form['contrasena_rep']
 
             # 2. Llamada al sistema
             mi_marcodex = MarcoDex.getMyMarcoDex(db)
-            resultado = mi_marcodex.procesarRegistro(nombre, apellido, correo, usuario, contrasena, contrasena_rep)
+            resultado = mi_marcodex.procesarRegistro(pNom, pAp, pCorreo, pNomUsuario, pContrasena, pContrasenaRep)
 
             # 3. Evaluar resultado
             if resultado == -1:
                 flash("Error: Las contraseñas no coinciden.")
-                # Asegúrate de que el nombre del HTML coincida con tu archivo real
                 return render_template('registro.html')
 
             elif resultado == -2:

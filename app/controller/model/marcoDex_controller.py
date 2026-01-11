@@ -156,10 +156,6 @@ class MarcoDex:
         return gestorUsuario.getMyGestorUsuario().tiene_amigos()
 
     def iniciarSesion(self, pNomUsuario: str, pContrasena: str) -> bool:
-        """
-        Delega la verificacion al gestor de usuarios.
-        """
-        # Llamamos al método estático/clase del gestor
         return gestorUsuario.iniciarSesion(pNomUsuario, pContrasena, self.db)
 
     def getRol(self, nombre_usuario: str) -> str:
@@ -173,7 +169,7 @@ class MarcoDex:
             return gestor.usuario.rol
         return "NOVERIF"
 
-    def procesarRegistro(self, pNom, pAp, pCorreo, pNomUsuario, pContrasena, pContrasenaRep) -> int:
+    def procesarRegistro(self, pNom: str, pAp: str, pCorreo: str, pNomUsuario: str, pContrasena: str, pContrasenaRep: str) -> int:
         """
         Coordina el registro de un nuevo usuario.
         Retornos:
@@ -184,7 +180,7 @@ class MarcoDex:
         # Llamamos al método estático del gestor
         return gestorUsuario.registrarUsuario(pNom, pAp, pCorreo, pNomUsuario, pContrasena, pContrasenaRep, self.db)
 
-    def procesarSolicitudModificar(self, pNomUsuario, pNom, pAp, pCorreo, pUsuarioNuevo, pNuevaContra) -> int:
+    def procesarSolicitudModificar(self, pNomUsuario: str, pNom: str, pAp: str, pCorreo: str, pUsuarioNuevo: str, pNuevaContra: str) -> int:
         """
         Retorna:
          0: Modificación directa exitosa
@@ -207,9 +203,8 @@ class MarcoDex:
             gestor.modificarUsuarioEnMemoriaYBD(pNom, pAp, pCorreo, pUsuarioNuevo, pNuevaContra)
             return 0
 
-    def confirmarConContraseña(self, pNomUsuario, pContraseña):
+    def confirmarConContraseña(self, pNomUsuario: str, pContraseña: str): #TODO ahora se devuelve el objeto entero, intentar cambiar por String o boolean como lo tenía antes si es posible
         gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
-        # Retornamos directamente lo que devuelva el gestor (ahora es un Objeto Usuario o None)
         return gestor.validarCredencialesYGuardarCambios(pNomUsuario, pContraseña)
 
     # --- MÉTODOS AUXILIARES ---

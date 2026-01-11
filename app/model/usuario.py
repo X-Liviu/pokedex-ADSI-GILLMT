@@ -101,7 +101,7 @@ class Usuario:
     def validarPassword(self, pContrasena: str) -> bool:
         return self.contrasena == pContrasena
 
-    def modificarDatos(self, pNom, pAp, pCorreo, pUsuarioNuevo, pNuevaContra):
+    def modificarDatos(self, pNom: str, pAp: str, pCorreo: str, pUsuarioNuevo: str, pNuevaContra: str):
         """
         Actualiza los datos del objeto en memoria.
         """

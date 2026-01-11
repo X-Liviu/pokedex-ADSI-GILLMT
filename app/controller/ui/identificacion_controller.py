@@ -13,18 +13,18 @@ def identificacion_blueprint(db: Connection) -> Blueprint:
             return redirect(url_for('index'))
 
         if request.method == 'POST':
-            usuario_input = request.form['usuario']
-            contrasena_input = request.form['contrasena']
+            pNomUsuario = request.form['usuario']
+            pContrasena = request.form['contrasena']
 
             mi_marcodex = MarcoDex.getMyMarcoDex(db)
-            exito = mi_marcodex.iniciarSesion(usuario_input, contrasena_input)
+            exito = mi_marcodex.iniciarSesion(pNomUsuario, pContrasena)
 
             if exito:
-                session['usuario'] = usuario_input
+                session['usuario'] = pNomUsuario
 
                 # --- IMPORTANTE: Guardamos el rol en sesión ---
                 # Esto es lo que usa tu HTML para mostrar u ocultar el botón de Admin
-                rol_usuario = mi_marcodex.getRol(usuario_input)
+                rol_usuario = mi_marcodex.getRol(pNomUsuario)
                 session['rol'] = rol_usuario
 
                 # --- REDIRECCIÓN UNIFICADA ---
@@ -40,7 +40,6 @@ def identificacion_blueprint(db: Connection) -> Blueprint:
     @bp_identificacion.route("/logout")
     def logout():
         session.clear()
-        flash("Has cerrado sesión correctamente.")
         return redirect(url_for('identificacion.identificacion'))
 
     return bp_identificacion

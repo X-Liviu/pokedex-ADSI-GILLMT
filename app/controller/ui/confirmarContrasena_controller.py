@@ -9,24 +9,21 @@ def confirmar_contrasena_blueprint(db: Connection) -> Blueprint:
 
     @bp.route("/confirmar-cambios", methods=["GET", "POST"])
     def confirmar_cambios():
-        usuario_actual = session.get('usuario')
-        if not usuario_actual:
+        pNomUsuario = session.get('usuario')
+        if not pNomUsuario:
             return redirect(url_for('modificar_datos.modificar_datos'))
 
         if request.method == "POST":
             pContrasena = request.form.get("password_actual")
 
-            # LLAMADA A MARCODEX
-            # Ahora 'resultado' será el objeto Usuario si salió bien, o None si salió mal
-            usuario_obj = mDex.confirmarConContraseña(usuario_actual, pContrasena)
+            usuario_obj = mDex.confirmarConContraseña(pNomUsuario, pContrasena)
 
             if usuario_obj:  # Si no es None, es que funcionó
 
                 # --- AQUÍ ESTÁ LA SOLUCIÓN ---
                 # Actualizamos la sesión con el nombre REAL que tiene ahora el usuario
-                session['usuario'] = usuario_obj.getNomUsuario()
+                session['usuario'] = usuario_obj.getNomUsuario() #TODO que se devuelva el Usuario entero a la UI y que acceda ella directamente al atributo del usuario.
 
-                flash("Perfil actualizado con éxito.")
                 return redirect(url_for('index'))
             else:
                 flash("Contraseña incorrecta o error al procesar.")

@@ -97,3 +97,34 @@ class Usuario:
 
     def tieneAmigos(self) -> bool:
         return self.amigos != []
+
+    def validarPassword(self, pContrasena: str) -> bool:
+        return self.contrasena == pContrasena
+
+    def modificarDatos(self, pNom, pAp, pCorreo, pUsuarioNuevo, pNuevaContra):
+        """
+        Actualiza los datos del objeto en memoria.
+        """
+        self.nombre = pNom
+        self.apellido = pAp
+        self.correo = pCorreo
+        self.nombre_usuario = pUsuarioNuevo
+
+        if pNuevaContra and len(pNuevaContra) > 0:
+            self.contrasena = pNuevaContra
+
+    # --- GETTERS ---
+    def getNombre(self):
+        return self.nombre
+
+    def getApellido(self):
+        return self.apellido
+
+    def getCorreo(self):
+        return self.correo
+
+    def getNomUsuario(self):
+        return self.nombre_usuario
+
+    def getContrasena(self):
+        return self.contrasena

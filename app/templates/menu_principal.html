@@ -138,7 +138,7 @@
             <img src="{{ url_for('static', filename='imagenes/logo.png') }}" alt="Marcodex Logo" class="center-logo-img">
 
             {% if session.get('rol') == 'ADMIN' %}
-                <a href="{{ url_for('gestionar_usuarios') }}" class="menu-btn btn-center-below-logo">Ver Lista de<br>Usuarios</a>
+                <a href="{{ url_for('ver_lista_usuarios.ver_lista_usuarios') }}" class="menu-btn btn-center-below-logo">Ver Lista de<br>Usuarios</a>
             {% endif %}
 
             <a href="{{ url_for('chatbot.chatbot_view') }}" class="menu-btn btn-right-top">Chatbot</a>

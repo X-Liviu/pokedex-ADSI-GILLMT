@@ -6,7 +6,7 @@ from app.controller.ui import lista_pokemon_controller
 from app.controller.ui import crearEquipo_controller
 from app.controller.ui import verEquipos_controller
 from app.controller.ui import verAmigos_controller
-from app.controller.ui import gestionarUsuarios_controller
+from app.controller.ui import verListaUsuarios_controller
 from app.controller.ui import chatbot_controller
 from app.controller.ui import verRanking_controller
 from app.controller.ui import changelog_controller

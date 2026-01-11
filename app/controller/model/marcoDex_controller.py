@@ -184,5 +184,38 @@ class MarcoDex:
         # Llamamos al método estático del gestor
         return gestorUsuario.registrarUsuario(pNom, pAp, pCorreo, pNomUsuario, pContrasena, pContrasenaRep, self.db)
 
+    def procesarSolicitudModificar(self, pNomUsuario, pNom, pAp, pCorreo, pUsuarioNuevo, pNuevaContra) -> int:
+        """
+        Retorna:
+         0: Modificación directa exitosa
+         1: Requiere confirmación con contraseña
+        -1: ERROR CRÍTICO (Usuario no encontrado)
+        """
+        gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
+
+        if gestor is None:
+            # El usuario de la sesión no existe en la BD.
+            return -1
+
+        # 1. Verificar Cambios
+        es_sensible = gestor.verificarCambios(pNomUsuario, pUsuarioNuevo, pNuevaContra)
+
+        if es_sensible:
+            gestor.guardarModificacionTemporal(pNomUsuario, pNom, pAp, pCorreo, pUsuarioNuevo, pNuevaContra)
+            return 1
+        else:
+            gestor.modificarUsuarioEnMemoriaYBD(pNom, pAp, pCorreo, pUsuarioNuevo, pNuevaContra)
+            return 0
+
+    def confirmarConContraseña(self, pNomUsuario, pContraseña):
+        gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
+        # Retornamos directamente lo que devuelva el gestor (ahora es un Objeto Usuario o None)
+        return gestor.validarCredencialesYGuardarCambios(pNomUsuario, pContraseña)
+
+    # --- MÉTODOS AUXILIARES ---
+    def getUsuarioObjeto(self, nombre_usuario):
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
+        return gestor.usuario if gestor else None
+
 if __name__ == "__main__":
     pass

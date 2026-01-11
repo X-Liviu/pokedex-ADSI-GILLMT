@@ -6,6 +6,7 @@ from app.model.usuario import Usuario
 
 class gestorUsuario:
     _instancias_usuarios = {}
+    _modificaciones_temporales = {}  # Necesario para guardar cambios pendientes de confirmación
 
     def __init__(self, db, usuario):
         self.db = db
@@ -188,3 +189,102 @@ class gestorUsuario:
         except Exception as e:
             print(f"Error en BD: {e}")
             return -2
+
+    def verificarCambios(self, pNomUsuario, pUsuarioNuevo, pContraNueva) -> bool:
+        # Devuelve true si hay cambios sensibles (usuario o contraseña)
+        # MODIFICADO: Solo comprobamos si han escrito ALGO en el nuevo usuario/contraseña
+        if pUsuarioNuevo and len(pUsuarioNuevo.strip()) > 0:
+            if pNomUsuario != pUsuarioNuevo:
+                return True
+
+        if pContraNueva and len(pContraNueva) > 0:
+            return True
+        return False
+
+    def guardarModificacionTemporal(self, pNomUsuario, pNom, pAp, pCorreo, pUsuarioNuevo, pNuevaContra):
+        # Guardamos en el diccionario estático (simulando memoria del servidor)
+        # Nota: En una web real con concurrencia se usaría Redis o Session, pero seguimos tu diagrama.
+        datos = {
+            "nombre": pNom,
+            "apellido": pAp,
+            "correo": pCorreo,
+            "usuario": pUsuarioNuevo,
+            "contrasena": pNuevaContra
+        }
+        gestorUsuario._modificaciones_temporales[pNomUsuario] = datos
+
+    def recuperarModificacionTemporal(self, pNomUsuario) -> Usuario:
+        # Recuperamos el diccionario
+        datos = gestorUsuario._modificaciones_temporales.get(pNomUsuario)
+        if not datos:
+            return None
+
+        # Devolvemos un objeto Usuario "transitorio" con los datos nuevos
+        # Pasamos db=None porque es un objeto temporal solo para transportar datos
+        return Usuario(datos['nombre'], datos['apellido'], datos['usuario'],
+                       datos['correo'], datos['contrasena'], 'VERIF', [], None)
+
+    def modificarUsuarioEnMemoriaYBD(self, pNom, pAp, pCorreo, pUsuarioNuevo, pNuevaContra) -> Usuario:
+        # --- LÓGICA DE MEZCLA INTELIGENTE ---
+        # Si el input viene vacío, cogemos el dato que ya tiene el usuario.
+        final_nom = pNom if pNom and pNom.strip() else self.usuario.getNombre()
+        final_ap = pAp if pAp and pAp.strip() else self.usuario.getApellido()
+        final_correo = pCorreo if pCorreo and pCorreo.strip() else self.usuario.getCorreo()
+        final_usuario = pUsuarioNuevo if pUsuarioNuevo and pUsuarioNuevo.strip() else self.usuario.getNomUsuario()
+        final_contra = pNuevaContra if pNuevaContra and pNuevaContra.strip() else self.usuario.getContrasena()
+
+        # Guardamos el nombre viejo para el WHERE antes de que el objeto cambie
+        # Esto es vital para que la SQL encuentre la fila original
+        nombre_viejo_where = self.usuario.getNomUsuario()
+
+        # 1. Modificar en memoria (usando los valores finales)
+        self.usuario.modificarDatos(final_nom, final_ap, final_correo, final_usuario, final_contra)
+
+        # 2. Modificar en BD (Llamada SQL)
+        sql = """
+              UPDATE Usuario
+              SET Nombre=?, \
+                  Apellido=?, \
+                  Correo=?, \
+                  NombreUsuario=?, \
+                  Contrasena=?
+              WHERE NombreUsuario = ? \
+              """
+
+        # Ejecutamos el SQL con los datos finales y el nombre viejo para el WHERE
+        self.db.update(sql, (final_nom, final_ap, final_correo, final_usuario, final_contra, nombre_viejo_where))
+
+        # Actualizar caché si cambió el nombre de usuario
+        if nombre_viejo_where != final_usuario:
+            if nombre_viejo_where in gestorUsuario._instancias_usuarios:
+                del gestorUsuario._instancias_usuarios[nombre_viejo_where]
+            gestorUsuario._instancias_usuarios[final_usuario] = self
+
+        return self.usuario
+
+    def validarCredencialesYGuardarCambios(self, pNomUsuario, pContrasena):
+        # 1. Validar Contraseña (Llamada a Usuario)
+        if not self.usuario.validarPassword(pContrasena):
+            return None # Devolvemos None si falla
+
+        # 2. Recuperar Modificación Temporal
+        u_temp = self.recuperarModificacionTemporal(pNomUsuario)
+        if not u_temp:
+            return None # Devolvemos None si falla
+
+        # 3. Modificar en Memoria y BD
+        # Guardamos el resultado (que es el objeto Usuario actualizado) en una variable
+        usuario_actualizado = self.modificarUsuarioEnMemoriaYBD(
+            u_temp.getNombre(),
+            u_temp.getApellido(),
+            u_temp.getCorreo(),
+            u_temp.getNomUsuario(),
+            u_temp.getContrasena()
+        )
+
+        # Limpiar temporal
+        if pNomUsuario in gestorUsuario._modificaciones_temporales:
+            del gestorUsuario._modificaciones_temporales[pNomUsuario]
+
+        # IMPORTANTE: Devolvemos el objeto usuario, no un booleano
+        return usuario_actualizado

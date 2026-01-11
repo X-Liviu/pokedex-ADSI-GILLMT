@@ -26,6 +26,8 @@ from app.controller.ui.verAmigos_controller import ver_amigos_blueprint
 from app.controller.ui.modificarDatos_controller import modificar_datos_blueprint
 from app.controller.ui.identificacion_controller import identificacion_blueprint
 from app.controller.ui.registrarse_controller import registrarse_blueprint
+from app.controller.ui.confirmarContrasena_controller import confirmar_contrasena_blueprint
+from app.controller.ui.verListaUsuarios_controller import ver_lista_usuarios_blueprint
 # Tipos de datos
 from config import Config
 
@@ -80,6 +82,8 @@ def create_app():
     app.register_blueprint(ver_amigos_blueprint(db))
     app.register_blueprint(identificacion_blueprint(db))
     app.register_blueprint(registrarse_blueprint(db))
+    app.register_blueprint(ver_lista_usuarios_blueprint(db))
+    app.register_blueprint(confirmar_contrasena_blueprint(db))
 
     """
     Esto es para que se redireccione a otra

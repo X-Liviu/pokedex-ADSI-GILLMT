@@ -8,6 +8,7 @@ def registrarse_blueprint(db: Connection) -> Blueprint:
 
     @bp_registrarse.route("/registrarse", methods=['GET', 'POST'])
     def registrarse():
+        # --- ZONA POST (Procesar formulario) ---
         if request.method == 'POST':
             # 1. Recoger datos
             nombre = request.form['nombre']
@@ -24,6 +25,7 @@ def registrarse_blueprint(db: Connection) -> Blueprint:
             # 3. Evaluar resultado
             if resultado == -1:
                 flash("Error: Las contraseñas no coinciden.")
+                # Asegúrate de que el nombre del HTML coincida con tu archivo real
                 return render_template('registro.html')
 
             elif resultado == -2:
@@ -31,18 +33,22 @@ def registrarse_blueprint(db: Connection) -> Blueprint:
                 return render_template('registro.html')
 
             elif resultado == 0:
-                # --- ÉXITO: AUTO-LOGIN ---
-                session['usuario'] = usuario
+                # --- ÉXITO: VERIFICACIÓN ROBUSTA ---
+                # Intentamos iniciar sesión REALMENTE para asegurar que la BD está bien
+                if mi_marcodex.iniciarSesion(usuario, contrasena):
+                    # Ahora sí, guardamos la sesión
+                    session['usuario'] = usuario
 
-                rol_real = mi_marcodex.getRol(usuario)
-                session['rol'] = rol_real
+                    rol_real = mi_marcodex.getRol(usuario)
+                    session['rol'] = rol_real
 
-                if rol_real == 'NOVERIF':
-                    flash(f"Registro completado. ¡Vaya! Has tenido mala suerte y tu rol es {rol_real}.")
+                    # Redirección final
+                    return redirect(url_for('index'))
+
                 else:
-                    flash(f"Registro completado. ¡Bienvenido Entrenador Verificado!")
-
-                return redirect(url_for('index'))  # Nos lleva al menú principal directamente
+                    # Fallo de seguridad/BD tras el registro
+                    flash("Error crítico: El usuario se creó pero no se pudo iniciar sesión.")
+                    return render_template('registro.html')
 
         return render_template('registro.html')
 

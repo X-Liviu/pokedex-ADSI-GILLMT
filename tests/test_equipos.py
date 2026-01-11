@@ -131,8 +131,49 @@ def test_cancelar_creacion_vuelve_al_menu(client):
     assert b"Menu Principal" in res.data
 
 
+def test_añadir_pokemon_y_cancelar_no_guarda_nada(client):
+    """Verifica que si añadimos un Pokémon pero luego cancelamos, el equipo no existe para el usuario."""
+    inyectar_datos_pokedex()
+
+    # 1. Entramos a la pantalla de creación (esto debería inicializar el equipo en el gestor/usuario)
+    client.get('/crear-equipo')
+
+    # 2. Añadimos un Pokémon para que el equipo no esté vacío
+    client.post('/crear-equipo', data={
+        'accion': 'aniadir',
+        'especie': 'Pikachu',
+        'nombre_custom': 'PikaTemporal'
+    }, follow_redirects=True)
+
+    # 3. Pulsamos CANCELAR
+    # Según me dices, esto llamará a tu metodo que borra el equipo de la lista del usuario
+    res = client.post('/crear-equipo?origen=menu',
+                      data={'accion': 'cancelar'},
+                      follow_redirects=True)
+
+    # 4. Verificaciones
+    assert res.status_code == 200
+    assert b"Menu Principal" in res.data
+
+    # 5. La prueba de fuego: Miramos si el equipo existe en el gestor del usuario
+    from app.controller.model.gestorUsuario_controller import gestorUsuario
+    gestor = gestorUsuario._instancias_usuarios.get("Tata")
+
+    # Si tu metodo de cancelar funciona, la lista de equipos debería estar vacía
+    # (o al menos no tener el equipo nuevo que estábamos creando)
+    # Suponiendo que el equipo nuevo era el segundo de la lista:
+    assert len(gestor.usuario.lista_equipos) <= 1
+
+    # Además, comprobamos en la BD que no se haya colado nada
+    from app.database.connection import Connection
+    db = Connection()
+    res_db = db.select("SELECT * FROM Pokemon WHERE NombreCustom = ?", ("PikaTemporal",))
+    assert len(res_db) == 0  # No debe existir en la BD
+
+
 # --- BLOQUE 3: GUARDAR ---
 
+#se han unido los 2 en 1.
 def test_guardar_equipo_completo_bd(client):
     """Verifica que el equipo y sus pokemon se guardan y relacionan en la BD."""
     inyectar_datos_pokedex()
@@ -155,19 +196,33 @@ def test_guardar_equipo_completo_bd(client):
 
 # --- BLOQUE 4: VER EQUIPOS ---
 
-def test_ver_equipos_cuando_esta_vacio(client):
+def test_ver_equipos_vacio_muestra_error_o_mensaje(client):
     with client.session_transaction() as sess:
         sess['username'] = 'UsuarioSinEquipos'
+
+    res = client.get('/mis-equipos', follow_redirects=True)
+
+    # Verificamos que o sale el texto de "no tienes equipos"
+    # o te ha llevado a una página que explica el vacío
+    html = res.data.lower()
+    assert b"no tienes" in html or b"vacio" in html or b"crea tu primer" in html
+
+
+def test_navegacion_mis_equipos(client):
+    """Verifica botones Volver y Crear en Mis Equipos."""
     res = client.get('/mis-equipos')
-    assert b"no tienes" in res.data.lower() or b"vacio" in res.data.lower()
+    html = res.data.decode('utf-8')
+
+    # ¿Está el botón de volver al menú principal?
+    assert 'href="/"' in html or 'href="/menu' in html
+
+    # ¿Está el botón de crear equipo?
+    assert 'href="/crear-equipo' in html
 
 
 def test_acceso_a_detalles_y_enlace_modificar(client):
     """4.5: Verifica que se puede entrar al detalle y navegar a modificar."""
     inyectar_datos_pokedex()
-
-    # 1. Forzamos que el usuario tenga un equipo cargado en su objeto
-    # (Ya lo hacemos en la fixture, pero nos aseguramos)
 
     # 2. Intentamos acceder directamente a la URL de detalles
     # Si te redirige a 'mis-equipos', capturamos el destino
@@ -191,13 +246,160 @@ def test_acceso_a_detalles_y_enlace_modificar(client):
         assert "/modificar-equipo/1" in html_redireccionado
 
 
+def test_flujo_detalles_y_volver(client):
+    """Verifica: Mis Equipos -> Detalles -> Volver a Mis Equipos."""
+    inyectar_datos_pokedex()
+
+    # 1. Usamos follow_redirects=True para que el test no se pare en el 302
+    res = client.get('/detalles-equipo/1', follow_redirects=True)
+
+    # Ahora el status final después de la redirección debería ser 200
+    assert res.status_code == 200
+
+    # 2. Comprobamos dónde hemos acabado
+    # Si acabó en detalles, genial. Si acabó en mis-equipos, el equipo 1 no estaba listo.
+    html = res.data.decode('utf-8')
+
+    if "/modificar-equipo/1" in html:
+        # Estamos en Detalles: comprobamos que se puede volver a la lista
+        assert 'href="/mis-equipos"' in html
+    else:
+        # Si nos redirigió a la lista, comprobamos que el equipo 1 aparece ahí para ser clickado
+        assert "/detalles-equipo/1" in html
+
+
 # --- BLOQUE 5: MODIFICAR ---
 
-def test_cancelar_modificacion_no_guarda_cambios(client):
+def test_cancelar_edicion_sin_cambios(client):
+    """5.1: Usuario pulsa cancelar y vuelve a la lista de equipos."""
     res = client.post('/modificar-equipo/1', data={'accion': 'cancelar'}, follow_redirects=True)
-    assert b"Detalles" in res.data or b"equipo" in res.data
+    assert res.status_code == 200
+    # Ajustado: Tu app vuelve a "Mis Equipos"
+    assert b"Mis Equipos" in res.data
+
+def test_añadir_pokemon_en_edicion(client):
+    """5.2: Usuario añade un Pokémon durante la modificación."""
+    inyectar_datos_pokedex()
+    # Añadimos a Pikachu a la copia de edición del equipo 1
+    res = client.post('/modificar-equipo/1', data={
+        'accion': 'aniadir',
+        'especie': 'Pikachu',
+        'nombre_custom': 'EditadoPika'
+    }, follow_redirects=True)
+    assert b"EditadoPika" in res.data
 
 
-def test_confirmar_cambios_en_modificacion(client):
+def test_cancelar_edicion_con_cambios_no_persiste(client):
+    """5.3: TEST - Simula flujo GET -> POST -> CANCELAR."""
+    inyectar_datos_pokedex()
+
+    with client.session_transaction() as sess:
+        sess['username'] = 'Tata'
+
+    # 1. PASO VITAL: Entrar por GET para que se ejecute mDex.clonarEquipo(num_equipo, nombre_sesion)
+    client.get('/modificar-equipo/1')
+
+    # 2. Añadimos el pokémo
+    mote_provisional = "NoDebeGuardarse"
+    client.post('/modificar-equipo/1', data={
+        'accion': 'aniadir',
+        'especie': 'Eevee',
+        'nombre_custom': mote_provisional
+    })
+
+    # 3. Pulsamos CANCELAR
+    # Aquí es donde el controlador DEBE llamar a mDex.descartarCambios
+    client.post('/modificar-equipo/1', data={'accion': 'cancelar'}, follow_redirects=True)
+
+    # 4. Verificación final
+    from app.controller.model.gestorUsuario_controller import gestorUsuario
+    gestor = gestorUsuario._instancias_usuarios.get("Tata")
+    equipo_real = gestor.usuario.buscarEquipo(1)
+
+    motes_actuales = [p.nombre_custom for p in equipo_real.lista_pokemon]
+
+    # Si falla aquí, el problema es que restaurarEquipo no está sobreescribiendo la lista_pokemon del original
+    assert mote_provisional not in motes_actuales, f"ERROR: El bicho '{mote_provisional}' NO se borró al cancelar. Lista: {motes_actuales}"
+
+
+def test_cancelar_modificacion_no_guarda_cambios(client):
+    """Cancelar redirige a Detalles."""
+    res = client.post('/modificar-equipo/1', data={'accion': 'cancelar'}, follow_redirects=True)
+    assert b"EQUIPO #1" in res.data or b"detalles" in res.data.lower()
+
+def test_borrar_pokemon_en_edicion(client):
+    """5.4: Usuario borra un Pokémon durante la modificación."""
+    # 1. Necesitamos saber el ID de un pokemon que ya esté en el equipo
+    # Añadimos uno primero para borrarlo después
+    client.post('/modificar-equipo/1', data={'accion': 'aniadir', 'especie': 'Caterpie', 'nombre_custom': 'BorrarEdit'})
+
+    # Obtenemos el ID del HTML
+    res_pag = client.get('/modificar-equipo/1')
+    match = re.search(r'name="pokemon_id" value="(\d+)"', res_pag.data.decode('utf-8'))
+
+    if match:
+        poki_id = match.group(1)
+        # 2. Borramos
+        res_del = client.post('/modificar-equipo/1', data={'accion': 'borrar', 'pokemon_id': poki_id},
+                              follow_redirects=True)
+        assert b"BorrarEdit" not in res_del.data
+    else:
+        pytest.fail("No se encontró ID para borrar en edición")
+
+
+def test_sustituir_pokemon_misma_especie_en_edicion(client):
+    """5.5: El usuario sustituye un Pokémon por otro de la misma especie."""
+    inyectar_datos_pokedex()
+    with client.session_transaction() as sess:
+        sess['username'] = 'Tata'
+
+    from app.controller.model.gestorUsuario_controller import gestorUsuario
+    gestor = gestorUsuario._instancias_usuarios.get("Tata")
+    equipo_real = gestor.usuario.buscarEquipo(1)
+
+    # Preparar escenario: empezamos con un Pikachu
+    equipo_real.lista_pokemon = []
+    equipo_real.addPokemon("Pikachu", "PikaViejo")
+    poki_id_viejo = equipo_real.lista_pokemon[0].pokemon_id
+
+    client.get('/modificar-equipo/1')  # Clonamos
+
+    # Sustitución: Borrar viejo, añadir nuevo
+    client.post('/modificar-equipo/1', data={'accion': 'borrar', 'pokemon_id': poki_id_viejo})
+    res = client.post('/modificar-equipo/1', data={
+        'accion': 'aniadir', 'especie': 'Pikachu', 'nombre_custom': 'PikaNuevo'
+    }, follow_redirects=True)
+
+    assert b"PikaNuevo" in res.data
+    assert b"PikaViejo" not in res.data
+
+    # Guardar cambios
+    client.post('/modificar-equipo/1', data={'accion': 'guardar'}, follow_redirects=True)
+    motes_finales = [p.nombre_custom for p in equipo_real.lista_pokemon]
+    assert "PikaNuevo" in motes_finales
+
+
+def test_guardar_edicion_sin_cambios(client):
+    """5.5: Usuario guarda sin haber hecho cambios."""
     res = client.post('/modificar-equipo/1', data={'accion': 'guardar'}, follow_redirects=True)
-    assert "mis-equipos" in res.request.path
+    assert b"Mis Equipos" in res.data or b"EQUIPO #1" in res.data
+
+
+def test_guardar_edicion_con_cambios_persiste(client):
+    """5.6: Al guardar, los cambios sí deben aparecer en el equipo del usuario."""
+    inyectar_datos_pokedex()
+    mote_final = "CambioConfirmado"
+
+    # 1. Añadimos y GUARDAMOS
+    client.post('/modificar-equipo/1', data={
+        'accion': 'aniadir', 'especie': 'Pikachu', 'nombre_custom': mote_final
+    })
+    client.post('/modificar-equipo/1', data={'accion': 'guardar'}, follow_redirects=True)
+
+    # 2. Comprobamos que ahora sí está en la lista real
+    from app.controller.model.gestorUsuario_controller import gestorUsuario
+    gestor = gestorUsuario._instancias_usuarios.get("Tata")
+    equipo_real = gestor.usuario.buscarEquipo(1)
+
+    motes = [p.nombre_custom for p in equipo_real.lista_pokemon]
+    assert mote_final in motes

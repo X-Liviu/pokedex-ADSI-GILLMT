@@ -9,6 +9,17 @@ def chatbot_blueprint(db: Connection) -> Blueprint:
     bp_chatbot = Blueprint(nombre_bp, __name__)
     mDex = MarcoDex.getMyMarcoDex(db)
 
+    # Función auxiliar para convertir cualquier JSON en texto legible para el chat
+    def formatear_json_a_html(datos_json):
+        if not datos_json:
+            return "No se encontraron datos."
+
+        html = "<b>Datos encontrados:</b><br>"
+        for clave, valor in datos_json.items():
+            # Formateamos la clave (poniendo la primera letra en mayúscula) y el valor
+            html += f"• <b>{clave.capitalize()}:</b> {valor}<br>"
+        return html
+
     @bp_chatbot.route('/chatbot', methods=['GET', 'POST'])
     def chatbot_view():
         # 1. PRECARGA ÚNICA: Guardamos el JSON en la sesión para reutilizarlo
@@ -45,7 +56,7 @@ def chatbot_blueprint(db: Connection) -> Blueprint:
 
                     prompts = {
                         "1": "Introduce el <b>ID del equipo</b>:",
-                        "2": "Introduce el <b>nombre del Pokémon</b> (Fortalezas):",
+                        "2": "Introduce el <b>nombre del Pokémon</b> (Características):",
                         "3": "Introduce el <b>nombre del Pokémon</b> (Evolución):",
                         "4": "Introduce el <b>nombre del Pokémon</b> (Stats):"
                     }
@@ -60,21 +71,20 @@ def chatbot_blueprint(db: Connection) -> Blueprint:
                 # Llamadas a métodos independientes
                 if opcion == "1":
                     res = mDex.mejorPokemon(user_input)
-                    resultado = f"Mejor Pokémon: <b>{res.get('nombre')}</b>"
                 elif opcion == "2":
                     res = mDex.obtenerEfectos(user_input)
-                    resultado = f"Fortalezas: {', '.join(res.get('tipos', []))}"
                 elif opcion == "3":
                     res = mDex.cadenaEvolutiva(user_input)
-                    resultado = f"Evolución: {res.get('cadena')}"
                 elif opcion == "4":
                     res = mDex.caracteristicasPokemon(user_input)
-                    resultado = f"Stats: ATK {res.get('atk')}, DEF {res.get('def')}"
 
-                temp_historial.append({"role": "bot", "content": resultado, "separador": True})
+                # Convertimos el JSON a una cadena HTML legible
+                resultado_formateado = formatear_json_a_html(res)
 
-                # REUTILIZACIÓN: Usamos el JSON guardado en session['menu_json']
-                # Ya no llamamos a mDex.precargar_opciones_menu()
+                # Guardamos en el historial
+                temp_historial.append({"role": "bot", "content": resultado_formateado, "separador": True})
+
+                # Reutilizamos el menú guardado anteriormente
                 opciones_guardadas = session['menu_json'].get('opciones', [])
                 menu_reinicio = "<b>Para elegir introduce un número:</b><br>" + "<br>".join(opciones_guardadas)
                 temp_historial.append({"role": "bot", "content": menu_reinicio})

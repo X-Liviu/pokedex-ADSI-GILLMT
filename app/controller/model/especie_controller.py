@@ -4,7 +4,7 @@ from app.controller.model.gestorEfectos_controller import GestorEfectos
 
 
 class Especie:
-    def __init__(self, nombre: str, descripcion: str, legendario: bool, alturaMedia: float, pesoMedio : float, movimientos: list, tipos: list, imagen: str):
+    def __init__(self, nombre: str, descripcion: str, legendario: bool, alturaMedia: float, pesoMedio : float, movimientos: list, tipos: list, imagen: str, evoluciones: list, preevoluciones: list):
         self.nombre = nombre
         self.descripcion = descripcion
         self.legendario = legendario
@@ -13,6 +13,8 @@ class Especie:
         self.movimientos = movimientos
         self.tipos = [t.nombre if hasattr(t,'nombre') else str(t) for t in tipos]
         self.imagen = imagen
+        self.evoluciones = evoluciones
+        self.preevoluciones = preevoluciones
 
     def esEsta(self, nombreEspecie):
         return self.nombre == nombreEspecie
@@ -21,13 +23,13 @@ class Especie:
         datos = []
         for tipo in self.tipos :
             datos.append(GestorEfectos.obtenerEfectosEficaces(tipo.nombre))
-        return json.dumps(datos, indent=4)
+        return datos
 
     def esDebilContra(self):
         datos = []
         for tipo in self.tipos :
             datos.append(GestorEfectos.obtenerEfectosDebiles(tipo.nombre))
-        return json.dumps(datos, indent=4)
+        return datos
 
     def getInfo(self):
         datos = {
@@ -42,10 +44,19 @@ class Especie:
         }
         return datos
 
-    #TODO
     def cadenaEvolutiva(self):
-        #Hay que ver como es la descripcion del Pokemon
-        pass
+        if (len(self.preevoluciones) == 0) & (len(self.evoluciones) == 0):
+            datos = {"Cadena evolutiva": self.nombre}
+        elif len(self.evoluciones) == 0 :
+            datos = {"Cadena evolutiva": [self.preevoluciones, self.nombre]}
+        elif len(self.preevoluciones) == 0 :
+            datos = {"Cadena evolutiva": [self.nombre, self.evoluciones]}
+        else:
+            datos = {"Cadena evolutiva": [self.preevoluciones, self.nombre, self.evoluciones]}
+        return json.dumps(datos, indent=4)
+
+
+
 
     def comprobarFiltroValor(self, filtro: str, valor: str) -> bool:
         """

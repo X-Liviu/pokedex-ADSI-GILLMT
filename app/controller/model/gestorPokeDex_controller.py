@@ -6,7 +6,8 @@ class gestorPokeDex() :
     def obtenerEfectos(self, nombreEspecie) :
         laEspecie = self.buscarEspecie(nombreEspecie)
         if laEspecie != None :
-            datos = [laEspecie.esFuerteContra(),laEspecie.esDebilContra()]
+            datos = {"Efectos contra los que es fuerte": laEspecie.esFuerteContra(),
+                     "Efectos contra los que es débil": laEspecie.esDebilContra()}
             return json.dumps(datos, indent=4)
         else:
             return -1

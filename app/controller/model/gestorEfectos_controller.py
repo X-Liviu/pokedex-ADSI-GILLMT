@@ -9,11 +9,11 @@ class GestorEfectos:
         for efecto in self.efectos :
             if efecto.esFuerte(nombreTipo) :
                 datos.append(efecto.tipoDefensor)
-        return json.dumps(datos, indent=4)
+        return datos
 
     def obtenerEfectosDebiles(self, nombreTipo):
         datos = []
         for efecto in self.efectos :
             if efecto.esDebil(nombreTipo) :
                 datos.append(efecto.tipoDefensor)
-        return json.dumps(datos, indent=4)
+        return datos

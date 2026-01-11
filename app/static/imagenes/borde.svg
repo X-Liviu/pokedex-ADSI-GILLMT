@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   version="1.1"
+   id="svg1"
+   width="2028.3733"
+   height="81.701118"
+   viewBox="0 0 2028.3733 81.701118"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <g
+     id="layer2"
+     transform="translate(-22.848414,-32.990174)">
+    <path
+       id="rect1"
+       style="display:inline;opacity:1;fill:#ff66c4;fill-opacity:1;stroke-width:2.144"
+       d="M 86.287211,32.990444 H 1987.7133 c 35.1444,0 61.853,15.018943 63.4374,33.632282 l 0.071,48.068564 -2028.370187,-0.005 c 0,0 -0.0031,-32.176765 -0.0031,-48.063834 0,-18.632284 28.293062,-33.632282 63.437359,-33.632282 z" />
+    <ellipse
+       style="display:inline;opacity:1;fill:#ff3131;fill-opacity:1;stroke:#333333;stroke-width:5.385;stroke-dasharray:none;stroke-opacity:1"
+       id="path1"
+       cx="79.395302"
+       cy="73.0411"
+       rx="19.704412"
+       ry="19.640223" />
+    <ellipse
+       style="display:inline;opacity:1;fill:#ffff00;fill-opacity:1;stroke:#333333;stroke-width:5.385;stroke-dasharray:none;stroke-opacity:1"
+       id="ellipse2"
+       cx="144.06137"
+       cy="73.16301"
+       rx="19.704412"
+       ry="19.640223" />
+    <ellipse
+       style="display:inline;opacity:1;fill:#00ff00;fill-opacity:1;stroke:#333333;stroke-width:5.385;stroke-dasharray:none;stroke-opacity:1"
+       id="ellipse3"
+       cx="210.14159"
+       cy="73.526085"
+       rx="19.704412"
+       ry="19.640223" />
+    <text
+       xml:space="preserve"
+       style="font-weight:bold;font-size:36.2792px;font-family:'Nunito Sans';-inkscape-font-specification:'Nunito Sans Bold';text-align:center;writing-mode:lr-tb;direction:ltr;text-anchor:middle;display:inline;opacity:1;fill:#00ff00;fill-opacity:1;stroke:#333333;stroke-width:5.385;stroke-dasharray:none;stroke-opacity:1"
+       x="341.24512"
+       y="85.848389"
+       id="text3"><tspan
+         id="tspan3"
+         x="341.24512"
+         y="85.848389"
+         style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:36.2792px;font-family:Arial;-inkscape-font-specification:'Arial Bold';fill:#000000;stroke:none;stroke-width:5.385">RANKING</tspan></text>
+  </g>
+</svg>

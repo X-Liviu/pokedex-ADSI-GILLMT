@@ -1,7 +1,7 @@
 import os.path
 import sqlite3
 
-from flask import Flask
+from flask import Flask, session, redirect, url_for
 
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 # MAEs
@@ -24,7 +24,8 @@ from app.controller.ui.lista_pokemon_controller import lista_pokemon_blueprint
 from app.controller.ui.modificar_equipo_controller import modificar_equipo_blueprint
 from app.controller.ui.verAmigos_controller import ver_amigos_blueprint
 from app.controller.ui.modificarDatos_controller import modificar_datos_blueprint
-
+from app.controller.ui.identificacion_controller import identificacion_blueprint
+from app.controller.ui.registrarse_controller import registrarse_blueprint
 # Tipos de datos
 from config import Config
 
@@ -47,18 +48,25 @@ de las funciones de los otros archivos mediante directoio.archivo, pueda acceder
 a funciones implementadas aqui, como si la carpeta fuera un archivo.py.
 """
 
+
 def init_db():
     """
     Importa la estructura del archivo .sql
-    a la base de datos (marcoDex.sqlite)
+    SOLO si la base de datos no existe aun.
     """
-    print("Iniciando la base de datos")
-    if os.path.exists(Config.DB_PATH):
-        print("La base de datos existe")
+    print("Verificando base de datos...")
+
+    # Si el archivo NO existe, lo creamos
+    if not os.path.exists(Config.DB_PATH):
+        print("No se encontró base de datos. Creando nueva desde schema.sql...")
         conn = sqlite3.connect(Config.DB_PATH)
         with open('app/database/schema.sql') as f:
             conn.executescript(f.read())
         conn.close()
+        print("Base de datos creada exitosamente.")
+    else:
+        # Si YA existe, no hacemos nada para no borrar los datos
+        print("La base de datos ya existe. Iniciando sin sobrescribir.")
 
 def create_app():
     app = Flask(__name__)
@@ -99,7 +107,10 @@ def create_app():
     app.register_blueprint(lista_pokemon_blueprint(db))
     app.register_blueprint(chatbot_blueprint(db))
     app.register_blueprint(modificar_equipo_blueprint(db))
-
+    app.register_blueprint(modificar_datos_blueprint(db))
+    app.register_blueprint(ver_amigos_blueprint(db))
+    app.register_blueprint(identificacion_blueprint(db))
+    app.register_blueprint(registrarse_blueprint(db))
     """
     Esto es para que se redireccione a otra
     direccion, siempre que se quiera acceder
@@ -108,6 +119,12 @@ def create_app():
 
     @app.route('/')
     def index() -> str:
-        #return app.redirect("/mis-equipos")
+        # --- NUEVO: Protección de ruta ---
+        if 'usuario' not in session:
+            # Si no está logueado, lo mandamos a identificarse
+            return redirect(url_for('identificacion.identificacion'))
+        # ---------------------------------
+
         return menu_principal_controller.mostrar_menu()
+
     return app

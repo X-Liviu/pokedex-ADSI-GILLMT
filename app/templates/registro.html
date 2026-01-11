@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Marcodex - Registrarse</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap');
+
+        :root {
+            --pink: #ff66c4;
+            --yellow: #ffcc00;
+            --cream: #f2e9e4;
+            --border: 3px solid #000;
+            --shadow: 4px 4px 0px #000;
+            --grey-input: #c4c4c4; /* Un gris un poco más oscuro para igualar la foto */
+        }
+
+        body {
+            font-family: 'Fredoka', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        .window {
+            width: 800px;
+            height: 500px;
+            background: white;
+            border: var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .window-header {
+            height: 50px;
+            background: var(--pink);
+            border-bottom: var(--border);
+            display: flex;
+            align-items: center;
+            padding-left: 15px;
+            gap: 10px;
+        }
+
+        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
+        .red { background: #ff4d4d; }
+        .yellow { background: #ffcc00; }
+        .green { background: #00cc00; }
+
+        .content {
+            flex: 1;
+            padding: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Contenedor principal del formulario usando Grid para las 2 columnas */
+        .register-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+            column-gap: 60px; /* Espacio entre columnas */
+            row-gap: 20px;    /* Espacio entre filas */
+            width: 90%;
+            max-width: 700px;
+        }
+
+        /* Estilo de los Inputs para que parezcan cajas grises con etiqueta dentro */
+        .input-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid black;
+            background: var(--grey-input);
+            border-radius: 10px;
+            outline: none;
+            box-sizing: border-box;
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            color: #000;
+        }
+
+        /* Estilo para el placeholder (el texto "Nombre:", "Apellidos:", etc) */
+        ::placeholder {
+            color: black;
+            opacity: 1; /* Firefox */
+        }
+
+        /* Columna derecha específica para alinear el botón abajo */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: flex-start;
+        }
+
+        /* Botón de registrarse */
+        .btn-register-action {
+            background: var(--cream); /* Color crema como en tu diseño original */
+            border: var(--border);
+            padding: 10px 20px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            align-self: flex-end; /* Alineado a la derecha */
+            margin-top: 20px; /* Un poco de espacio extra */
+        }
+
+        .btn-register-action:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+        /* Ajuste para agrupar los inputs de la izquierda */
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="window-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+        </div>
+
+        <div class="content">
+            <form class="register-layout">
+
+                <div class="left-column">
+                    <input type="text" placeholder="Nombre:">
+                    <input type="text" placeholder="Apellidos:">
+                    <input type="email" placeholder="Correo:">
+                    <input type="text" placeholder="Nombre Usuario:">
+                </div>
+
+                <div class="right-column">
+                    <input type="password" placeholder="Contraseña:">
+                    <input type="password" placeholder="Repetir Contraseña:">
+
+                    <button type="button" class="btn-register-action">Registrarse</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

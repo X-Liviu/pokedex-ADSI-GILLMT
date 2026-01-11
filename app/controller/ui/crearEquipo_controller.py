@@ -1,8 +1,8 @@
 import json
 from flask import Blueprint, render_template, session, redirect, url_for, request, flash
 from app.controller.model.marcoDex_controller import MarcoDex
-from app.controller.ui import menu_principal_controller
 from app.database.connection import Connection
+
 
 def crear_equipo_blueprint(db: Connection) -> Blueprint:
     nombre_direccion_crear_equipo: str = "crear_equipo"
@@ -13,17 +13,14 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
     @bp_crear_equipo.route("/crear-equipo", methods=["GET", "POST"])
     def crear_equipo():
         # 1. Identificar al usuario
-        nombre_sesion = session.get('username')
-
-        # PRUEBA TATA
-        #if not session.get('username'):
-        #    session['username'] = 'Tata'
+        # --- CORRECCIÓN 1: Usar 'usuario' (que es como lo guardamos en el login) ---
+        nombre_sesion = session.get('usuario')
 
         if not nombre_sesion:
-           return redirect(url_for('iniciar_sesion')) # Redirección si no hay sesión
+            # --- CORRECCIÓN 2: Apuntar al blueprint correcto del login ---
+            return redirect(url_for('identificacion.identificacion'))
 
-        # 2. CAPTURAR EL ORIGEN (Vital para saber a dónde volver)
-        # Lo buscamos primero en el formulario (POST) y si no, en la URL (GET)
+            # 2. CAPTURAR EL ORIGEN
         origen = request.form.get("origen") or request.args.get("origen", "menu")
 
         # A. Si entramos por primera vez
@@ -41,9 +38,12 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
                 especie = request.form.get("especie")
                 nombre_custom = request.form.get("nombre_custom")
                 resultado = mDex.aniadirPokemon(especie, nombre_custom, num_equipo, nombre_sesion)
-                if resultado == -1: flash("¡El equipo ya está completo (máximo 6)!")
-                elif resultado == -2: flash("Ya tienes un Pokemon que se llama así!!")
-                elif resultado == -3: flash("Esta especie ya está en tu equipo")
+                if resultado == -1:
+                    flash("¡El equipo ya está completo (máximo 6)!")
+                elif resultado == -2:
+                    flash("Ya tienes un Pokemon que se llama así!!")
+                elif resultado == -3:
+                    flash("Esta especie ya está en tu equipo")
 
             elif accion == "borrar":
                 pokemon_id = request.form.get("pokemon_id")
@@ -54,18 +54,22 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
                 mDex.guardarEquipo(num_equipo, nombre_sesion)
                 session.pop('equipo_en_edicion', None)
                 flash("¡Equipo creado con éxito!")
+
                 # REDIRECCIÓN DINÁMICA
                 if origen == 'mis_equipos':
                     return redirect(url_for('ver_equipos.ver_equipos'))
-                return redirect(url_for('menu_principal.mostrar_menu'))
+                # --- CORRECCIÓN 3: Redirigir a 'index' (que es el menú principal) ---
+                return redirect(url_for('index'))
 
             elif accion == "cancelar":
                 mDex.borrarEquipo(num_equipo, nombre_sesion)
                 session.pop('equipo_en_edicion', None)
+
                 # REDIRECCIÓN DINÁMICA
                 if origen == 'mis_equipos':
                     return redirect(url_for('ver_equipos.ver_equipos'))
-                return redirect(url_for('menu_principal.mostrar_menu'))
+                # --- CORRECCIÓN 3: Redirigir a 'index' ---
+                return redirect(url_for('index'))
 
         # C. Renderizado
         especies_json = mDex.mostrarPokedex()
@@ -75,6 +79,6 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
                                especies=json.loads(especies_json),
                                equipo=equipo_datos,
                                num_equipo=num_equipo,
-                               origen=origen) # <--- Pasamos el origen al HTML
+                               origen=origen)
 
     return bp_crear_equipo

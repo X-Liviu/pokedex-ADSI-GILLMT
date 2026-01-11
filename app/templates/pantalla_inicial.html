@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Marcodex - Login</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap');
+        :root { --pink: #ff66c4; --yellow: #ffcc00; --cream: #f2e9e4; --border: 3px solid #000; --shadow: 4px 4px 0px #000; }
+        body { font-family: 'Fredoka', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
+        .window { width: 800px; height: 500px; background: white; border: var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; }
+        .window-header { height: 50px; background: var(--pink); border-bottom: var(--border); display: flex; align-items: center; padding-left: 15px; gap: 10px; }
+        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
+        .red { background: #ff4d4d; } .yellow { background: #ffcc00; } .green { background: #00cc00; }
+        .content { flex: 1; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .logo-area { margin-bottom: 30px; margin-top: 20px; }
+        .logo-img { height: 90px; width: auto; border: none; outline: none; }
+        .login-layout { display: flex; justify-content: center; align-items: center; width: 100%; gap: 80px; }
+        .a-btn { position: relative; background: var(--cream); border: var(--border); padding: 12px 25px; font-size: 1.1rem; font-weight: bold; border-radius: 12px; box-shadow: var(--shadow); cursor: pointer; text-align: center; white-space: nowrap; color: black; text-decoration: none; display: inline-block; z-index: 20; }
+        .a-btn:active { transform: translate(2px, 2px); box-shadow: 3px 3px 0px #000; }
+        .login-box { width: 320px; background: var(--cream); border: var(--border); box-shadow: var(--shadow); border-radius: 4px; overflow: hidden; }
+        .login-box-header { background: var(--yellow); padding: 10px 15px; border-bottom: var(--border); font-weight: 700; font-size: 1.1rem; display: flex; justify-content: space-between; align-items: center; }
+        .login-box-body { padding: 25px; display: flex; flex-direction: column; gap: 15px; align-items: center; }
+        input { width: 100%; padding: 10px; border: 2px solid black; background: #ccc; border-radius: 8px; outline: none; box-sizing: border-box; font-family: inherit; }
+        .btn-ok { background: var(--cream); border: var(--border); padding: 5px 40px; border-radius: 10px; box-shadow: var(--shadow); cursor: pointer; font-weight: 700; margin-top: 10px; font-family: inherit; transition: transform 0.1s, box-shadow 0.1s; }
+        .btn-ok:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
+
+        /* Estilo para mensajes de error (Flash) */
+        .flash-msg { color: red; font-weight: bold; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="window-header">
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
+        </div>
+
+        <div class="content">
+            <div class="logo-area">
+                <img src="{{ url_for('static', filename='imagenes/logo.png') }}" alt="Marcodex Logo" class="logo-img">
+            </div>
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="flash-msg">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <div class="login-layout">
+                <a href="{{ url_for('registrarse.registrarse') }}" class="a-btn">Registrarse</a>
+
+                <div class="login-box">
+                    <div class="login-box-header">
+                        <span>Iniciar Sesión</span>
+                    </div>
+                    <form class="login-box-body" action="{{ url_for('identificacion.identificacion') }}" method="POST">
+                        <input type="text" name="usuario" placeholder="Usuario" required>
+                        <input type="password" name="contrasena" placeholder="Contraseña" required>
+                        <button type="submit" class="btn-ok">Ok</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

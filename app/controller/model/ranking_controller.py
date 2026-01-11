@@ -48,7 +48,7 @@ class Ranking:
                         """
 
         resultado_sql: List[sqlite3.Row] = self.bd.select(sentence)
-        resultado: ListaUsuarios = None
+        resultado = ListaUsuarios() #He cambiado esto, para que en caso de que no sea capaz de obtener los usuarios de la BD, que no explote y de Internal Server Error - Liviu (15:28 - 11/01/2026)
 
         if len(resultado_sql) > 0:
             resultado = ListaUsuarios()

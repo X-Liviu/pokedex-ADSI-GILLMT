@@ -130,5 +130,12 @@ class MarcoDex:
     def tieneAmigos(self) -> bool:
         return gestorUsuario.getMyGestorUsuario().tiene_amigos()
 
+    def iniciarSesion(self, pNomUsuario: str, pContrasena: str) -> bool:
+        """
+        Delega la verificacion al gestor de usuarios.
+        """
+        # Llamamos al método estático/clase del gestor
+        return gestorUsuario.iniciarSesion(pNomUsuario, pContrasena, self.db)
+
 if __name__ == "__main__":
     pass

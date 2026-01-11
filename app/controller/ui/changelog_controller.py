@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session
+from flask import Blueprint, render_template, session, request
 from app.controller.model.marcoDex_controller import MarcoDex
 
 def changelog_blueprint(db):
@@ -15,10 +15,18 @@ def changelog_blueprint(db):
 
             nombreUsuario = session.get('username')
 
-            lista_noticias = mDex.mostrar_changelog(nombreUsuario)
+            lista_noticias = mDex.mostrar_changelog(nombreUsuario, '')
             return render_template('changelog.html', noticias=lista_noticias)
         else:
             return render_template('error_no_amigos.html')
 
+    @bp_changelog.route('/changelog')
+    def filtrar():
+
+        mDex = MarcoDex.getMyMarcoDex(db)
+        nombreUsuario = session.get('username')
+        filtro = request.args.get('usuario')
+        lista_noticias = mDex.mostrar_changelog(nombreUsuario, filtro)
+        return render_template('changelog.html', noticias=lista_noticias)
 
     return bp_changelog

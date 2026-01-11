@@ -14,7 +14,7 @@ class gestorNoticias:
         return cls.myGestorNoticias
 
 
-    def mostrar_changelog(self, usuario):
+    def mostrar_changelog(self, usuario,filtro):
         sql = """
             SELECT 
                 P.NombreUsuario, 
@@ -33,10 +33,12 @@ class gestorNoticias:
                 FROM AmigoDe A 
                 WHERE A.NombreUsuario2 = ?
             )
+            AND NombreUsuario LIKE ?%
+
             ORDER BY P.FechaHora DESC;
         """
 
-        filas = self.db.select(sql, (usuario, usuario))
+        filas = self.db.select(sql, (usuario, usuario, filtro))
         json_noticia = []
 
         for fila in filas:

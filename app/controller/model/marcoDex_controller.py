@@ -114,9 +114,9 @@ class MarcoDex:
             return gestorUsuario.getMyGestorUsuario().tiene_amigos(usuario)
         return False
 
-    def mostrar_changelog(self, usuario):
+    def mostrar_changelog(self, usuario, filtro):
         #clase de gestor_noticia por crear
-        return gestorNoticias.getGestorNoticias.mostrar_changelog(usuario)
+        return gestorNoticias.getGestorNoticias.mostrar_changelog(usuario,filtro)
 
     def mostrarPokedex(self) -> str:
         return PokeDex.get_instance().mostrarPokedex()

@@ -162,5 +162,27 @@ class MarcoDex:
         # Llamamos al método estático/clase del gestor
         return gestorUsuario.iniciarSesion(pNomUsuario, pContrasena, self.db)
 
+    def getRol(self, nombre_usuario: str) -> str:
+        """
+        Recupera el rol del usuario (ADMIN, VERIF, NOVERIF)
+        para poder decidir a qué pantalla redirigir.
+        """
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
+        # Verificamos que el gestor y el usuario existan para evitar errores
+        if gestor and gestor.usuario:
+            return gestor.usuario.rol
+        return "NOVERIF"
+
+    def procesarRegistro(self, pNom, pAp, pCorreo, pNomUsuario, pContrasena, pContrasenaRep) -> int:
+        """
+        Coordina el registro de un nuevo usuario.
+        Retornos:
+           -1: Contraseñas no coinciden
+           -2: Usuario o correo duplicado
+            0: Éxito
+        """
+        # Llamamos al método estático del gestor
+        return gestorUsuario.registrarUsuario(pNom, pAp, pCorreo, pNomUsuario, pContrasena, pContrasenaRep, self.db)
+
 if __name__ == "__main__":
     pass

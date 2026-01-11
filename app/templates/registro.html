@@ -12,7 +12,7 @@
             --cream: #f2e9e4;
             --border: 3px solid #000;
             --shadow: 4px 4px 0px #000;
-            --grey-input: #c4c4c4; /* Un gris un poco más oscuro para igualar la foto */
+            --grey-input: #c4c4c4;
         }
 
         body {
@@ -46,8 +46,9 @@
             gap: 10px;
         }
 
-        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
-        .red { background: #ff4d4d; }
+        /* Modificado para que el punto rojo sea clickeable y mantenga el estilo */
+        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; display: block; text-decoration: none;}
+        .red { background: #ff4d4d; cursor: pointer; }
         .yellow { background: #ffcc00; }
         .green { background: #00cc00; }
 
@@ -55,21 +56,20 @@
             flex: 1;
             padding: 40px;
             display: flex;
+            flex-direction: column; /* Cambiado a columna para poner el error arriba */
             justify-content: center;
             align-items: center;
         }
 
-        /* Contenedor principal del formulario usando Grid para las 2 columnas */
         .register-layout {
             display: grid;
-            grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
-            column-gap: 60px; /* Espacio entre columnas */
-            row-gap: 20px;    /* Espacio entre filas */
+            grid-template-columns: 1fr 1fr;
+            column-gap: 60px;
+            row-gap: 20px;
             width: 90%;
             max-width: 700px;
         }
 
-        /* Estilo de los Inputs para que parezcan cajas grises con etiqueta dentro */
         .input-group {
             display: flex;
             flex-direction: column;
@@ -89,13 +89,11 @@
             color: #000;
         }
 
-        /* Estilo para el placeholder (el texto "Nombre:", "Apellidos:", etc) */
         ::placeholder {
             color: black;
-            opacity: 1; /* Firefox */
+            opacity: 1;
         }
 
-        /* Columna derecha específica para alinear el botón abajo */
         .right-column {
             display: flex;
             flex-direction: column;
@@ -103,9 +101,8 @@
             justify-content: flex-start;
         }
 
-        /* Botón de registrarse */
         .btn-register-action {
-            background: var(--cream); /* Color crema como en tu diseño original */
+            background: var(--cream);
             border: var(--border);
             padding: 10px 20px;
             font-size: 1.2rem;
@@ -114,8 +111,8 @@
             cursor: pointer;
             font-weight: 700;
             font-family: inherit;
-            align-self: flex-end; /* Alineado a la derecha */
-            margin-top: 20px; /* Un poco de espacio extra */
+            align-self: flex-end;
+            margin-top: 20px;
         }
 
         .btn-register-action:active {
@@ -123,11 +120,23 @@
             box-shadow: 2px 2px 0px #000;
         }
 
-        /* Ajuste para agrupar los inputs de la izquierda */
         .left-column {
             display: flex;
             flex-direction: column;
             gap: 20px;
+        }
+
+        /* Estilo para los mensajes de error (Flash) */
+        .flash-msg {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+            background: #ffe6e6;
+            padding: 10px;
+            border: 2px solid red;
+            border-radius: 10px;
+            width: 80%;
         }
 
     </style>
@@ -136,26 +145,35 @@
 
     <div class="window">
         <div class="window-header">
-            <div class="dot red"></div>
+            <a href="{{ url_for('identificacion.identificacion') }}" class="dot red" title="Cancelar / Volver"></a>
             <div class="dot yellow"></div>
             <div class="dot green"></div>
         </div>
 
         <div class="content">
-            <form class="register-layout">
+
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="flash-msg">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            <form class="register-layout" action="{{ url_for('registrarse.registrarse') }}" method="POST">
 
                 <div class="left-column">
-                    <input type="text" placeholder="Nombre:">
-                    <input type="text" placeholder="Apellidos:">
-                    <input type="email" placeholder="Correo:">
-                    <input type="text" placeholder="Nombre Usuario:">
+                    <input type="text" name="nombre" placeholder="Nombre:" required>
+                    <input type="text" name="apellido" placeholder="Apellidos:" required>
+                    <input type="email" name="correo" placeholder="Correo:" required>
+                    <input type="text" name="usuario" placeholder="Nombre Usuario:" required>
                 </div>
 
                 <div class="right-column">
-                    <input type="password" placeholder="Contraseña:">
-                    <input type="password" placeholder="Repetir Contraseña:">
+                    <input type="password" name="contrasena" placeholder="Contraseña:" required>
+                    <input type="password" name="contrasena_rep" placeholder="Repetir Contraseña:" required>
 
-                    <button type="button" class="btn-register-action">Registrarse</button>
+                    <button type="submit" class="btn-register-action">Registrarse</button>
                 </div>
 
             </form>

@@ -1,7 +1,7 @@
 import os.path
 import sqlite3
 
-from flask import Flask, session, redirect, url_for
+from flask import Flask, session, redirect, url_for, make_response
 
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 # MAEs
@@ -38,17 +38,6 @@ from app.controller.ui.user_controlller import user_blueprint
 from app.database.connection import Connection
 
 
-"""
-POR QUE ESTE NOMBRE ?
-Para poder importar codigo en Python que se encuentra en una carpeta,
-hace falta que el directorio contenga un archivo .py, cuyo nombre sea
-__init__.py. Ademas a la hora de importar codigo de la carpeta, se puede
-programar dentro del archivo __init__.py, haciendo que el directorio, ademas
-de las funciones de los otros archivos mediante directoio.archivo, pueda acceder
-a funciones implementadas aqui, como si la carpeta fuera un archivo.py.
-"""
-
-
 def init_db():
     """
     Importa la estructura del archivo .sql
@@ -68,6 +57,7 @@ def init_db():
         # Si YA existe, no hacemos nada para no borrar los datos
         print("La base de datos ya existe. Iniciando sin sobrescribir.")
 
+
 def create_app():
     app = Flask(__name__)
     app.config.from_object(Config)
@@ -77,27 +67,6 @@ def create_app():
 
     # Crear conexión a la base de datos
     db = Connection()
-
-    ## --- DATOS DE PRUEBA (MOCK) ---
-    ## Creamos un par de tipos
-    #t_fuego = Tipo("Fuego","es fueguito")
-    #t_planta = Tipo("Planta", "es plantita")
-    #t_elec = Tipo("Electrico", "es electrico")
-    ## Creamos un par de especies según tu constructor
-    ## (nombre, descripcion, legendario, altura, peso, tipos, region)
-    #p1 = Especie("Bulbasaur", "Un Pokémon semilla.", False, 0.7, 6.9, ["latigo cepa"], [t_planta])
-    #p2 = Especie("Charmander", "Prefiere las cosas calientes.", False, 0.6, 8.5, ["lanzallamas"], [t_fuego])
-    #p3 = Especie("Pikachu", "Ratón eléctrico.", False, 0.4, 6.0, ["impactrueno"], [t_elec])
-
-    ## Inicializamos el Singleton con esta lista
-    #PokeDex.get_instance([p1, p2, p3])
-    ## ------------------------------
-
-    """
-    app.register_blueprint(user_blueprint(db))
-    app.register_blueprint(book_blueprint(db))
-    app.register_blueprint(loan_blueprint(db))
-    """
 
     app.register_blueprint(ranking_blueprint(db))
     app.register_blueprint(ver_equipos_blueprint(db))
@@ -111,6 +80,7 @@ def create_app():
     app.register_blueprint(ver_amigos_blueprint(db))
     app.register_blueprint(identificacion_blueprint(db))
     app.register_blueprint(registrarse_blueprint(db))
+
     """
     Esto es para que se redireccione a otra
     direccion, siempre que se quiera acceder
@@ -118,13 +88,20 @@ def create_app():
     """
 
     @app.route('/')
-    def index() -> str:
-        # --- NUEVO: Protección de ruta ---
+    def index():
+        # 1. Protección de ruta (Si no hay usuario, fuera)
         if 'usuario' not in session:
-            # Si no está logueado, lo mandamos a identificarse
             return redirect(url_for('identificacion.identificacion'))
-        # ---------------------------------
 
-        return menu_principal_controller.mostrar_menu()
+        # 2. Generamos el HTML del menú
+        html_content = menu_principal_controller.mostrar_menu()
+
+        # --- CAMBIO 2: Evitar caché del navegador ---
+        respuesta = make_response(html_content)
+        respuesta.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+        respuesta.headers["Pragma"] = "no-cache"
+        respuesta.headers["Expires"] = "0"
+
+        return respuesta
 
     return app

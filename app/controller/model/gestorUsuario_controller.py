@@ -1,4 +1,5 @@
 import sqlite3
+import random
 from app.controller.model.gestorCopiasEquipo_controller import gestorCopiasEquipo
 from app.model.usuario import Usuario
 
@@ -157,3 +158,33 @@ class gestorUsuario:
 
     def tieneAmigos(self) -> bool:
         return self.usuario.tieneAmigos()
+
+    @classmethod
+    def registrarUsuario(cls, pNom, pAp, pCorreo, pNomUsuario, pContrasena, pContrasenaRep, db) -> int:
+
+        # CASO 1: Contraseñas no coinciden
+        if pContrasena != pContrasenaRep:
+            return -1
+
+        # CASO 2: Usuario o correo ya existen
+        sql_check = "SELECT NombreUsuario FROM Usuario WHERE NombreUsuario = ? OR Correo = ?"
+        filas = db.select(sql_check, (pNomUsuario, pCorreo))
+
+        if len(filas) > 0:
+            return -2
+
+        # CASO 3: Registro Correcto (verificado o no verificado es aleatorio, ya que realmente no influye en nada, solo para que pueda ser probado el caso de uso de ver lista usuarios.
+        rol_asignado = 'NOVERIF' if random.random() < 0.20 else 'VERIF'
+
+        sql_insert = """
+                     INSERT INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol)
+                     VALUES (?, ?, ?, ?, ?, ?) \
+                     """
+        try:
+            # Pasamos 'rol_asignado' en la consulta
+            db.insert(sql_insert, (pNomUsuario, pNom, pAp, pCorreo, pContrasena, rol_asignado))
+            return 0  # Éxito
+
+        except Exception as e:
+            print(f"Error en BD: {e}")
+            return -2

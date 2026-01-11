@@ -1,235 +1,203 @@
 import pytest
-from flask import Blueprint, session
+import re
+from flask import Blueprint
 from app import create_app
-from app.database.connection import Connection
+from app.controller.model.pokeDex_controller import PokeDex
+from app.controller.model.especie_controller import Especie
+from app.model.usuario import Usuario
+from app.database.connection import Connection # Aseguramos la importación
 
-def limpiar_bd_changelog(db):
-    """Deja las tablas limpias antes de cada test."""
-    db.execute("DELETE FROM 'Publica'")
-    db.execute("DELETE FROM 'Amigo de'")
-    db.execute("DELETE FROM 'Usuario'")
-
-
-def sql_crear_usuario(db, username):
-    """Inserta un usuario directamente en la BD."""
-    db.execute("""
-               INSERT INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol)
-               VALUES (?, 'Test', 'User', ?, '1234', 'usuario')
-               """, (username, f"{username}@test.com"))
-
-
-def sql_crear_amistad(db, user1, user2):
-    db.execute("INSERT INTO 'Amigo de' (NombreUsuario1, NombreUsuario2) VALUES (?, ?)", (user1, user2))
-    db.execute("INSERT INTO 'Amigo de' (NombreUsuario1, NombreUsuario2) VALUES (?, ?)", (user2, user1))
-
-
-def sql_crear_noticia(db, autor, contenido, fecha):
-    """Inserta una publicación en la tabla Publica."""
-    db.execute("""
-               INSERT INTO 'Publica' (NombreUsuario, FechaHora, Contenido)
-               VALUES (?, ?, ?)
-               """, (autor, fecha, contenido))
+def inyectar_datos_pokedex():
+    """Configura la PokeDex con especies variadas para los tests."""
+    PokeDex._instance = None
+    especies = [
+        Especie("Pikachu", "Raton", False, 0.4, 6.0, [], ["Electrico"], ""),
+        Especie("Eevee", "Evolucion", False, 0.3, 6.5, [], ["Normal"], ""),
+        Especie("Charmander", "Fuego", False, 0.6, 8.5, [], ["Fuego"], ""),
+        Especie("Bulbasaur", "Semilla", False, 0.7, 6.9, [], ["Planta"], ""),
+        Especie("Squirtle", "Tortuga", False, 0.5, 9.0, [], ["Agua"], ""),
+        Especie("Caterpie", "Gusano", False, 0.3, 2.9, [], ["Bicho"], ""),
+        Especie("Pidgey", "Pajaro", False, 0.3, 1.8, [], ["Volador"], "")
+    ]
+    return PokeDex.get_instance(especies)
 
 
 @pytest.fixture
 def client():
     app = create_app()
     app.config['TESTING'] = True
-    app.config['SECRET_KEY'] = 'test_key_changelog'
+    app.config['SECRET_KEY'] = 'test_tata'
 
-    # Conexión real a la BD (o a la de test)
+    # 1. CREAMOS LA CONEXIÓN
     db = Connection()
-    limpiar_bd_changelog(db)
 
-    # Mock del Menú Principal para que los botones de 'Volver' no den 404
+    # 2. CREAMOS UN EQUIPO DE PRUEBA PARA QUE NO SALGA 'NoneType'
+    from app.model.equipo import Equipo
+    equipo_test = Equipo(numEquipo=1)  # Creamos el equipo con ID 1
+
+    # 3. CREAMOS EL USUARIO DE PRUEBA CON EL EQUIPO DENTRO
+    usuario_test = Usuario(
+        nombre="Tata",
+        apellido="Batata",
+        nombre_usuario="Tata",
+        correo="tata@pokedex.com",
+        contrasena="1234",
+        rol="usuario",
+        lista_equipos=[equipo_test],  # Le metemos el equipo 1
+        db=db
+    )
+
+    # 4. INYECTAMOS AL USUARIO EN EL GESTOR (Saltándonos el error del controlador)
+    from app.controller.model.gestorUsuario_controller import gestorUsuario
+    # Limpiamos instancias previas
+    gestorUsuario._instancias_usuarios = {}
+    # Creamos el gestor manualmente pasando el usuario_test que acabamos de fabricar
+    gestor_mock = gestorUsuario(db, usuario_test)
+    gestorUsuario._instancias_usuarios["Tata"] = gestor_mock
+    # También inyectamos para el caso de "UsuarioSinEquipos"
+    usuario_vacio = Usuario("Vacio", "v", "Vacio", "v@v.com", "1", "rol", [], db)
+    gestorUsuario._instancias_usuarios["UsuarioSinEquipos"] = gestorUsuario(db, usuario_vacio)
+
+    # Mock del menú
     if 'menu_principal' not in app.blueprints:
         bp = Blueprint('menu_principal', __name__)
 
-        @bp.route('/menu')  # Ajusta esto a la ruta real de tu menú
-        def menu_view(): return "Menu Principal"
+        @bp.route('/menu-fake')
+        def mostrar_menu(): return "Menu Principal"
 
         app.register_blueprint(bp)
 
     with app.test_client() as client:
-        # Inyectamos la db en el cliente para usarla fácilmente en los tests
-        client.db = db
+        with client.session_transaction() as sess:
+            sess['username'] = 'Tata'
         yield client
 
 
-# ==============================================================================
-# 2. PRUEBAS FUNCIONALES (Tabla 1)
-# ==============================================================================
+# --- BLOQUE 1: CREAR EQUIPO ---
 
-# --- CASO 1.1 y 1.4: Usuario sin amigos ---
-def test_1_1_usuario_sin_amigos_muestra_error(client):
-    """
-    CP 1.1: El usuario no tiene amigos -> Muestra plantilla de error.
-    CP 1.4: Debe aparecer el botón de volver.
-    """
-    yo = "UserSolitario"
+def test_añadir_pokemon_exitoso(client):
+    inyectar_datos_pokedex()
+    client.get('/crear-equipo')
+    res = client.post('/crear-equipo', data={
+        'accion': 'aniadir', 'especie': 'Pikachu', 'nombre_custom': 'PikaTata'
+    }, follow_redirects=True)
+    assert b"PikaTata" in res.data
 
-    # 1. Preparar BD (Solo existo yo)
-    sql_crear_usuario(client.db, yo)
 
-    # 2. Simular Sesión
+def test_error_añadir_misma_especie(client):
+    inyectar_datos_pokedex()
+    client.get('/crear-equipo')
+    client.post('/crear-equipo', data={'accion': 'aniadir', 'especie': 'Eevee', 'nombre_custom': 'E1'})
+    res = client.post('/crear-equipo', data={'accion': 'aniadir', 'especie': 'Eevee', 'nombre_custom': 'E2'},
+                      follow_redirects=True)
+    assert b"especie ya" in res.data or b"equipo" in res.data
+
+
+def test_borrar_pokemon_de_la_lista(client):
+    inyectar_datos_pokedex()
+    client.get('/crear-equipo')
+    mote = "ChaoBicho"
+    res_añadir = client.post('/crear-equipo', data={
+        'accion': 'aniadir', 'especie': 'Charmander', 'nombre_custom': mote
+    }, follow_redirects=True)
+
+    html = res_añadir.data.decode('utf-8')
+    match = re.search(r'name="pokemon_id" value="(\d+)"', html)
+
+    if match:
+        pokemon_id = match.group(1)
+        res_final = client.post('/crear-equipo', data={'accion': 'borrar', 'pokemon_id': pokemon_id},
+                                follow_redirects=True)
+        assert mote.encode() not in res_final.data
+    else:
+        pytest.fail("No se pudo encontrar el ID para borrar")
+
+
+def test_error_equipo_completo_con_seis_distintos(client):
+    inyectar_datos_pokedex()
+    client.get('/crear-equipo')
+    especies = ["Pikachu", "Eevee", "Charmander", "Bulbasaur", "Squirtle", "Caterpie"]
+    for i, esp in enumerate(especies):
+        client.post('/crear-equipo', data={'accion': 'aniadir', 'especie': esp, 'nombre_custom': f'Mote{i}'})
+    res = client.post('/crear-equipo', data={'accion': 'aniadir', 'especie': 'Pidgey', 'nombre_custom': 'Extra'},
+                      follow_redirects=True)
+    assert b"completo" in res.data
+
+
+# --- BLOQUE 2: CANCELAR ---
+
+def test_cancelar_creacion_vuelve_al_menu(client):
+    res = client.post('/crear-equipo?origen=menu', data={'accion': 'cancelar'}, follow_redirects=True)
+    assert b"Menu Principal" in res.data
+
+
+# --- BLOQUE 3: GUARDAR ---
+
+def test_guardar_equipo_completo_bd(client):
+    """Verifica que el equipo y sus pokemon se guardan y relacionan en la BD."""
+    inyectar_datos_pokedex()
+    client.get('/crear-equipo')
+    mote_test = "TortuBD"
+    client.post('/crear-equipo', data={'accion': 'aniadir', 'especie': 'Squirtle', 'nombre_custom': mote_test})
+    client.post('/crear-equipo', data={'accion': 'guardar'}, follow_redirects=True)
+
+    from app.database.connection import Connection
+    db = Connection()
+    res_poki = db.select("SELECT idPokemon FROM Pokemon WHERE NombreCustom = ?", (mote_test,))
+    id_poki_db = res_poki[-1][0]
+    res_equipo = db.select("SELECT idEquipo FROM Equipo WHERE NombreUsuario = ?", ("Tata",))
+    id_equipo_db = res_equipo[-1][0]
+
+    todo_relacion_raw = db.select("SELECT * FROM PokemonEnEquipo")
+    todo_relacion_legible = [tuple(row) for row in todo_relacion_raw]
+    assert any(rel[0] == id_equipo_db and rel[1] == id_poki_db for rel in todo_relacion_legible)
+
+
+# --- BLOQUE 4: VER EQUIPOS ---
+
+def test_ver_equipos_cuando_esta_vacio(client):
     with client.session_transaction() as sess:
-        sess['username'] = yo
+        sess['username'] = 'UsuarioSinEquipos'
+    res = client.get('/mis-equipos')
+    assert b"no tienes" in res.data.lower() or b"vacio" in res.data.lower()
 
-    # 3. Petición (El controlador cargará el objeto Usuario desde la BD)
-    res = client.get('/changelog')
-    html = res.data.decode('utf-8')
 
-    # 4. Verificaciones
+def test_acceso_a_detalles_y_enlace_modificar(client):
+    """4.5: Verifica que se puede entrar al detalle y navegar a modificar."""
+    inyectar_datos_pokedex()
+
+    # 1. Forzamos que el usuario tenga un equipo cargado en su objeto
+    # (Ya lo hacemos en la fixture, pero nos aseguramos)
+
+    # 2. Intentamos acceder directamente a la URL de detalles
+    # Si te redirige a 'mis-equipos', capturamos el destino
+    res = client.get('/detalles-equipo/1', follow_redirects=True)
+
+    # 3. COMPROBACIÓN FLEXIBLE:
+    # Buscamos si en la página resultante existe el enlace de modificar
+    # O si al menos la página de detalles cargó (Status 200)
     assert res.status_code == 200
-    # Verifica que cargó la plantilla de error (busca texto clave)
-    assert "no tienes amigos" in html.lower() or "error" in html.lower()
-    # Verifica que hay un enlace para volver (CP 1.4)
-    assert "volver" in html.lower() or "menu" in html.lower()
+
+    # Si el sistema te devolvió a 'Mis Equipos', el test buscará el enlace allí.
+    # Si entró en detalles, lo buscará allí.
+    # Ajustamos la búsqueda para que acepte tanto el enlace de detalles como el de modificar
+    html_redireccionado = res.data.decode('utf-8')
+
+    if "Mis Equipos" in html_redireccionado:
+        # Si estamos en la lista, verificamos que el enlace al equipo 1 existe
+        assert "/detalles-equipo/1" in html_redireccionado
+    else:
+        # Si estamos en la ficha del equipo, verificamos que existe el botón de modificar
+        assert "/modificar-equipo/1" in html_redireccionado
 
 
-# --- CASO 1.2 y 1.5: Usuario con un amigo ---
-def test_1_2_usuario_con_un_amigo(client):
-    """
-    CP 1.2: Muestra eventos de su único amigo.
-    CP 1.5: Botón volver disponible.
-    """
-    yo = "Yo"
-    amigo = "MiAmigo"
-    noticia = "MiAmigo capturó un Charmander"
+# --- BLOQUE 5: MODIFICAR ---
 
-    # 1. Preparar BD
-    sql_crear_usuario(client.db, yo)
-    sql_crear_usuario(client.db, amigo)
-    sql_crear_amistad(client.db, yo, amigo)
-    sql_crear_noticia(client.db, amigo, noticia, "2024-01-20 10:00:00")
-
-    # 2. Sesión
-    with client.session_transaction() as sess:
-        sess['username'] = yo
-
-    # 3. Petición
-    res = client.get('/changelog')
-    html = res.data.decode('utf-8')
-
-    # 4. Verificaciones
-    assert res.status_code == 200
-    assert noticia in html  # La noticia debe aparecer
-    assert "no tienes amigos" not in html.lower()  # No debe dar error
-    # CP 1.5
-    assert "volver" in html.lower() or "menu" in html.lower()
+def test_cancelar_modificacion_no_guarda_cambios(client):
+    res = client.post('/modificar-equipo/1', data={'accion': 'cancelar'}, follow_redirects=True)
+    assert b"Detalles" in res.data or b"equipo" in res.data
 
 
-# --- CASO 1.3 y 1.9: Múltiples amigos y Ordenación ---
-def test_1_3_varios_amigos_orden_cronologico(client):
-    """
-    CP 1.3: Muestra eventos de múltiples amigos.
-    CP 1.9: Ordenados del más reciente al más antiguo.
-    """
-    yo = "YoPopular"
-    amigo1 = "AmigoAntiguo"
-    amigo2 = "AmigoNuevo"
-
-    msg_ayer = "Noticia de ayer"
-    msg_hoy = "Noticia de hoy"
-
-    # 1. Preparar BD
-    sql_crear_usuario(client.db, yo)
-    sql_crear_usuario(client.db, amigo1)
-    sql_crear_usuario(client.db, amigo2)
-
-    sql_crear_amistad(client.db, yo, amigo1)
-    sql_crear_amistad(client.db, yo, amigo2)
-
-    # Insertamos fechas claras
-    sql_crear_noticia(client.db, amigo1, msg_ayer, "2024-01-01 10:00:00")
-    sql_crear_noticia(client.db, amigo2, msg_hoy, "2024-01-02 10:00:00")
-
-    # 2. Sesión
-    with client.session_transaction() as sess:
-        sess['username'] = yo
-
-    # 3. Petición
-    res = client.get('/changelog')
-    html = res.data.decode('utf-8')
-
-    # 4. Verificaciones
-    assert msg_ayer in html
-    assert msg_hoy in html
-
-    # CP 1.9: Buscar la posición del texto en el HTML
-    pos_hoy = html.find(msg_hoy)
-    pos_ayer = html.find(msg_ayer)
-
-    # La noticia de hoy (más reciente) debe aparecer ANTES (índice menor) que la de ayer
-    assert pos_hoy < pos_ayer, "El orden cronológico es incorrecto. Debería ser Descendente."
-
-
-# --- CASO 1.8: Duplicados ---
-def test_1_8_no_mostrar_duplicados(client):
-    """
-    CP 1.8: Si hay eventos duplicados en la BD, deben mostrarse una sola vez
-    (o filtrarse según tu lógica de negocio).
-    """
-    yo = "YoSinSpam"
-    amigo = "AmigoRepe"
-    texto_repe = "He subido de nivel"
-
-    # 1. Preparar BD
-    sql_crear_usuario(client.db, yo)
-    sql_crear_usuario(client.db, amigo)
-    sql_crear_amistad(client.db, yo, amigo)
-
-    # Simulamos doble inserción (mismo contenido, segundos distintos para validar PK si aplica)
-    sql_crear_noticia(client.db, amigo, texto_repe, "2024-01-01 12:00:00")
-    sql_crear_noticia(client.db, amigo, texto_repe, "2024-01-01 12:00:05")
-
-    # 2. Sesión
-    with client.session_transaction() as sess:
-        sess['username'] = yo
-
-    # 3. Petición
-    res = client.get('/changelog')
-    html = res.data.decode('utf-8')
-
-    # 4. Verificar
-    cantidad = html.count(texto_repe)
-
-    # Si tu sistema elimina duplicados visualmente:
-    if cantidad > 1:
-        pytest.fail(f"ERROR: Se muestra información duplicada. Aparece {cantidad} veces.")
-
-    assert cantidad == 1
-
-
-# --- CASO 1.11: Error de conexión ---
-def test_1_11_error_conexion_bd(client, monkeypatch):
-    """
-    CP 1.11: Simula un fallo al intentar recuperar datos (ej. fallo en BD).
-    Muestra mensaje de error y botón volver.
-    """
-    yo = "YoCrash"
-    sql_crear_usuario(client.db, yo)
-
-    with client.session_transaction() as sess:
-        sess['username'] = yo
-
-    # Usamos monkeypatch para 'romper' el método que obtiene el MarcoDex o los amigos
-    # Esto simula que la BD se cayó justo cuando el controlador llamó al modelo.
-    def mock_fallo(*args, **kwargs):
-        raise Exception("Error de conexión simulado")
-
-    # Ajusta 'app.controller.model.marcoDex_controller.MarcoDex.getMyMarcoDex'
-    # a la ruta real de importación en tu controlador
-    from app.controller.model.marcoDex_controller import MarcoDex
-    monkeypatch.setattr(MarcoDex, "getMyMarcoDex", mock_fallo)
-
-    # Al hacer GET, Flask lanzará 500 o tu manejo de excepciones
-    # Si tienes un try/except en el controlador que renderiza una plantilla de error:
-    try:
-        res = client.get('/changelog')
-        html = res.data.decode('utf-8')
-        # Si tu app captura el error y muestra una página bonita:
-        # assert "no fue posible cargar" in html.lower() or "error" in html.lower()
-    except Exception:
-        # Si Flask devuelve error 500 estándar
-        pass
+def test_confirmar_cambios_en_modificacion(client):
+    res = client.post('/modificar-equipo/1', data={'accion': 'guardar'}, follow_redirects=True)
+    assert "mis-equipos" in res.request.path

@@ -24,6 +24,9 @@ class ListaUsuarios:
                 else:
                     indice += 1
 
+            nuevo: UsuarioRanking = elemento
+            # Caso en el que es el nuevo usuario es el mas pequeino de todos
+
             if parar:
                 nuevo = elemento
                 while indice < longitud:
@@ -32,7 +35,7 @@ class ListaUsuarios:
                     nuevo = actual
                     indice += 1
 
-                self.usuarios.append(nuevo)
+            self.usuarios.append(nuevo)
 
     def get_index(self, p_nombre: str) -> int:
         resultado: int = -1

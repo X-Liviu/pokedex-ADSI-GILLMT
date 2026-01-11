@@ -1,10 +1,26 @@
+/* IMPORTANTE: Quitar márgenes por defecto del navegador */
+body {
+    margin: 0;
+    padding: 0;
+    /* overflow-x: hidden; /* Evita scroll horizontal no deseado */
+}
+
+/* El borde que ocupa todo el ancho */
+.svg-cabecera {
+    width: 100%; /* Cambiado de 100vw a 100% */
+    min-width: 800px; /* OPCIONAL: Si quieres que el fondo no se encoja demasiado */
+    height: auto;
+    display: block;
+}
+
 /* Contenedor padre que agrupa todo */
 .podium-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: 75px;
+    /* Ajusta este margen según cuánto espacio quieras respecto al borde */
+    margin-top: 20px;
     font-family: 'Arial', sans-serif;
 }
 
@@ -14,6 +30,14 @@
     flex-direction: column;
     align-items: center;
     width: fit-content;
+    position: relative; /* Permite posicionamiento interno */
+}
+
+.svg-podio {
+    width: 120px;  /* Controlas el tamaño aquí */
+    height: auto;
+    margin-bottom: 15px;
+    display: block; /* Asegura que respete el centrado del flex */
 }
 
 .puesto_numero {
@@ -48,28 +72,41 @@
 
 /* Contenedor que limita la vista a 4 filas */
 .ranking-scroll-container {
-    max-height: 220px; /* Ajustado para que quepan aprox 4 filas */
+    max-height: 180px; /* Ajustado para que quepan aprox 4 filas */
     overflow-y: auto;  /* Activa el scroll vertical */
     width: fit-content;
-    margin: 30px auto; /* Centra la lista en la página */
+
+    margin: 100px auto 30px auto;
+
     padding-right: 15px; /* Espacio para que el scroll no tape el texto */
 }
 
-/* Cada fila de la lista */
+/* 1. Ajustamos el contenedor de la lista */
+.ranking-scroll-container {
+    max-height: 180px;
+    overflow-y: auto;
+
+    /* CAMBIO: Quitamos fit-content y definimos un ancho */
+    width: 90%;            /* Ocupa casi todo el ancho disponible */
+    max-width: 325px;      /* Pero ponemos un tope para que no sea excesivo en pantallas grandes */
+
+    margin: 100px auto 30px auto;
+    padding-right: 15px;
+    scrollbar-gutter: stable; /* Evita que el contenido baile cuando aparece el scroll */
+}
+
+/* 2. Aseguramos que cada fila se estire */
 .ranking-list-item {
     display: flex;
     align-items: center;
-    gap: 15px;        /* Espacio entre número y nombre */
+    gap: 15px;             /* Un poco más de espacio entre número y burbuja */
     margin-bottom: 12px;
     font-family: 'Arial', sans-serif;
-}
-
-.puesto-lista {
+    width: 100%;           /* Obliga a la fila a usar el ancho del contenedor */
     font-weight: bold;
-    font-size: 1.1rem;
-    min-width: 30px;  /* Asegura que los números no muevan el nombre */
 }
 
+/* 3. Ajustamos la burbuja para que ocupe el espacio y centre el texto */
 .nombre-lista-burbuja {
     background: #ce5888;
     color: black;
@@ -77,7 +114,12 @@
     border-radius: 50px;
     font-weight: bold;
     white-space: nowrap;
-    display: inline-block;
+    text-decoration: none;
+
+    /* CAMBIO: flex-grow hace que la burbuja rellene el espacio restante */
+    flex-grow: 1;
+    text-align: left;    /* Centra el nombre dentro de la burbuja ancha */
+    display: block;        /* Cambiado de inline-block para mejor comportamiento con width 100% */
 }
 
 /* Personalización opcional de la barra de scroll para que sea fina */
@@ -87,4 +129,46 @@
 .ranking-scroll-container::-webkit-scrollbar-thumb {
     background: #ce5888;
     border-radius: 10px;
+}
+
+
+.boton-volver-estilo {
+    position: absolute;
+
+    /* 1. Lo llevamos al centro exacto de la pantalla */
+    left: 50%;
+
+    /* 2. Lo empujamos hacia la derecha.
+       Ajusta el valor (200px) hasta que quede donde te gusta.
+       Como tu lista mide 325px, unos 200px lo sacan fuera del ranking. */
+    margin-left: 300px;
+
+    /* 3. Mantenemos tu altura preferida */
+    top: 600px;
+
+    /* --- Tus estilos originales --- */
+    background-color: #ebe1d8;
+    color: #001637;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-family: 'Arial', sans-serif;
+    font-weight: bold;
+    text-decoration: none;
+    border: 3px solid black;
+    box-shadow: -10px 10px 0px 0px rgba(0, 0, 0, 1);
+    transition: all 0.2s ease;
+    z-index: 100;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* Animación de presión */
+.boton-volver-estilo:hover {
+    transform: translate(-6px, 6px);
+    box-shadow: -4px 4px 0px 0px rgba(0, 0, 0, 1);
+}
+
+.boton-volver-estilo:active {
+    transform: translate(-10px, 10px);
+    box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 1);
 }

@@ -10,10 +10,13 @@
     <h2>Ranking</h2>
     ---->
 
+    <img src="{{ url_for('static', filename='imagenes/borde.svg') }}" class="svg-cabecera" alt="cabecera">
+
     <div class="podium-wrapper">
 
         {% if usuarios.usuarios|length >= 1 %}
         <div class="first_place_container">
+            <img src="{{ url_for('static', filename='imagenes/corona.svg') }}" class="svg-podio" alt="Icono podio">
             <div class="puesto_numero">{{usuarios.usuarios[0].puesto}}</div>
             <a class="nombre_burbuja" href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuarios.usuarios[0].nombre)}} ">{{usuarios.usuarios[0].nombre}}</a>
         </div>
@@ -39,32 +42,22 @@
 
     </div>
 
-    <table>
-        {% for usuario in usuarios.usuarios%}
-        <tr>
-            {% if usuario.puesto > 3 %}
-            <td><a href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuario.nombre)}} "> {{usuario.nombre}}</a></td>
-            <td>{{usuario.rareza}}</td>
-            <td>{{usuario.puesto}}</td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-    </table>
-
     <div class="ranking-scroll-container">
     {% for usuario in usuarios.usuarios %}
         {% if loop.index > 3 %}
         <div class="ranking-list-item">
             <div class="puesto-lista">{{ usuario.puesto }}</div>
 
-            <div class="nombre-lista-burbuja">
+            <a class="nombre-lista-burbuja" href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuario.nombre)}} ">
                 {{ usuario.nombre }}
-            </div>
+            </a>
         </div>
         {% endif %}
     {% endfor %}
     </div>
 
-    <a href="/">volver</a>
+    <div class="contenedor-volver">
+        <a href="/" class="boton-volver-estilo">Volver</a>
+    </div>
 </body>
 </html>

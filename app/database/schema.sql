@@ -155,6 +155,21 @@ INSERT OR IGNORE INTO Usuario VALUES ("Tate430", "Aco", "ElZapas", "marlartate@g
 -- Gorde
 INSERT OR IGNORE INTO Usuario VALUES ("Gorde", "Gorde", "ElZapas", "gorde@gmail.com", "1234gorde", "pasivisimo", FALSE);
 
+-- Ivanka
+INSERT OR IGNORE INTO Usuario VALUES ("Ivanka", "Ivanka", "Trump", "ivanka@hotmail.us", "1234Ivanka", "wtf", FALSE);
+
+-- FKA Twigs
+INSERT OR IGNORE INTO Usuario VALUES ("FKA", "FKA", "Twigs", "fka@twigs.com","1234FKA","ACTIVISIMA",FALSE);
+
+-- Lorde
+INSERT OR IGNORE INTO Usuario VALUES ("Lorde", "Ella Maria", "Oconnel", "lorde@melodrama.nz", "1234Lorde","Activisima", FALSE);
+
+-- Tame Impala
+INSERT OR IGNORE INTO Usuario VALUES ("TameImpala", "Tame","Impala","tameimpala@hotmail.aus","1234TameImpala","WTF",FALSE);
+
+-- Lana del Rey
+INSERT OR IGNORE INTO Usuario VALUES ("Lana", "Lana","Del Rey","lanadelrey@hotmail.us","1234Lana","Pasivisima",FALSE);
+
 -- Especie
 INSERT OR IGNORE INTO EspeciePokemon VALUES ("pikachu", "Caca", FALSE, 1.75, 1.43, "Canto");
 INSERT OR IGNORE INTO EspeciePokemon VALUES ("charizard", "Esta en el cuento criptico", FALSE, 1.75, 1.43, "Canto");
@@ -167,15 +182,40 @@ INSERT OR IGNORE INTO Pokemon VALUES (2,NULL, "Laura", 8, FALSE, 1.1, 1.1, "pika
 INSERT OR IGNORE INTO Pokemon VALUES (3,NULL, "Victor", 10, FALSE, 1.9, 1.5, "pikachu", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png");
 
 -- Gorde
-INSERT OR IGNORE INTO Pokemon VALUES (4, NULL, "Elecho", 0.1, FALSE, 1.0, 1.0, "charizard", NULL);
+INSERT OR IGNORE INTO Pokemon VALUES (4, NULL, "Elecho", 3, FALSE, 1.0, 1.0, "charizard", NULL);
+
+-- Ivanka
+INSERT OR IGNORE INTO Pokemon VALUES ( 5, NULL, "Trumpedo", 0, FALSE, 0.1, 1.0, "charizard", NULL );
+
+-- FKA Twigs
+INSERT OR IGNORE INTO POKEMON VALUES (6, NULL, "Two Weeks", 0, FALSE, 1.55, 2.0, "charizard", NULL);
+
+-- Lorde
+INSERT OR IGNORE INTO POKEMON VALUES (7, NULL, "Green Light", 2, FALSE, 1.02, 1.30, "pikachu", NULL);
+
+-- Tame Impala
+INSERT OR IGNORE INTO POKEMON VALUES (8, NULL, "The Less I Know The Better", 4, FALSE, 1.02, 1.30, "charizard", NULL);
+
+-- Lana del Rey
+INSERT OR IGNORE INTO POKEMON VALUES (9, NULL, "Radio", 2, FALSE, 1.02, 1.30, "pikachu", NULL);
 
 -- Equipos
 INSERT OR IGNORE INTO Equipo VALUES (NULL, 1, "Tata430");
 INSERT OR IGNORE INTO Equipo VALUES (NULL, 2, "Tate430");
 INSERT OR IGNORE INTO Equipo VALUES (NULL, 3, "Gorde");
+INSERT OR IGNORE INTO Equipo VALUES (NULL, 4, "Ivanka");
+INSERT OR IGNORE INTO Equipo VALUES (NULL, 5, "FKA");
+INSERT OR IGNORE INTO Equipo VALUES (NULL, 6, "Lorde");
+INSERT OR IGNORE INTO Equipo VALUES (NULL, 7, "TameImpala");
+INSERT OR IGNORE INTO Equipo VALUES (NULL, 8, "Lana");
 
 -- Relaciones
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (1, 1);
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (1, 2);
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (2, 3);
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (3, 4);
+INSERT OR IGNORE INTO PokemonEnEquipo VALUES (4, 5);
+INSERT OR IGNORE INTO PokemonEnEquipo VALUES (5, 6);
+INSERT OR IGNORE INTO PokemonEnEquipo VALUES (6, 7);
+INSERT OR IGNORE INTO PokemonEnEquipo VALUES (7, 8);
+INSERT OR IGNORE INTO PokemonEnEquipo VALUES (8, 9);

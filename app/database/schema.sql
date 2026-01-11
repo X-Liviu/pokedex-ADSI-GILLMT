@@ -152,8 +152,12 @@ INSERT OR IGNORE INTO Usuario VALUES ("Tata430", "Tata", "Morente", "tata@hotmai
 -- Tate
 INSERT OR IGNORE INTO Usuario VALUES ("Tate430", "Aco", "ElZapas", "marlartate@gmail.com", "1234tate", "activisimo", FALSE);
 
+-- Gorde
+INSERT OR IGNORE INTO Usuario VALUES ("Gorde", "Gorde", "ElZapas", "gorde@gmail.com", "1234gorde", "pasivisimo", FALSE);
+
 -- Especie
-INSERT OR IGNORE INTO EspeciePokemon VALUES ("Pikachu", "Caca", FALSE, 1.75, 1.43, "Canto");
+INSERT OR IGNORE INTO EspeciePokemon VALUES ("pikachu", "Caca", FALSE, 1.75, 1.43, "Canto");
+INSERT OR IGNORE INTO EspeciePokemon VALUES ("charizard", "Esta en el cuento criptico", FALSE, 1.75, 1.43, "Canto");
 
 -- Tata (Añadimos un "" al final para la columna Imagen)
 INSERT OR IGNORE INTO Pokemon VALUES (1,NULL, "Jon", 1, FALSE, 1.5, 1.5, "pikachu", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png");
@@ -162,11 +166,16 @@ INSERT OR IGNORE INTO Pokemon VALUES (2,NULL, "Laura", 8, FALSE, 1.1, 1.1, "pika
 -- Tate (Añadimos la imagen al final)
 INSERT OR IGNORE INTO Pokemon VALUES (3,NULL, "Victor", 10, FALSE, 1.9, 1.5, "pikachu", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png");
 
+-- Gorde
+INSERT OR IGNORE INTO Pokemon VALUES (4, NULL, "Elecho", 0.1, FALSE, 1.0, 1.0, "charizard", NULL);
+
 -- Equipos
 INSERT OR IGNORE INTO Equipo VALUES (NULL, 1, "Tata430");
 INSERT OR IGNORE INTO Equipo VALUES (NULL, 2, "Tate430");
+INSERT OR IGNORE INTO Equipo VALUES (NULL, 3, "Gorde");
 
 -- Relaciones
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (1, 1);
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (1, 2);
 INSERT OR IGNORE INTO PokemonEnEquipo VALUES (2, 3);
+INSERT OR IGNORE INTO PokemonEnEquipo VALUES (3, 4);

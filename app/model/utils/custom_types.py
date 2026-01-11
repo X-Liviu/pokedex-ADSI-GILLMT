@@ -6,6 +6,12 @@ class Custom_types:
         Usuarios = Dict[str, List]
         Usuario = Dict[str, Any]
 
+    class GestorUsuario:
+        EstadoAmigo = Dict[str, bool]
+
+    class MarcoDex:
+        Usuario = Dict[str, Any]
+
     class VerUsuario:
         NO_SOLICITADO: int = 0
         AMIGO_NUEVO: int = 1

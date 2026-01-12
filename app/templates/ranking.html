@@ -8,67 +8,78 @@
 </head>
 <body>
 
-    <img src="{{ url_for('static', filename='imagenes/borde.svg') }}" class="svg-cabecera" alt="cabecera">
+    <div class="window">
 
-    <div class="podium-wrapper">
-
-        {% if usuarios.usuarios|length >= 1 %}
-        {% set top1 = usuarios.usuarios[0] %}
-        <div class="first_place_container">
-            <img src="{{ url_for('static', filename='imagenes/corona.svg') }}" class="svg-podio" alt="Corona">
-            <div class="puesto_numero">{{ top1.puesto }}</div>
-            <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top1.nombre) }}">
-                <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
-                {{ top1.nombre }}
-            </a>
+        <div class="window-header">
+            <div class="traffic-lights">
+                <span class="dot red"></span>
+                <span class="dot yellow"></span>
+                <span class="dot green"></span>
+            </div>
+            <span class="window-title">RANKING</span>
         </div>
-        {% endif %}
 
-        {% if usuarios.usuarios|length >= 2 %}
-        <div class="second_third_row">
+        <div class="window-body">
 
-            {% set top2 = usuarios.usuarios[1] %}
-            <div class="first_place_container">
-                <div class="puesto_numero">{{ top2.puesto }}</div>
-                <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top2.nombre) }}">
-                    <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
-                    {{ top2.nombre }}
-                </a>
+            <div class="podium-wrapper">
+
+                {% if usuarios.usuarios|length >= 1 %}
+                {% set top1 = usuarios.usuarios[0] %}
+                <div class="first_place_container">
+                    <img src="{{ url_for('static', filename='imagenes/corona.svg') }}" class="svg-podio" alt="Corona">
+                    <div class="puesto_numero">{{ top1.puesto }}</div>
+                    <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top1.nombre) }}">
+                        <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
+                        {{ top1.nombre }}
+                    </a>
+                </div>
+                {% endif %}
+
+                {% if usuarios.usuarios|length >= 2 %}
+                <div class="second_third_row">
+
+                    {% set top2 = usuarios.usuarios[1] %}
+                    <div class="first_place_container">
+                        <div class="puesto_numero">{{ top2.puesto }}</div>
+                        <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top2.nombre) }}">
+                            <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
+                            {{ top2.nombre }}
+                        </a>
+                    </div>
+
+                    {% if usuarios.usuarios|length >= 3 %}
+                    {% set top3 = usuarios.usuarios[2] %}
+                    <div class="first_place_container">
+                        <div class="puesto_numero">{{ top3.puesto }}</div>
+                        <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top3.nombre) }}">
+                            <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
+                            {{ top3.nombre }}
+                        </a>
+                    </div>
+                    {% endif %}
+
+                </div>
+                {% endif %}
+
             </div>
 
-            {% if usuarios.usuarios|length >= 3 %}
-            {% set top3 = usuarios.usuarios[2] %}
-            <div class="first_place_container">
-                <div class="puesto_numero">{{ top3.puesto }}</div>
-                <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top3.nombre) }}">
-                    <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
-                    {{ top3.nombre }}
-                </a>
+            <div class="ranking-scroll-container">
+                {% for usuario in usuarios.usuarios %}
+                    {% if loop.index > 3 %}
+                    <div class="ranking-list-item">
+                        <div class="puesto-lista">{{ usuario.puesto }}</div>
+                        <a class="nombre-lista-burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuario.nombre) }}">
+                            <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
+                            {{ usuario.nombre }}
+                        </a>
+                    </div>
+                    {% endif %}
+                {% endfor %}
             </div>
-            {% endif %}
 
-        </div>
-        {% endif %}
+            <div class="contenedor-volver">
+                <a href="/" class="boton-volver-estilo">Volver</a>
+            </div>
 
-    </div>
-
-    <div class="ranking-scroll-container">
-    {% for usuario in usuarios.usuarios %}
-        {% if loop.index > 3 %}
-        <div class="ranking-list-item">
-            <div class="puesto-lista">{{ usuario.puesto }}</div>
-            <a class="nombre-lista-burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuario.nombre) }}">
-                <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
-                {{ usuario.nombre }}
-            </a>
-        </div>
-        {% endif %}
-    {% endfor %}
-    </div>
-
-    <div class="contenedor-volver">
-        <a href="/" class="boton-volver-estilo">Volver</a>
-    </div>
-
-</body>
+        </div> </div> </body>
 </html>

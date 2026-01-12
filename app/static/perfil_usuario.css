@@ -1,145 +1,191 @@
+/* --- RESET Y BASE --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    padding: 40px 20px;
+    font-family: 'Arial', sans-serif;
+    background-color: #fdfaf7;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
 @font-face {
     src: url("fuentes/Pokemon Solid.ttf");
     font-family: 'Pokemon';
 }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #fdfaf7;
+/* --- VENTANA PRINCIPAL --- */
+.window {
+    position: relative;
+    width: 95%;
+    max-width: 900px;
+    min-height: 850px;
+    background-color: white;
+    border: 4px solid #000;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 12px 12px 0px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
 }
 
-a
-{
-    white-space: nowrap;
+.window-header {
+    background-color: #ff5eb9;
+    padding: 15px 25px;
+    border-bottom: 4px solid #000;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
 }
 
-/* Borde superior que ocupa el ancho */
+.traffic-lights { display: flex; gap: 8px; }
+.dot { width: 18px; height: 18px; border-radius: 50%; border: 3px solid #000; }
+.dot.red { background-color: #ff3b30; }
+.dot.yellow { background-color: #ffcc00; }
+.dot.green { background-color: #28cd41; }
+.window-title { font-weight: bold; font-size: 1.3rem; }
+
+.window-body {
+    padding: 60px 50px 140px 50px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
 .svg-cabecera {
     width: 100%;
-    min-width: 800px;
     height: auto;
-    display: block;
+    margin-bottom: 50px;
 }
 
+/* --- CABECERA PERFIL (FOTO Y DATOS) --- */
 .seccion-cabecera-perfil {
-    position: absolute;
-    padding: 25px 60px;
-}
-
-.foto-perfil
-{
-    position: absolute;
-    width: 250px;
-    height: 250px;
-}
-
-.datos-usuario
-{
-    position: absolute;
-    left: 350px;
-    top: 60px;
-}
-
-.titulo-nombre
-{
-    position: absolute;
-    font-size: 24px;
-    font-weight: bold;
-    top: 0px;
-    left: 0px;
-}
-
-.top-ranking
-{
-    position: absolute;
-    font-size: 36px;
-    font-weight: bold;
-    left: 850px;
-    top: 0px;
-    font-family: Pokemon;
-    color: #ffcb05;
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: #254bb1;
-    text-align: center;
-
-
-}
-.nombre
-{
-    position: absolute;
-    top: 40px;
-    left: 0px;
-    font-size: 20px;
-}
-
-.subtitulo-pokemon
-{
-    position: absolute;
-    top: 375px;
-    left: 60px;
-}
-
-.lista-pokemon
-{
-    position: absolute;
     display: flex;
-    flex-wrap: wrap;
-    top: 450px;
-    left: 60px;
-    gap: 5px;
-}
-
-.pokemon
-{
-    display: grid;
-    justify-items: center;
+    gap: 40px;
+    margin-bottom: 60px;
     align-items: center;
 }
 
-.nombre-especie
-{
-    grid-column: 1;
-    grid-row: 1;
+.foto-perfil-principal {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid #000;
+    background: #fff;
+    /* Sombra circular hacia la IZQUIERDA */
+    box-shadow: -12px 12px 0px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
 }
 
-.foto-pokemon
-{
-    grid-column: 1;
-    grid-row: 2;
+.datos-usuario {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex-grow: 1;
 }
 
-.nombre-custom
-{
-    grid-column: 1;
-    grid-row: 3;
+.nombre-y-puesto {
+    display: flex;
+    justify-content: space-between; /* Alinea los extremos */
+    align-items: baseline;        /* Alinea el texto por abajo */
+    width: 100%;
+    max-width: 550px;
 }
 
-/* --- BOTÓN VOLVER --- */
-.boton-volver-estilo {
-    display: flex;             /* Activa Flexbox */
-    align-items: center;       /* Centra verticalmente */
-    justify-content: center;   /* Centra horizontalmente */
-
-    /* Tu código original */
-    position: absolute;
-    left: 1200px;
-    top: 600px;
-    width: 80px;
-    height: 40px;
-    background-color: #ebe1d8;
-    color: #001637;
-    border-radius: 10px;
+.titulo-nombre {
+    font-size: 1.6rem;
     font-weight: bold;
-    text-decoration: none;
-    border: 3px solid black;
-    box-shadow: -8px 8px 0px 0px rgba(0, 0, 0, 1);
-    transition: all 0.2s ease;
-    z-index: 100;
+    color: #333;
 }
 
-.boton-volver-estilo:hover {
-    transform: translate(-4px, 4px);
-    box-shadow: -4px 4px 0px 0px rgba(0, 0, 0, 1);
+.top-ranking {
+    font-size: 3.2rem;
+    font-family: 'Pokemon', sans-serif;
+    color: #ffcb05;
+    -webkit-text-stroke: 1.5px #254bb1;
+    line-height: 1;
+}
+
+.nombre-valor {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #ce5888;
+}
+
+/* --- SECCIÓN POKÉMON --- */
+.subtitulo-pokemon {
+    font-size: 1.8rem;
+    margin-bottom: 30px;
+    padding-left: 15px;
+    border-left: 10px solid #ff5eb9;
+}
+
+.lista-pokemon {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 25px;
+}
+
+.pokemon-card {
+    background: #fdfaf7;
+    border: 3px solid #000;
+    border-radius: 20px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 6px 6px 0px rgba(0,0,0,0.05);
+}
+
+.foto-pokemon { width: 100px; height: 100px; object-fit: contain; }
+
+/* --- BOTÓN VOLVER (ESQUINA) --- */
+.contenedor-volver {
+    position: absolute;
+    bottom: 35px;
+    right: 35px;
+}
+
+.boton-volver-estilo {
+    background-color: #efe6dc;
+    border: 4px solid #000;
+    border-radius: 12px;
+    padding: 15px 40px;
+    font-weight: 800;
+    color: #0a1f44;
+    text-decoration: none;
+    box-shadow: 8px 8px 0px #000;
+    transition: all 0.1s;
+}
+
+.boton-volver-estilo:active {
+    transform: translate(4px, 4px);
+    box-shadow: 4px 4px 0px #000;
+}
+
+/* Solicitud Amistad */
+.btn-solicitud {
+    background-color: #ff5eb9;
+    color: white;
+    padding: 8px 20px;
+    border: 3px solid #000;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    box-shadow: 4px 4px 0px #000;
+}
+
+/* Responsivo */
+@media (max-width: 650px) {
+    .seccion-cabecera-perfil { flex-direction: column; text-align: center; }
+    .nombre-y-puesto { flex-direction: column; align-items: center; }
+    .contenedor-volver { position: relative; right: 0; bottom: 0; margin-top: 40px; }
 }

@@ -1,17 +1,68 @@
 /* --- RESET Y BASE --- */
-body {
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: 'Arial', sans-serif;
-    background-color: #fdfaf7;
 }
 
-/* Borde superior que ocupa el ancho */
+body {
+    padding: 40px 20px;
+    font-family: 'Arial', sans-serif;
+    background-color: #fdfaf7;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+}
+
+/* --- VENTANA PRINCIPAL --- */
+.window {
+    position: relative;    /* Para que el botón de la esquina se oriente aquí */
+    width: 95%;
+    max-width: 900px;      /* Ventana ancha */
+    min-height: 850px;     /* Ventana alta */
+    background-color: white;
+    border: 4px solid #000;
+    border-radius: 25px;
+    overflow: hidden;
+    box-shadow: 12px 12px 0px rgba(0,0,0,0.15);
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- CABECERA ROSA --- */
+.window-header {
+    background-color: #ff5eb9;
+    padding: 15px 25px;
+    border-bottom: 4px solid #000;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-shrink: 0;
+}
+
+.traffic-lights { display: flex; gap: 8px; }
+.dot { width: 18px; height: 18px; border-radius: 50%; border: 3px solid #000; }
+.dot.red { background-color: #ff3b30; }
+.dot.yellow { background-color: #ffcc00; }
+.dot.green { background-color: #28cd41; }
+.window-title { font-weight: bold; font-size: 1.3rem; color: #000; }
+
+/* --- CUERPO DE LA VENTANA --- */
+.window-body {
+    padding: 60px 40px 120px 40px; /* 60px arriba para bajar el contenido, 120px abajo para el botón */
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centra todo el contenido internamente */
+}
+
+/* Cabecera SVG original */
 .svg-cabecera {
     width: 100%;
-    min-width: 800px;
+    max-width: 600px;
     height: auto;
-    display: block;
+    margin-bottom: 40px;
 }
 
 /* --- PODIO (TOP 3) --- */
@@ -20,132 +71,145 @@ body {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: 20px;
 }
 
 .first_place_container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: fit-content;
-    position: relative;
+    margin-bottom: 20px;
 }
 
 .svg-podio {
-    width: 120px;
+    width: 110px;
     height: auto;
-    margin-bottom: 15px;
-    display: block;
+    margin-bottom: 10px;
 }
 
 .puesto_numero {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: bold;
     margin-bottom: 5px;
 }
 
-/* Burbujas del Podio (Estilo Cápsula con Foto) */
 .nombre_burbuja {
     background: #ce5888;
-    color: black;
-    padding: 6px 25px 6px 10px; /* Menos padding a la izquierda para la foto */
+    color: white;
+    padding: 10px 30px;
     border-radius: 50px;
     font-weight: bold;
-    white-space: nowrap;
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 12px;
-    border: 2px solid #000;
+    border: 4px solid #000;
+    font-size: 1.2rem;
+    transition: transform 0.1s;
 }
 
-/* Fila de 2º y 3º */
+.nombre_burbuja:hover {
+    transform: translateY(-3px);
+}
+
 .second_third_row {
     display: flex;
     justify-content: center;
-    gap: 150px;
-    margin-top: 50px;
+    gap: 100px; /* Más espacio entre el 2 y el 3 */
+    margin-top: 20px;
     width: 100%;
 }
 
-/* --- FOTO DE PERFIL (Sin fondos ni bordes extra) --- */
+/* Fotos de perfil */
 .foto-perfil {
-    width: 38px;
-    height: 38px;
+    width: 45px;
+    height: 45px;
     border-radius: 50%;
     object-fit: cover;
-    background-color: transparent; /* Eliminado el fondo gris/blanco */
-    border: none;                  /* Eliminado el borde circular */
-    display: block;
+    border: 2px solid #000;
+    background: #fff;
 }
 
 /* --- LISTA RANKING (SCROLL) --- */
 .ranking-scroll-container {
-    max-height: 220px;
+    max-height: 350px;
     overflow-y: auto;
-    width: 90%;
-    max-width: 380px;
-    margin: 60px auto 30px auto;
+    width: 100%;
+    max-width: 650px;
+    margin-top: 60px;
     padding-right: 15px;
-    scrollbar-gutter: stable;
 }
 
 .ranking-list-item {
     display: flex;
     align-items: center;
     gap: 15px;
-    margin-bottom: 12px;
-    width: 100%;
-    font-weight: bold;
+    margin-bottom: 15px;
 }
 
 .puesto-lista {
-    min-width: 25px;
-    text-align: center;
+    min-width: 35px;
+    font-size: 1.2rem;
+    font-weight: bold;
 }
 
 .nombre-lista-burbuja {
-    background: #ce5888;
-    color: black;
-    padding: 5px 15px 5px 8px;
-    border-radius: 50px;
-    font-weight: bold;
-    white-space: nowrap;
-    text-decoration: none;
+    background: #d16d8c;
+    color: #3b0d1e;
+    padding: 12px 25px;
+    border-radius: 25px;
+    border: 3px solid #000;
     flex-grow: 1;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1.1rem;
 }
 
 /* Scrollbar personalizada */
-.ranking-scroll-container::-webkit-scrollbar {
-    width: 6px;
-}
+.ranking-scroll-container::-webkit-scrollbar { width: 10px; }
 .ranking-scroll-container::-webkit-scrollbar-thumb {
-    background: #ce5888;
+    background: #ff5eb9;
+    border: 2px solid #000;
     border-radius: 10px;
 }
 
-/* --- BOTÓN VOLVER --- */
+/* --- BOTÓN VOLVER (ESQUINA INFERIOR DERECHA) --- */
+.contenedor-volver {
+    position: absolute;
+    bottom: 35px;
+    right: 35px;
+    z-index: 10;
+}
+
 .boton-volver-estilo {
-    position: fixed;
-    left: 50%;
-    margin-left: 280px;
-    bottom: 50px;
-    background-color: #ebe1d8;
-    color: #001637;
-    padding: 10px 25px;
-    border-radius: 10px;
-    font-weight: bold;
+    background-color: #efe6dc;
+    border: 4px solid #000;
+    border-radius: 12px;
+    padding: 15px 35px;
+    font-weight: 800;
+    color: #0a1f44;
     text-decoration: none;
-    border: 3px solid black;
-    box-shadow: -8px 8px 0px 0px rgba(0, 0, 0, 1);
-    transition: all 0.2s ease;
-    z-index: 100;
+    box-shadow: 7px 7px 0px #000;
+    display: inline-block;
+    transition: all 0.1s;
 }
 
-.boton-volver-estilo:hover {
-    transform: translate(-4px, 4px);
-    box-shadow: -4px 4px 0px 0px rgba(0, 0, 0, 1);
+.boton-volver-estilo:active {
+    transform: translate(4px, 4px);
+    box-shadow: 3px 3px 0px #000;
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 650px) {
+    .second_third_row { gap: 30px; }
+    .window-body { padding: 40px 15px 100px 15px; }
+    .contenedor-volver {
+        position: relative;
+        bottom: 0;
+        right: 0;
+        margin-top: 40px;
+        text-align: center;
+    }
 }

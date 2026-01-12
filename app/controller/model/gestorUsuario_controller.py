@@ -47,8 +47,6 @@ class gestorUsuario:
         # Si el usuario no está en memoria (por ejemplo, tras reiniciar servidor), lo recuperamos de la BD
         if nombre_usuario not in cls._instancias_usuarios:
 
-            # --- AQUÍ ESTABA EL ERROR (db.getUsuario no existe) ---
-            # CORRECCIÓN: Hacemos el SELECT manualmente:
             sql = "SELECT * FROM Usuario WHERE NombreUsuario = ?"
             resultado = db.select(sql, (nombre_usuario,))
 
@@ -295,13 +293,11 @@ class gestorUsuario:
         lista_diccionarios = []
 
         sql = "SELECT Nombre, Apellido, NombreUsuario, Correo, Contrasena, Rol FROM Usuario WHERE Rol = 'NOVERIF'"
-        # Nota: He añadido 'NOVERIF' al WHERE para filtrar, aunque el flujo Java decía SELECT ALL,
-        # en web es mejor filtrar en SQL. Si quieres TODOS, quita el WHERE.
 
         resultado = db.select(sql, ())
 
         for fila in resultado:
-            # 1. Crear objeto Usuario (como dice el flujo paso 11)
+            # 1. Crear objeto Usuario
             nuevo_usuario = Usuario(
                 nombre=fila['Nombre'],
                 apellido=fila['Apellido'],
@@ -327,7 +323,18 @@ class gestorUsuario:
         return lista_diccionarios
 
     @classmethod
-    def aprobarUsuario(cls, pNomUsuario, db) -> bool:
+    def buscarUsuarioDeLaListaParaAdmin(cls, pNomUsuario: str):
+        """
+        Busca un usuario por su nombre de usuario dentro de la lista estática cargada en memoria.
+        Retorna el objeto Usuario o None.
+        """
+        for usuario in cls.listaUsuariosParaAdmin:
+            if usuario.getNomUsuario() == pNomUsuario:
+                return usuario
+        return None
+
+    @classmethod
+    def aprobarUsuario(cls, pNomUsuario: str, db) -> bool:
         """
         Actualiza a VERIF en BD.
         """
@@ -347,28 +354,21 @@ class gestorUsuario:
 
     @classmethod
     def borrarUsuario(cls, pNomUsuario, db):
-        """
-        Borra de BD, borra de la lista en memoria y devuelve la lista actualizada.
-        """
-        # 1. Buscar usuario en la lista de memoria para borrarlo
-        usuario_a_borrar = None
-        for u in cls.listaUsuariosParaAdmin:
-            if u.getNomUsuario() == pNomUsuario:
-                usuario_a_borrar = u
-                break
+        # 1. Buscar usuario usando buscarUsuarioDeLaListaParaAdmin
+        usuario_a_borrar = cls.buscarUsuarioDeLaListaParaAdmin(pNomUsuario)
 
-        # 2. Remover de memoria
+        # 2. Remover de memoria si existe
         if usuario_a_borrar:
             cls.listaUsuariosParaAdmin.remove(usuario_a_borrar)
 
         # 3. Ejecutar SQL DELETE
         try:
             sql = "DELETE FROM Usuario WHERE NombreUsuario = ?"
-            db.delete(sql, (pNomUsuario,))  # Asumiendo que db.delete existe, si no usar db.update/insert
+            db.delete(sql, (pNomUsuario,))
         except Exception as e:
             print(f"Error borrando usuario BD: {e}")
 
-        # 4. Devolver la lista actualizada en formato diccionarios
+        # 4. Devolver la lista actualizada (diccionarios)
         lista_actualizada = []
         for u in cls.listaUsuariosParaAdmin:
             lista_actualizada.append({
@@ -382,21 +382,19 @@ class gestorUsuario:
 
     @classmethod
     def modificarUsuarioEnMemoriaPorAdmin(cls, pNomUsuarioOriginal, pNombre, pAp, pNomUsuarioModif, db):
-        """
-        Busca en memoria, actualiza el objeto y hace el UPDATE en BD.
-        """
-        # 1. Buscar usuario en lista (Paso 17 flujo)
-        usuario_act = None
-        for u in cls.listaUsuariosParaAdmin:
-            if u.getNomUsuario() == pNomUsuarioOriginal:
-                usuario_act = u
-                break
+        # 1. Buscar usuario
+        usuario_act = cls.buscarUsuarioDeLaListaParaAdmin(pNomUsuarioOriginal)
 
         if usuario_act:
-            # 2. Modificar datos en el objeto (Paso 19 flujo)
-            # Nota: Asumimos que correo y contraseña no cambian o se pasan vacíos/nulos según tu flujo
-            usuario_act.modificarDatos(pNombre, pAp, usuario_act.getCorreo(), pNomUsuarioModif, None)
+            # --- LÓGICA DE MEZCLA INTELIGENTE ---
+            # Si el input viene vacío (falso), usamos el dato que ya tiene el objeto.
+            final_nom = pNombre if pNombre and pNombre.strip() else usuario_act.getNombre()
+            final_ap = pAp if pAp and pAp.strip() else usuario_act.getApellido()
+            final_usuario = pNomUsuarioModif if pNomUsuarioModif and pNomUsuarioModif.strip() else usuario_act.getNomUsuario()
 
-            # 3. Update SQL (Paso 20 flujo)
+            # 2. Modificar datos en el objeto en memoria (usando los valores finales)
+            usuario_act.modificarDatos(final_nom, final_ap, usuario_act.getCorreo(), final_usuario, None)
+
+            # 3. Update SQL
             sql = "UPDATE Usuario SET NombreUsuario=?, Nombre=?, Apellido=? WHERE NombreUsuario=?"
-            db.update(sql, (pNomUsuarioModif, pNombre, pAp, pNomUsuarioOriginal))
+            db.update(sql, (final_usuario, final_nom, final_ap, pNomUsuarioOriginal))

@@ -2,121 +2,234 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Marcodex - Modificar Datos</title>
+    <title>Modificar Usuario - Admin Style</title>
     <style>
-        /* Importación de fuentes y variables (IGUAL QUE EL ORIGINAL) */
+        /* --- Importación de Fuentes y Variables --- */
         @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&display=swap');
-        :root { --pink: #ff66c4; --cream: #f2e9e4; --border: 3px solid #000; --shadow: 4px 4px 0px #000; --grey-input: #c4c4c4; }
-        body { font-family: 'Fredoka', sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; background-color: #f0f0f0; }
 
-        /* Estilos de la ventana (IGUAL QUE EL ORIGINAL) */
-        .window { width: 800px; height: 550px; background: white; border: var(--border); border-radius: 20px; overflow: hidden; display: flex; flex-direction: column; position: relative; }
-        .window-header { height: 50px; background: var(--pink); border-bottom: var(--border); display: flex; align-items: center; padding-left: 15px; gap: 10px; }
-        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
-        .red { background: #ff4d4d; } .yellow { background: #ffcc00; } .green { background: #00cc00; }
+        :root {
+            --pink: #ff66c4;
+            --cream: #f2e9e4;
+            --grey-input: #c4c4c4;
+            --btn-bg: #efe6dc;
+            --border: 3px solid #000;
+            --shadow: 4px 4px 0px #000;
+            --shadow-hover: 2px 2px 0px #000;
+        }
 
-        /* Contenido principal - MODIFICADO para alineación */
-        .content {
-            flex: 1;
-            padding: 40px;
+        body {
+            font-family: 'Fredoka', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+
+        /* --- Ventana Principal (Estilo Imagen 2) --- */
+        .window {
+            width: 850px;
+            height: 550px;
+            background: white;
+            border: var(--border);
+            border-radius: 20px;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            /* Se cambia justify-content para que empiece desde arriba, no centrado verticalmente */
-            justify-content: flex-start;
-            padding-top: 70px; /* Espacio superior añadido para coincidir con la imagen */
+            box-shadow: var(--shadow);
             position: relative;
         }
 
-        /* Nuevo contenedor para el formulario para manejar el layout de columna única */
-        .form-container {
-            display: flex;
-            flex-direction: column;
-            gap: 30px;
-            width: 85%; /* Ancho ajustado */
-        }
-
-        /* Estilos de Input - MODIFICADO */
-        input {
-            width: 100%;
-            padding: 15px 20px; /* Padding aumentado para que parezcan más grandes como en la foto */
-            border: 2px solid black;
-            background: var(--grey-input);
-            border-radius: 12px;
-            outline: none;
-            box-sizing: border-box;
-            font-family: 'Fredoka', sans-serif;
-            font-weight: 700;
-            font-size: 1.1rem; /* Fuente ligeramente más grande */
-            color: black;
-        }
-
-        /* IMPORTANTE: Hacemos que el placeholder sea negro sólido para simular las etiquetas dentro de la caja */
-        input::placeholder {
-            color: black;
-            opacity: 1;
-        }
-
-        /* Contenedor para la última fila (input + botón guardar) */
-        .last-row {
+        /* Cabecera estilo Mac (Puntos) */
+        .window-header {
+            height: 50px;
+            background: var(--pink);
+            border-bottom: var(--border);
             display: flex;
             align-items: center;
+            padding-left: 20px;
+            gap: 12px;
+        }
+
+        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
+        .red { background: #ff4d4d; }
+        .yellow { background: #ffcc00; }
+        .green { background: #00cc00; }
+
+        /* --- Cuerpo del Contenido --- */
+        .window-body {
+            padding: 40px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative; /* Para posicionar el botón volver */
+        }
+
+        /* Texto informativo (De la Imagen 1) */
+        .info-section {
+            margin-bottom: 30px;
+        }
+        .info-section h2 {
+            margin: 0 0 5px 0;
+            font-size: 1.4rem;
+        }
+        .info-section p {
+            margin: 0;
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        /* Contenedor Flex para el Formulario (Izq) y Botón (Der) */
+        .main-layout {
+            display: flex;
             justify-content: space-between;
-            gap: 30px;
+            align-items: center; /* Centrar verticalmente el botón con los inputs */
+            width: 100%;
         }
 
-        /* El último input no debe ocupar todo el ancho para dejar espacio al botón */
-        .last-row input {
-            flex-grow: 1; /* Ocupa el espacio restante */
-            max-width: 60%; /* O un ancho fijo aproximado para coincidir con la imagen */
+        /* Columna de Inputs */
+        .inputs-column {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            width: 60%; /* Los inputs ocupan el 60% del ancho */
         }
 
-        /* Estilos de Botones (BASE ORIGINAL CON PEQUEÑOS AJUSTES) */
-        .btn { background: var(--cream); border: var(--border); border-radius: 10px; box-shadow: var(--shadow); cursor: pointer; font-weight: 700; font-family: inherit; text-decoration: none; color: black; text-align: center; display: inline-block; }
-        .btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
+        /* Estilo Híbrido: Label + Input dentro de una caja gris (Estilo Imagen 2) */
+        .input-box {
+            background: var(--grey-input);
+            border: 2px solid black;
+            border-radius: 12px;
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column; /* Label arriba, input abajo dentro de la caja */
+            justify-content: center;
+            height: 55px; /* Altura fija para uniformidad */
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
 
+        .input-box label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #000;
+            margin-bottom: 2px;
+        }
+
+        .input-box input {
+            background: transparent;
+            border: none;
+            outline: none;
+            font-family: 'Fredoka', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            width: 100%;
+            color: #333;
+        }
+
+        .input-box input::placeholder {
+            color: #555;
+            opacity: 0.6;
+            font-style: italic;
+        }
+
+        /* Botón Guardar (Estilo Retro flotando a la derecha) */
         .btn-save {
-            padding: 12px 35px;
+            background-color: var(--btn-bg);
+            border: 3px solid #000;
+            border-radius: 12px;
+            padding: 15px 40px;
             font-size: 1.2rem;
-            /* Se eliminó align-self y margin-top del original */
+            font-weight: 800;
+            color: #0a1f44;
+            cursor: pointer;
+            box-shadow: 6px 6px 0px #000;
+            transition: all 0.1s ease;
+            margin-right: 50px; /* Separación del borde derecho */
         }
 
+        .btn-save:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 8px 8px 0px #000;
+        }
+
+        .btn-save:active {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
+        /* Botón Volver/Cancelar (Esquina inferior derecha) */
         .btn-back {
             position: absolute;
             bottom: 30px;
             right: 40px;
+            background-color: var(--btn-bg);
+            border: 3px solid #000;
+            border-radius: 10px;
             padding: 10px 30px;
-            font-size: 1rem;
+            font-weight: 700;
+            text-decoration: none;
+            color: black;
+            box-shadow: 4px 4px 0px #000;
+            transition: all 0.1s;
+            font-size: 0.9rem;
         }
 
-        /* (Estilos de mensajes flash originales - se mantienen por si acaso) */
-        .flash-msg { text-align: center; color: red; font-weight: bold; margin-bottom: 20px; background: #ffe6e6; padding: 10px; border-radius: 10px; border: 2px solid red; width: 80%; margin: 0 auto; }
+        .btn-back:active {
+            transform: translate(2px, 2px);
+            box-shadow: 2px 2px 0px #000;
+        }
+
     </style>
 </head>
 <body>
+
     <div class="window">
         <div class="window-header">
-            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
         </div>
-        <div class="content">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}{% for message in messages %}<div class="flash-msg">{{ message }}</div>{% endfor %}{% endif %}
-            {% endwith %}
 
-            <form class="form-container" action="{{ url_for('modificar_datos.modificar_datos') }}" method="POST">
+        <div class="window-body">
 
-                <input type="text" name="nombre" placeholder="Nombre:">
+            <div class="info-section">
+                <h2>Modificando al usuario: <strong>{{ nombre_usuario_vista }}</strong></h2>
+                <p>Deja en blanco los campos que NO quieras cambiar.</p>
+            </div>
 
-                <input type="text" name="apellido" placeholder="Apellidos:">
+            <form action="/procesar_modificacion_admin" method="POST" style="width: 100%; height: 100%;">
+                <input type="hidden" name="usuario_original_hidden" value="{{ nombre_usuario_vista }}">
 
-                <div class="last-row">
-                    <input type="text" name="usuario" placeholder="Nombre Usuario:">
-                    <button type="submit" class="btn btn-save">Guardar</button>
+                <div class="main-layout">
+
+                    <div class="inputs-column">
+
+                        <div class="input-box">
+                            <label>Nuevo Nombre:</label>
+                            <input type="text" name="nombre" placeholder="Escribe el nombre...">
+                        </div>
+
+                        <div class="input-box">
+                            <label>Nuevo Apellido:</label>
+                            <input type="text" name="apellido" placeholder="Escribe el apellido...">
+                        </div>
+
+                        <div class="input-box">
+                            <label>Nuevo Nombre de Usuario:</label>
+                            <input type="text" name="nombre_usuario" placeholder="Escribe el nombre de usuario...">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-save">Guardar</button>
+
                 </div>
 
+                <a href="/ver_lista_usuarios" class="btn-back">Cancelar</a>
             </form>
 
-            <a href="{{ url_for('index') }}" class="btn btn-back">Volver</a>
         </div>
     </div>
+
 </body>
 </html>

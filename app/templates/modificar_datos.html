@@ -31,10 +31,6 @@
             <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
         </div>
         <div class="content">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}{% for message in messages %}<div class="flash-msg">{{ message }}</div>{% endfor %}{% endif %}
-            {% endwith %}
-
             <form class="modify-layout" action="{{ url_for('modificar_datos.modificar_datos') }}" method="POST">
                 <div class="column">
                     <div class="input-group">

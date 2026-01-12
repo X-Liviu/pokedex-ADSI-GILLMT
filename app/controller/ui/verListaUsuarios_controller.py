@@ -8,55 +8,46 @@ def ver_lista_usuarios_blueprint(db: Connection) -> Blueprint:
 
     @bp_verlistaus.route("/ver_lista_usuarios")
     def ver_lista_usuarios():
-        # 1. Obtenemos la instancia de la fachada
         modelo = MarcoDex.getMyMarcoDex(db)
-
-        # 2. Pedimos los usuarios (Flujo: pedirUsuariosParaAdmin)
-        # Esto devuelve la lista de diccionarios que Jinja necesita
         lista_usuarios = modelo.pedirUsuariosParaAdmin()
-
-        # 3. Renderizamos pasando la lista CORREGIDA
         return render_template('ver_lista_usuarios.html', usuarios=lista_usuarios)
 
-    # ---------------------------------------------------------
-    # RUTAS DE ACCIÓN (POST desde el HTML)
-    # ---------------------------------------------------------
-
-    @bp_verlistaus.route("/aprobar_usuario/<string:nombre_usuario>", methods=['POST'])
-    def aprobar_usuario(nombre_usuario):
-        modelo = MarcoDex.getMyMarcoDex(db)
-        exito = modelo.procesarAprobadoUsuario(nombre_usuario)
-
+    @bp_verlistaus.route("/aprobar_usuario/<string:pNomUsuario>", methods=['POST'])
+    def aprobar_usuario(pNomUsuario: str):
+        mDex = MarcoDex.getMyMarcoDex(db)
+        exito = mDex.procesarAprobadoUsuario(pNomUsuario)
         if exito:
-            flash(f"Usuario {nombre_usuario} aprobado correctamente.", "success")
+            flash(f"Aprobado: {pNomUsuario}", "success")
         else:
-            flash(f"Error al aprobar a {nombre_usuario}.", "error")
-
+            flash(f"Error al aprobar: {pNomUsuario}", "error")
         return redirect(url_for('ver_lista_usuarios.ver_lista_usuarios'))
 
-    @bp_verlistaus.route("/borrar_usuario/<string:nombre_usuario>", methods=['POST'])
-    def borrar_usuario(nombre_usuario):
-        modelo = MarcoDex.getMyMarcoDex(db)
-        # El método devuelve la lista nueva, pero como hacemos redirect,
-        # se volverá a pedir en la siguiente petición.
-        modelo.procesarBorradoUsuario(nombre_usuario)
-
-        flash(f"Usuario {nombre_usuario} eliminado.", "info")
+    @bp_verlistaus.route("/borrar_usuario/<string:pNomUsuario>", methods=['POST'])
+    def borrar_usuario(pNomUsuario: str):
+        mDex = MarcoDex.getMyMarcoDex(db)
+        mDex.procesarBorradoUsuario(pNomUsuario)
+        flash(f"Eliminado: {pNomUsuario}", "info")
         return redirect(url_for('ver_lista_usuarios.ver_lista_usuarios'))
 
-    # Esta ruta se llamaría desde la futura pantalla de "Modificar Datos"
+    # --- RUTAS DE MODIFICACIÓN ---
+
+    # 1. GET: Mostrar formulario
+    @bp_verlistaus.route("/formulario_modificar_admin/<string:pNomUsuario>", methods=['GET'])
+    def formulario_modificar_admin(pNomUsuario: str):
+        return render_template('modificar_datos_admin.html', nombre_usuario_vista=pNomUsuario)
+
+    # 2. POST: Procesar formulario
     @bp_verlistaus.route("/procesar_modificacion_admin", methods=['POST'])
     def procesar_modificacion_admin():
-        # Recoger datos del formulario (Fig. 10)
-        usuario_original = request.form.get('usuario_original')
-        nuevo_nombre = request.form.get('nombre')
-        nuevo_apellido = request.form.get('apellido')
-        nuevo_usuario = request.form.get('nombre_usuario')
+        pNomUsuario = request.form.get('usuario_original_hidden')
+        pNom = request.form.get('nombre')
+        pAp = request.form.get('apellido')
+        pNomUsuarioModif = request.form.get('nombre_usuario')
 
-        modelo = MarcoDex.getMyMarcoDex(db)
-        modelo.procesarModificarDatosAdmin(usuario_original, nuevo_nombre, nuevo_apellido, nuevo_usuario)
-
-        flash("Usuario modificado correctamente", "success")
+        mDex = MarcoDex.getMyMarcoDex(db)
+        exito = mDex.procesarModificarDatosAdmin(pNomUsuario, pNom, pAp, pNomUsuarioModif)
+        if exito:
+            return redirect(url_for('index'))
         return redirect(url_for('ver_lista_usuarios.ver_lista_usuarios'))
 
     return bp_verlistaus

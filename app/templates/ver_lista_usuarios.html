@@ -4,19 +4,20 @@
     <meta charset="UTF-8">
     <title>Panel Admin - Lista de Usuarios</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap');
 
         :root {
-            --bg-color: #e0e0e0;
+            --bg-color: #f0f0f0;
             --window-bg: #ffffff;
-            --header-bg: #ff66c4; /* Rosa base */
+            --header-bg: #ff66c4; /* Rosa Marcodex */
+            --cream: #f2e9e4;     /* Color crema para botones */
             --border: 3px solid #000;
-            --shadow: 6px 6px 0px #000;
+            --shadow: 5px 5px 0px #000;
 
             /* Colores de Roles */
-            --role-noverif: #ff4d4d; /* Rojo fuerte */
-            --role-verif: #4dff88;   /* Verde menta */
-            --role-admin: #66ccff;   /* Azul cielo */
+            --role-noverif: #ff4d4d;
+            --role-verif: #00cc00;
+            --role-admin: #3399ff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -37,7 +38,7 @@
             height: 650px;
             background: var(--window-bg);
             border: var(--border);
-            border-radius: 15px;
+            border-radius: 20px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
@@ -47,24 +48,24 @@
         /* --- CABECERA --- */
         .window-header {
             background: var(--header-bg);
-            padding: 15px;
+            padding: 15px 20px;
             border-bottom: var(--border);
             display: flex;
             align-items: center;
             gap: 15px;
         }
         .dots { display: flex; gap: 8px; }
-        .dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid black; }
-        .red { background: #ff5f57; } .yellow { background: #febc2e; } .green { background: #28c840; }
+        .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
+        .red { background: #ff4d4d; } .yellow { background: #ffcc00; } .green { background: #00cc00; }
 
-        .title { font-weight: 600; font-size: 1.2rem; margin-left: 10px; }
+        .title { font-weight: 700; font-size: 1.3rem; margin-left: 5px; color: black; }
 
         /* --- CUERPO --- */
         .window-body {
             display: flex;
             flex: 1;
-            padding: 25px;
-            gap: 25px;
+            padding: 30px;
+            gap: 30px;
             overflow: hidden;
         }
 
@@ -73,8 +74,8 @@
             flex: 2;
             display: flex;
             flex-direction: column;
-            border: 2px solid black;
-            border-radius: 12px;
+            border: var(--border);
+            border-radius: 15px;
             background: #fff;
             overflow: hidden;
             box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
@@ -84,7 +85,8 @@
             background: black;
             color: white;
             padding: 12px 20px;
-            font-size: 0.9rem;
+            font-weight: bold;
+            font-size: 1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -92,124 +94,140 @@
         .user-list {
             list-style: none;
             overflow-y: auto;
-            padding: 10px;
+            padding: 15px;
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
-        /* Scrollbar */
+        /* Scrollbar personalizado */
         .user-list::-webkit-scrollbar { width: 14px; }
         .user-list::-webkit-scrollbar-track { background: #f0f0f0; border-left: 2px solid black; }
         .user-list::-webkit-scrollbar-thumb { background: var(--header-bg); border: 2px solid black; border-radius: 10px; }
+        .user-list::-webkit-scrollbar-thumb:hover { background: #ff3399; }
 
-        /* --- ITEM USUARIO (TARJETA) --- */
+        /* --- ITEM USUARIO --- */
         .user-item {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
+            border: 2px solid #ccc; /* Borde suave por defecto */
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.1s;
-            background: #fafafa;
+            background: #f9f9f9;
         }
 
         .user-item:hover {
-            border-color: black;
-            background: #fff0f5; /* Rosa muy clarito */
+            border: 2px solid black;
+            background: #ffe6f2; /* Rosa muy suave */
+            transform: translateX(3px);
         }
 
         /* ESTADO SELECCIONADO */
         .user-item.selected {
-            background: #fff7cc; /* Amarillo pálido */
+            background: #fffbe6; /* Crema amarillento */
             border: 2px solid black;
-            box-shadow: 3px 3px 0px black;
+            box-shadow: 4px 4px 0px black;
             transform: translate(-2px, -2px);
         }
 
         .u-info { display: flex; flex-direction: column; }
-        .u-realname { font-size: 1.1rem; color: #555; }
+        .u-realname { font-size: 1.1rem; color: #444; }
         .u-username {
             font-size: 1rem;
-            font-weight: 800; /* Negrita fuerte */
+            font-weight: 800;
             color: black;
         }
 
         /* --- BADGES DE ROL --- */
         .role-badge {
-            font-size: 0.75rem;
-            padding: 4px 10px;
+            font-size: 0.8rem;
+            padding: 5px 12px;
             border-radius: 20px;
             border: 2px solid black;
             font-weight: bold;
             text-transform: uppercase;
-            box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.15);
+            color: white; /* Texto blanco por defecto */
         }
 
-        .role-noverif { background-color: var(--role-noverif); color: white; }
-        .role-verif { background-color: var(--role-verif); color: black; }
+        .role-noverif { background-color: var(--role-noverif); }
+        .role-verif { background-color: var(--role-verif); color: black; } /* Texto negro para contraste */
         .role-admin { background-color: var(--role-admin); color: black; }
 
-        /* --- BOTONES (DERECHA) --- */
+        /* --- PANEL DERECHO (BOTONES) --- */
         .actions-panel {
             flex: 1;
             display: flex;
             flex-direction: column;
             gap: 15px;
-            justify-content: center;
-            background: #f8f8f8;
-            padding: 20px;
-            border-radius: 12px;
-            border: 2px solid #ddd;
+            justify-content: flex-start;
         }
 
-        .action-btn {
+        .section-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            text-decoration: underline;
+            text-decoration-thickness: 3px;
+            text-decoration-color: var(--header-bg);
+        }
+
+        /* ESTILOS COMUNES DE BOTÓN */
+        .retro-btn {
+            width: 100%;
             padding: 15px;
             font-family: 'Fredoka', sans-serif;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 1rem;
-            border: 2px solid black;
-            border-radius: 10px;
-            background: white;
+            border: var(--border);
+            border-radius: 12px;
             cursor: pointer;
-            box-shadow: 4px 4px 0px black;
+            box-shadow: var(--shadow);
             transition: all 0.1s;
-        }
-
-        .action-btn:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px black; }
-
-        .action-btn:disabled {
-            background: #e0e0e0;
-            color: #999;
-            border-color: #bbb;
-            box-shadow: none;
-            cursor: not-allowed;
-            transform: translate(2px, 2px);
-        }
-
-        .btn-approve { background: #ccffcc; }
-        .btn-approve:not(:disabled):hover { background: #99ff99; }
-
-        .btn-delete { background: #ffcccc; }
-        .btn-delete:not(:disabled):hover { background: #ff9999; }
-
-        .btn-modify { background: #ffffcc; }
-        .btn-modify:not(:disabled):hover { background: #ffff99; }
-
-        .btn-back {
-            margin-top: auto;
             text-align: center;
             text-decoration: none;
+            display: block;
             color: black;
-            font-weight: bold;
-            padding: 10px;
-            border: 2px dashed black;
-            border-radius: 10px;
+            position: relative;
         }
-        .btn-back:hover { background: #eee; }
+
+        .retro-btn:active:not(:disabled) {
+            transform: translate(4px, 4px);
+            box-shadow: 1px 1px 0px black;
+        }
+
+        .retro-btn:disabled {
+            background: #e0e0e0;
+            color: #888;
+            border-color: #888;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: translate(4px, 4px);
+        }
+
+        /* Colores específicos */
+        .btn-approve { background: #b3ffb3; } /* Verde suave */
+        .btn-approve:not(:disabled):hover { background: #00cc00; }
+
+        .btn-delete { background: #ffb3b3; } /* Rojo suave */
+        .btn-delete:not(:disabled):hover { background: #ff4d4d; }
+
+        .btn-modify { background: #ffffb3; } /* Amarillo suave */
+        .btn-modify:not(:disabled):hover { background: #ffcc00; }
+
+        /* BOTÓN VOLVER (Ahora igual que los otros) */
+        .btn-back {
+            margin-top: auto; /* Lo empuja al fondo */
+            background: var(--cream);
+        }
+        .btn-back:hover {
+            background: #fff;
+        }
 
     </style>
 </head>
@@ -252,19 +270,19 @@
             </div>
 
             <div class="actions-panel">
-                <p style="text-align: center; font-weight: bold;">Acciones</p>
+                <div class="section-title">Acciones</div>
 
                 <form id="formAprobar" method="POST">
-                    <button id="btnAprobar" class="action-btn btn-approve" disabled>✔ Aprobar</button>
+                    <button id="btnAprobar" class="retro-btn btn-approve" disabled>✔ Aprobar</button>
                 </form>
 
                 <form id="formBorrar" method="POST">
-                    <button id="btnBorrar" class="action-btn btn-delete" disabled>🗑 Borrar</button>
+                    <button id="btnBorrar" class="retro-btn btn-delete" disabled>🗑 Borrar</button>
                 </form>
 
-                <button id="btnModificar" class="action-btn btn-modify" disabled onclick="irAModificar()">✎ Modificar</button>
+                <button id="btnModificar" class="retro-btn btn-modify" disabled onclick="irAModificar()">✎ Modificar</button>
 
-                <a href="/" class="btn-back">Volver</a>            </div>
+<a href="/" class="retro-btn btn-back">Volver</a>            </div>
 
         </div>
     </div>
@@ -279,45 +297,32 @@
             const formAprobar = document.getElementById('formAprobar');
             const formBorrar = document.getElementById('formBorrar');
 
-            // --- 1. LÓGICA DE DESELECCIÓN ---
-            // Si hacemos clic en el mismo usuario que ya está seleccionado...
+            // --- DESELECCIÓN ---
             if (usuarioSeleccionadoId === id) {
-                // Quitamos el estilo
                 elemento.classList.remove('selected');
-                // Reseteamos la variable
                 usuarioSeleccionadoId = null;
-
-                // Desactivamos
                 btnAprobar.disabled = true;
                 btnBorrar.disabled = true;
                 btnModificar.disabled = true;
-
-                // Limpiamos los formularios
                 formAprobar.action = "";
                 formBorrar.action = "";
-
-                // Salimos de la función aquí
                 return;
             }
 
-            // --- 2. LÓGICA DE SELECCIÓN NUEVA ---
-
-            // Limpiamos cualquier otra selección anterior
+            // --- SELECCIÓN NUEVA ---
             document.querySelectorAll('.user-item').forEach(i => i.classList.remove('selected'));
-
-            // Marcamos el nuevo
             usuarioSeleccionadoId = id;
             elemento.classList.add('selected');
 
-            // Actualizamos rutas (Usando los nombres correctos de tu controller)
+            // Rutas Flask
             formAprobar.action = "{{ url_for('ver_lista_usuarios.aprobar_usuario', pNomUsuario='') }}" + id;
             formBorrar.action = "{{ url_for('ver_lista_usuarios.borrar_usuario', pNomUsuario='') }}" + id;
 
-            // Habilitamos botones generales
+            // Botones
             btnBorrar.disabled = false;
             btnModificar.disabled = false;
 
-            // Lógica solo para NOVERIF
+            // Lógica NOVERIF
             if (rol === 'NOVERIF') {
                 btnAprobar.disabled = false;
                 btnAprobar.innerHTML = "✔ Aprobar Cuenta";
@@ -329,7 +334,6 @@
 
         function irAModificar() {
             if (usuarioSeleccionadoId) {
-                // Ruta corregida según tu código Python
                 window.location.href = "{{ url_for('ver_lista_usuarios.formulario_modificar_admin', pNomUsuario='') }}" + usuarioSeleccionadoId;
             }
         }

@@ -9,32 +9,6 @@ class PokeDex:
         if PokeDex._instance is not None:
             raise Exception("Esta clase es un Singleton. Usa get_instance()")
 
-        #PRUEBAS TATA
-        # especies_para_pokedex = [
-        #      Especie(
-        #         nombre="Pikachu",
-        #         descripcion="Mantiene su cola en alto...",
-        #         legendario=False,  # RECUERDA: 'legendario' en español
-        #         alturaMedia=0.4,
-        #         pesoMedio=6.0,
-        #         movimientos=["Impactrueno"],
-        #         tipos=["Eléctrico"],  # Palabras normales
-        #         imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png"
-        #      ),
-        #
-        #      Especie(
-        #         nombre="Eevee",
-        #         descripcion="Posee una estructura genética...",
-        #         legendario=False,  # CORREGIDO: de legendary a legendario
-        #         alturaMedia=0.3,
-        #         pesoMedio=6.5,
-        #         movimientos=["Refuerzo"],
-        #         tipos=["Normal"],
-        #         imagen="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png"
-        #      )
-        # ]
-        # self.listaEspecies = especies_para_pokedex
-
         self.listaEspecies = listaEspecies
         PokeDex._instance = self
 
@@ -49,7 +23,15 @@ class PokeDex:
             PokeDex(listaEspecies)
         return cls._instance
 
+    # ---------------------------------------------------------
+    # MÉTODOS DE BÚSQUEDA Y FILTRADO (Originales de PokeDex)
+    # ---------------------------------------------------------
+
     def buscarEspecie(self, nombreEspecie):
+        """
+        Busca un objeto Especie dentro de la lista de la Pokedex.
+        Devuelve el objeto Especie o None.
+        """
         for especie in self.listaEspecies:
             if especie.esEsta(nombreEspecie):
                 return especie
@@ -64,7 +46,7 @@ class PokeDex:
 
     def getInfo(self, nombreEspecie: str) -> str:
         """
-        Busca un Pokémon específico y devuelve su JSON
+        Busca un Pokémon específico y devuelve su JSON formateado.
         """
         for especie in self.listaEspecies:
             if especie.nombre.lower() == nombreEspecie.lower():
@@ -73,9 +55,48 @@ class PokeDex:
 
     def filtrarPokedex(self, filtro: str, valor: str) -> str:
         lista_filtrada = []
-        #bucle para cada especie pokemon
+        # Bucle para cada especie pokemon
         for especie in self.listaEspecies:
             if especie.comprobarFiltroValor(filtro, valor):
                 lista_filtrada.append(especie.getInfo())
 
         return json.dumps(lista_filtrada, indent=4, ensure_ascii=False)
+
+    # ---------------------------------------------------------
+    # MÉTODOS INTEGRADOS (Provenientes de gestorPokeDex)
+    # ---------------------------------------------------------
+
+    def obtenerEfectos(self, nombreEspecie):
+        """
+        Devuelve un JSON con las debilidades y fortalezas de la especie.
+        """
+        laEspecie = self.buscarEspecie(nombreEspecie)
+        if laEspecie is not None:
+            datos = {
+                "Efectos contra los que es fuerte": laEspecie.esFuerteContra(),
+                "Efectos contra los que es débil": laEspecie.esDebilContra()
+            }
+            return json.dumps(datos, indent=4)
+        else:
+            return -1
+
+    def caracteristicasPokemon(self, nombreEspecie):
+        """
+        Devuelve el diccionario de información (sin dumps) o -1 si no existe.
+        Nota: Similar a getInfo, pero mantiene el retorno original del gestor.
+        """
+        laEspecie = self.buscarEspecie(nombreEspecie)
+        if laEspecie is not None:
+            return laEspecie.getInfo()
+        else:
+            return -1
+
+    def cadenaEvolutiva(self, nombreEspecie):
+        """
+        Devuelve la cadena evolutiva de la especie.
+        """
+        laEspecie = self.buscarEspecie(nombreEspecie)
+        if laEspecie is not None:
+            return laEspecie.cadenaEvolutiva()
+        else:
+            return -1

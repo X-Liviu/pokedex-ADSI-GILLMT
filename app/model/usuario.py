@@ -162,12 +162,6 @@ class Usuario:
             self.lista_equipos.append(nuevo_equipo)
         return 1
 
-    def buscarEquipo(self, numEquipo: int):
-        for equipo in self.lista_equipos:
-            if equipo.esEsteEquipo(numEquipo):
-                return equipo
-        return None
-
     def añadirPokemon(self, nombreEspecie: str, nombreCustom: str, numEquipo: int, datos_bd: dict = None) -> int:
         """
         Paso 35aa: añadirPokemon

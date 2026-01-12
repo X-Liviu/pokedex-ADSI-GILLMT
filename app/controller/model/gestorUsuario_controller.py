@@ -17,24 +17,14 @@ class gestorUsuario:
 
     @classmethod
     def iniciarSesion(cls, pNomUsuario: str, pContrasena: str, db) -> bool:
-        # 1. Consultamos a la base de datos
+        # Paso 4: execSQL
         sql = "SELECT * FROM Usuario WHERE NombreUsuario = ? AND Contrasena = ?"
         resultado = db.select(sql, (pNomUsuario, pContrasena))
 
         if resultado and len(resultado) > 0:
             fila = resultado[0]
-            sql = """
-                  SELECT NombreUsuario1 \
-                  FROM AmigoDe \
-                  WHERE NombreUsuario2 = ?
-                  UNION
-                  SELECT NombreUsuario2 \
-                  FROM AmigoDe \
-                  WHERE NombreUsuario1 = ? \
-                  """
-            resultado = db.select(sql, (pNomUsuario, pNomUsuario))
-
-            # 2. Creamos el objeto Usuario
+            # Pasos 7a-11a: Obtener datos
+            # Paso 12a: new Usuario(...)
             usuario_obj = Usuario(
                 nombre=fila['Nombre'],
                 apellido=fila['Apellido'],
@@ -42,15 +32,14 @@ class gestorUsuario:
                 correo=fila['Correo'],
                 contrasena=fila['Contrasena'],
                 rol=fila['Rol'],
-                lista_equipos=[],
-                db=db,
-                amigos=[]  # CAMBIO: Inicializamos como lista vacía de objetos
+                lista_equipos=[],  # Se llenarán en precargarEquipos
+                amigos=[],  # Se llenarán en precargarAmigos
+                db=db
             )
 
-            # 3. Guardamos la instancia en el diccionario (Cache)
+            # Guardamos instancia (Cache)
             cls._instancias_usuarios[pNomUsuario] = cls(db, usuario_obj)
             return True
-
         return False
 
     # Dentro de la clase gestorUsuario
@@ -248,7 +237,7 @@ class gestorUsuario:
             'VERIF',
             [],
             db=self.db,  # <--- AÑADIR ESTO
-            amigos=None  # Y dejar esto explícito
+            amigos=[]  # Y dejar esto explícito
         ) #TODO revisar lo del rol por defecto de ahora
 
     def modificarUsuarioEnMemoriaYBD(self, pNom: str, pAp: str, pCorreo: str, pUsuarioNuevo: str, pNuevaContra: str):
@@ -530,45 +519,53 @@ class gestorUsuario:
 
     def precargarEquipos(self):
         """
-        Paso 26aa: precargarEquipos() con trazas de seguimiento.
+        Paso 26aa: precargarEquipos
         """
+        # Paso 27aa
         nomUsuario = self.usuario.getNomUsuario()
         print(f"\n[DEBUG] Iniciando precarga de equipos para el usuario: {nomUsuario}")
-
+        # Paso 28aa: execSQL
         sql2 = """
-               SELECT e.numEquipo, p.numPokemon, p.NombreCustom, p.NombreEspecie
+               SELECT e.numEquipo, \
+                      p.numPokemon, \
+                      p.NombreCustom, \
+                      p.NombreEspecie,
+                      p.Rareza, \
+                      p.Shiny, \
+                      p.Altura, \
+                      p.Peso, \
+                      p.Imagen
                FROM Equipo e
                         INNER JOIN PokemonEnEquipo pe ON e.numEquipo = pe.idEquipoInterno
-                        INNER JOIN Pokemon p ON pe.idPokemon = p.idPokemon
-               WHERE e.NombreUsuario = ? \
+                        INNER JOIN Pokemon p ON pe.idPokemon = p.numPokemon
+               WHERE e.NombreUsuario = ?
                """
+        # NOTA: Ajusta los nombres de columnas (numPokemon vs idPokemon) a tu BD real.
 
-        resultado = self.db.select(sql2, (nomUsuario,))
+        resultado = self.db.select(sql2, (nomUsuario,))  # Pasos 29aa
 
-        # Contador local para el print
         total_pokes = 0
-
-        for fila in resultado:
+        for fila in resultado:  # Paso 30aa: next()
+            # Paso 31aa - 33aa
             numEquipo = int(fila['numEquipo'])
             nombreEspecie = fila['NombreEspecie']
             nombreCustom = fila['NombreCustom']
 
-            # (Datos extra para el objeto...)
-            datos_extra = {
+            # Empaquetamos datos extra para restaurar estado (necesario para Paso 36aa modificado)
+            datos_bd = {
                 "id_real": int(fila['numPokemon']),
-                "rareza": 0.0,  # Ajustar según columnas reales de tu BD
-                "shiny": False,
-                "altura": 0.0,
-                "peso": 0.0,
-                "imagen": ""
+                "rareza": fila['Rareza'],
+                "shiny": bool(fila['Shiny']),
+                "altura": fila['Altura'],
+                "peso": fila['Peso'],
+                "imagen": fila['Imagen']
             }
 
-            # Paso 34aa: Cargar/Asegurar equipo en memoria
+            # Paso 34aa: cargarEquipo(numEquipo)
             self.usuario.cargarEquipo(numEquipo)
 
-            # Paso 35aa: Añadir el pokemon al equipo
-            self.usuario.añadirPokemon(nombreEspecie, nombreCustom, numEquipo, datos_bd=datos_extra)
-
+            # Paso 35aa: añadirPokemon (Delegamos en usuario)
+            self.usuario.añadirPokemon(nombreEspecie, nombreCustom, numEquipo, datos_bd)
             total_pokes += 1
             print(f"   -> [POKEMON] Añadido '{nombreCustom}' ({nombreEspecie}) al Equipo #{numEquipo}")
 
@@ -576,42 +573,38 @@ class gestorUsuario:
 
     def precargarAmigos(self):
         """
-        Paso 38aa: precargarAmigos()
+        Paso 38aa: precargarAmigos
         """
         # Paso 39aa
         nomUsuario = self.usuario.getNomUsuario()
 
-        # Paso 40aa: execSQL
+        # Paso 40aa: execSQL (Corregido alias NombreUsuarioAmigo)
         sql3 = """
-               SELECT u.Nombre, u.Apellido, u.NombreUsuario
+               SELECT u.Nombre, u.Apellido, u.NombreUsuario AS NombreUsuarioAmigo
                FROM AmigoDe a
-                        INNER JOIN Usuario u
-                                   ON a.NombreUsuario2 = u.NombreUsuario
-               WHERE a.NombreUsuario1 = ? \
+                        INNER JOIN Usuario u ON a.NombreUsuario2 = u.NombreUsuario
+               WHERE a.NombreUsuario1 = ?
                """
 
-        resultado = self.db.select(sql3, (nomUsuario,))  # Pasos 41aa, 42aa
+        resultado = self.db.select(sql3, (nomUsuario,))  # Pasos 41aa
 
-        for fila in resultado:
+        for fila in resultado:  # Paso 42aa: next()
             # Pasos 43aa - 45aa
             nombreAmigo = fila['Nombre']
             apellidoAmigo = fila['Apellido']
-            nombreUsuarioAmigo = fila['NombreUsuario']
+            nombreUsuarioAmigo = fila['NombreUsuarioAmigo']  # Usamos el Alias
 
             # Paso 46aa: amigoNuevo = new Usuario(...)
-            # Creamos un usuario "ligero" (solo datos básicos, sin DB connection necesaria para ser listado)
+            # Creamos usuario "ligero" (sin pass, ni rol, ni db)
             amigoNuevo = Usuario(
                 nombre=nombreAmigo,
                 apellido=apellidoAmigo,
                 nombre_usuario=nombreUsuarioAmigo,
-                correo="",
-                contrasena="",
-                rol="NOVERIF",
-                lista_equipos=[],
-                amigos=[],
-                db=None
+                correo="", contrasena="", rol="NOVERIF",
+                lista_equipos=[], amigos=[], db=None
             )
 
             # Paso 47aa: elUsuario.cargarAmigo(amigoNuevo)
             self.usuario.cargarAmigo(amigoNuevo)
-            print(f"DEBUG: Usuario {self.usuario.nombre_usuario} cargado con {len(self.usuario.amigos)} amigos en memoria.")
+            print(
+                f"DEBUG: Usuario {self.usuario.nombre_usuario} cargado con {len(self.usuario.amigos)} amigos en memoria.")

@@ -109,28 +109,23 @@ class Equipo:
     def addPokemon(self, nombreEspecie, nombrePokemon, datos_bd=None):
         """
         Paso 36aa: addPokemon.
-        Modificado para soportar carga de datos existentes (datos_bd)
-        o generación nueva (lógica original).
+        Soporta carga desde BD (datos_bd) o creación nueva (lógica original).
         """
-        # 1. Obtenemos la especie desde el Singleton PokeDex
+        # 1. Obtenemos especie
         especie_obj = PokeDex.get_instance().buscarEspecie(nombreEspecie)
-
         if not especie_obj:
-            return -1  # Especie no encontrada
+            return -1
 
-        # Si NO estamos cargando desde BD, hacemos validaciones de "Ya existe en el equipo"
-        # Si estamos cargando (datos_bd != None), confiamos en la BD y saltamos validación estricta
-        if datos_bd is None:
-            for pokemon in self.lista_pokemon:
-                if pokemon.nombre_custom == nombrePokemon:
-                    return -2
-                elif pokemon.especie == nombreEspecie:
-                    return -3
+        # Variables para construir el Pokemon
+        nuevoId = 0
+        rareza = 0.0
+        es_shiny = False
+        altura = 0.0
+        peso = 0.0
+        imagen = ""
 
-        # Lógica de Datos
         if datos_bd:
             # --- MODO CARGA (Desde BD) ---
-            # Usamos los datos guardados en la base de datos
             nuevoId = datos_bd['id_real']
             rareza = datos_bd['rareza']
             es_shiny = datos_bd['shiny']
@@ -138,32 +133,31 @@ class Equipo:
             peso = datos_bd['peso']
             imagen = datos_bd['imagen']
 
-            # Actualizamos el contador de IDs para que al añadir nuevos no colisionen
-            # Asumimos que el ID es algo como "101", "102" (Equipo 1, pokemon 1)
-            # Extraemos el último dígito o ajustamos ultimo_id_pokemon
+            # Ajustamos el contador interno para no re-generar IDs duplicados en el futuro
             try:
-                # Si tu ID es int concatenado (ej: 11 para equipo 1 pokemon 1)
-                # esto es un ejemplo simple, adáptalo a tu lógica de IDs
+                # Suponiendo que el ID es int. Si es compuesto, ajusta lógica.
                 self.ultimo_id_pokemon += 1
             except:
                 pass
 
         else:
-            # --- MODO CREACIÓN (Nuevo Pokemon) ---
+            # --- MODO CREACIÓN (Nuevo, Random) ---
+            # Validaciones de equipo lleno o duplicados solo si es NUEVO
+            for p in self.lista_pokemon:
+                if p.nombre_custom == nombrePokemon: return -2
+                if p.especie == nombreEspecie: return -3
+
             datos_especie = especie_obj.getInfo()
-
-            # Generamos ID
             self.ultimo_id_pokemon += 1
-            nuevoId = int(str(self.numEquipo) + str(self.ultimo_id_pokemon))
+            nuevoId = int(f"{self.numEquipo}{self.ultimo_id_pokemon}")  # Generación ID simple
 
-            # Probabilidad Shiny y Stats random
             es_shiny = random.random() < 0.1
-            rareza = datos_especie.get("rareza", 0.0)  # O random
+            rareza = datos_especie.get("rareza", 0.0)
             altura = datos_especie.get("alturaMedia", 0.0)
             peso = datos_especie.get("pesoMedio", 0.0)
             imagen = datos_especie.get("imagen", "")
 
-        # 4. Creación del objeto Pokemon (Step 37aa implícito: crear y añadir)
+        # Paso 37aa (Implícito): Crear y guardar en lista (memoria)
         newPokemon = Pokemon(
             pokemon_id=nuevoId,
             nombre_custom=nombrePokemon,
@@ -176,4 +170,4 @@ class Equipo:
         )
 
         self.lista_pokemon.append(newPokemon)
-        return 1  # Éxito
+        return 1

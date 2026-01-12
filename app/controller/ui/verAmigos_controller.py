@@ -7,7 +7,6 @@ def ver_amigos_blueprint(db: Connection):
     bp_vera = Blueprint("ver_amigos", __name__)
 
     @bp_vera.route("/ver_amigos")
-    # 2. CAMBIADO el nombre de la función a 'ver_amigos' para arreglar el enlace del HTML
     def ver_amigos():
         return render_template('ver_amigos.html')
 

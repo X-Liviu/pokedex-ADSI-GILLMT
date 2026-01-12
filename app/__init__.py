@@ -51,10 +51,23 @@ def init_db():
     if not os.path.exists(Config.DB_PATH):
         print("No se encontró base de datos. Creando nueva desde schema.sql...")
         conn = sqlite3.connect(Config.DB_PATH)
-        with open('app/database/schema.sql') as f:
-            conn.executescript(f.read())
-        conn.close()
-        print("Base de datos creada exitosamente.")
+
+        try:
+            # 1. Crear las tablas
+            with open('app/database/schema.sql') as f:
+                conn.executescript(f.read())
+
+            # 2. CARGA AUTOMÁTICA DE LA API
+            # Pasamos la conexión para que MarcoDex la use antes de cerrarla
+            print("Tablas creadas. Llamando a MarcoDex para poblar datos...")
+            MarcoDex.precargaInicioApp(conn)
+
+            print("Base de datos creada e inicializada exitosamente.")
+
+        except Exception as e:
+            print(f"Error crítico inicializando BD: {e}")
+        finally:
+            conn.close()
     else:
         # Si YA existe, no hacemos nada para no borrar los datos
         print("La base de datos ya existe. Iniciando sin sobrescribir.")
@@ -67,9 +80,10 @@ def create_app():
     # Inicializar base de datos
     init_db()
 
-    # Crear conexión a la base de datos
+    # Crear conexión a la base de datos (Objeto Connection wrapper)
     db = Connection()
 
+    # Blueprints
     app.register_blueprint(ranking_blueprint(db))
     app.register_blueprint(ver_equipos_blueprint(db))
     app.register_blueprint(detalles_equipo_blueprint(db))
@@ -85,24 +99,18 @@ def create_app():
     app.register_blueprint(ver_lista_usuarios_blueprint(db))
     app.register_blueprint(confirmar_contrasena_blueprint(db))
 
-    """
-    Esto es para que se redireccione a otra
-    direccion, siempre que se quiera acceder
-    a index.
-    """
-
     @app.route('/')
     def index():
         # 1. Protección de ruta (Si no hay usuario, fuera)
         if 'usuario' not in session:
             return redirect(url_for('identificacion.identificacion'))
         else:
-            gestorUsuario.cargarUsuario(session['usuario'], db) #cargar el usuario en gestorUsuario
+            gestorUsuario.cargarUsuario(session['usuario'], db)
 
         # 2. Generamos el HTML del menú
         html_content = menu_principal_controller.mostrar_menu()
 
-        # --- CAMBIO 2: Evitar caché del navegador ---
+        # Evitar caché del navegador
         respuesta = make_response(html_content)
         respuesta.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
         respuesta.headers["Pragma"] = "no-cache"

@@ -8,6 +8,7 @@ from app.model.utils.custom_types import Custom_types
 from app.database.connection import Connection
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 from app.controller.model.gestorNoticias_controller import gestorNoticias
+from app.controller.model.gestorAPI_controller import GestorAPI
 
 from typing import Dict
 
@@ -245,6 +246,61 @@ class MarcoDex:
         if gestor:
             return gestor.aniadirAmigo(pNomUsuarioAmigo)
         return False
+
+    @staticmethod
+    def precargaInicioApp(conn):
+        """
+        Método estático llamado desde __init__.py al crear la BD.
+        Recibe una conexión cruda de sqlite3 (no el wrapper Connection).
+        """
+        cursor = conn.cursor()
+
+        # 1. Obtener datos limpios de la API
+        lista_pokemons = GestorAPI.obtener_pokemons_iniciales()
+
+        if not lista_pokemons:
+            return
+
+        print("Guardando datos en la Base de Datos...")
+
+        # 2. Asegurar que existe la Región (Kanto) en la tabla Pokedex
+        # Tu schema dice: Region TEXT PRIMARY KEY, Generacion TEXT
+        cursor.execute("INSERT OR IGNORE INTO Pokedex (Region, Generacion) VALUES (?, ?)", ('Kanto', 'Primera'))
+
+        # Queries preparadas
+        sql_especie = """
+                      INSERT OR IGNORE INTO EspeciePokemon
+                          (Nombre, Descripcion, Legendario, AlturaMedia, PesoMedia, Region)
+                      VALUES (?, ?, ?, ?, ?, ?) \
+                      """
+
+        sql_tipo = "INSERT OR IGNORE INTO Tipo (Nombre, Descripcion) VALUES (?, ?)"
+
+        sql_especie_tipo = "INSERT OR IGNORE INTO EspecieTipo (NombreEspecie, NombreTipo) VALUES (?, ?)"
+
+        # 3. Recorrer y guardar
+        for poke in lista_pokemons:
+            # A) Guardar Especie
+            datos_especie = (
+                poke['nombre'],
+                poke['descripcion'],
+                poke['legendario'],
+                poke['altura'],
+                poke['peso'],
+                poke['region']
+            )
+            cursor.execute(sql_especie, datos_especie)
+
+            # B) Guardar Tipos y Relación Especie-Tipo
+            for nombre_tipo in poke['tipos']:
+                # Guardamos el tipo si no existe (ej: "Fuego", "Sin descripcion por ahora")
+                cursor.execute(sql_tipo, (nombre_tipo, "Tipo elemental"))
+
+                # Relacionamos Especie con Tipo
+                cursor.execute(sql_especie_tipo, (poke['nombre'], nombre_tipo))
+
+        conn.commit()
+        print(f"¡Base de datos poblada con {len(lista_pokemons)} especies nuevas!")
 
 if __name__ == "__main__":
     pass

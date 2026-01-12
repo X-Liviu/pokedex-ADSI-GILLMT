@@ -1,0 +1,96 @@
+.seccion-cabecera-perfil {
+    display: flex;
+    align-items: normal; /* Alinea verticalmente respecto a la foto */
+}
+
+.datos-usuario {
+    flex-grow: 1;        /* Hace que el contenedor de texto ocupe todo el ancho restante */
+    padding-right: 60px; /* Margen opcional a la derecha para que no pegue al borde */
+    padding-top: 40px;
+    font-family: 'Arial', sans-serif;
+}
+
+.fila-superior {
+    display: flex;
+    justify-content: space-between; /* Empuja el Puesto a la derecha */
+    align-items: center;            /* Alinea los dos H2 en la misma línea */
+}
+
+.foto-perfil {
+    width: 250px;
+    height: 250px;
+    padding: 25px 60px;
+}
+
+.datos-usuario a {
+    font-size: 20px;
+    display: block; /* Para que el valor del nombre baje a la siguiente línea */
+}
+
+.top-ranking {
+    color: #000000; /* Opcional: un color distinto para el puesto */
+}
+
+
+.subtitulo-pokemon
+{
+    padding: 0px 60px;
+    font-family: 'Arial', sans-serif;
+}
+
+.lista-pokemon {
+    display: flex;
+    flex-direction: row; /* Asegura que van de lado a lado */
+    flex-wrap: wrap;
+    justify-content: flex-start; /* Los pega todos a la izquierda */
+    padding: 0px 80px;           /* Quita rellenos del contenedor */
+    gap: 5px;            /* Único control de separación (ajusta a tu gusto) */
+}
+
+.pokemon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;           /* Eliminamos todo el padding interno */
+    margin: 0;            /* Eliminamos todo el margen externo */
+    width: min-content;   /* ¡Clave! El div no medirá más que su contenido */
+}
+
+.pokemon img {
+    display: block;       /* Quita el espacio extra que tienen las imágenes debajo */
+    width: 100px;         /* Ajusta el tamaño real que quieras */
+    height: auto;
+}
+
+.nombre-especie, .nombre-custom {
+    text-align: center;
+    white-space: nowrap;  /* Evita que el nombre se rompa en dos líneas */
+    font-size: 18px;      /* Ajusta el tamaño de letra */
+    margin: 0;
+    padding: 2px 0;       /* Mínima separación vertical entre texto e imagen */
+    font-family: 'Arial', sans-serif;
+}
+
+
+/* --- BOTÓN VOLVER --- */
+.boton-volver-estilo {
+    position: fixed;
+    left: 50%;
+    margin-left: 280px;
+    bottom: 50px;
+    background-color: #ebe1d8;
+    color: #001637;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    border: 3px solid black;
+    box-shadow: -8px 8px 0px 0px rgba(0, 0, 0, 1);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.boton-volver-estilo:hover {
+    transform: translate(-4px, 4px);
+    box-shadow: -4px 4px 0px 0px rgba(0, 0, 0, 1);
+}

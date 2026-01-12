@@ -3,33 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <title>Perfil Usuario</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='perfil_usuario.css') }}">
 </head>
 <body>
-    <table>
-        <h2>Nombre: {{info_usuario.nombre}} Puesto: {{info_usuario.puesto}}</h2>
-        <h3>Pokemon</h3>
-        <div>
-            <table>
-                <tr>
-                    {% for especie_actual in info_usuario.equipoEspecie %}
-                        <td>{{especie_actual}}</td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    {% for enlace_actual in info_usuario.fotoPokemon%}
-                        <td> <img src="{{enlace_actual}}" alt="foto-pokemon"></td>
-                    {% endfor %}
-                </tr>
-                <tr>
-                    {% for nombre_actual in info_usuario.equipoCustom %}
-                        <td>{{nombre_actual}}</td>
-                    {% endfor %}
-                </tr>
-            </table>
-        </div>
-    </table>
 
-    <a href="{{url_for('ranking.ranking')}}">volver</a>
+    <img src="{{ url_for('static', filename='imagenes/borde.svg') }}" class="svg-cabecera" alt="cabecera">
+
+   <div class="seccion-cabecera-perfil">
+        <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
+
+        <div class="datos-usuario">
+            <div class="fila-superior">
+                <h2 class="titulo-nombre">Nombre Usuario:</h2>
+                <h2 class="top-ranking">#{{info_usuario.puesto}}</h2>
+            </div>
+            <a>{{info_usuario.nombre}}</a>
+        </div>
+    </div>
+
+
+    <h2 class="subtitulo-pokemon">Pokemon</h2>
+
+    <div class = "lista-pokemon">
+        {% for especie_actual in info_usuario.equipoEspecie %}
+        <div class = "pokemon">
+            <a class="nombre-especie">{{especie_actual}}</a>
+            <img src="{{info_usuario.fotoPokemon[loop.index0]}}" alt="foto-pokemon">
+            <a class="nombre-custom">{{info_usuario.equipoCustom[loop.index0]}}</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <a href="{{url_for('ranking.ranking')}}" class="boton-volver-estilo">volver</a>
 
     {% if info_usuario.estado_amigo == 1%}
     <form method="POST">

@@ -3,29 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ titulo | default('Amigos Interface') }}</title>
+    <title>Mis Amigos</title>
     <style>
-        /* --- ESTILOS GENERALES (IDÉNTICOS AL ORIGINAL) --- */
+        /* --- ESTILOS GENERALES --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body {
             font-family: system-ui, -apple-system, sans-serif;
             background-color: #ffffff;
-            display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; padding: 20px; user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            user-select: none;
         }
 
         /* Ventana Principal */
         .window {
             width: 100%; max-width: 850px;
-            background-color: white; border: 4px solid #000;
-            border-radius: 25px; overflow: hidden;
-            font-weight: bold; box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            background-color: white;
+            border: 4px solid #000;
+            border-radius: 25px;
+            overflow: hidden;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
         }
 
         /* Cabecera Rosa */
         .window-header {
-            background-color: #ff5eb9; padding: 15px 20px;
-            border-bottom: 4px solid #000; display: flex; align-items: center; gap: 15px;
+            background-color: #ff5eb9;
+            padding: 15px 20px;
+            border-bottom: 4px solid #000;
+            display: flex; align-items: center; gap: 15px;
         }
 
         /* Semáforo */
@@ -38,66 +47,139 @@
 
         /* Cuerpo */
         .window-body {
-            display: flex; padding: 40px; gap: 40px; min-height: 500px;
+            display: flex;
+            padding: 40px;
+            gap: 40px;
+            min-height: 500px;
         }
 
-        /* --- COLUMNA IZQUIERDA --- */
-        .user-list-container { flex: 6; display: flex; flex-direction: column; }
+        /* --- COLUMNA IZQUIERDA: LISTA --- */
+        .user-list-container {
+            flex: 6;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* Scroll si hay muchos amigos */
+            max-height: 500px;
+            padding-right: 10px; /* Espacio para scrollbar */
+        }
+
         .user-list {
-            list-style: none; display: flex; flex-direction: column;
-            gap: 12px; width: 100%;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
         }
 
-        /* Items */
+        /* Estilo del item de amigo */
         .friend-item {
-            background-color: #d16d8c; height: 55px; border-radius: 25px;
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 0 10px 0 15px; color: #3b0d1e; font-size: 1.1rem;
+            background-color: #d16d8c;
+            height: 55px;
+            border-radius: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px 0 15px;
+            color: #3b0d1e;
+            font-size: 1.1rem;
             border: 3px solid transparent;
+            transition: transform 0.1s;
         }
-        .friend-item.empty { background-color: #d16d8c; justify-content: flex-start; }
-        .empty-dot { width: 24px; height: 24px; background-color: #7a2e4a; border-radius: 50%; }
 
-        /* Info Usuario */
-        .user-info-left { display: flex; align-items: center; gap: 15px; }
+        .friend-item:hover {
+            transform: scale(1.01);
+            filter: brightness(1.05);
+        }
+
+        /* Mensaje cuando no hay amigos */
+        .empty-message {
+            text-align: center;
+            color: #888;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* Información del usuario */
+        .user-info-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Avatar CSS */
         .css-avatar {
-            width: 32px; height: 32px; background-color: #6d1b36;
-            border-radius: 50%; border: 2px solid rgba(0,0,0,0.1);
-            position: relative; overflow: hidden;
+            width: 32px; height: 32px;
+            background-color: #6d1b36;
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
         }
         .css-avatar::after {
-            content: ''; position: absolute; bottom: -5px; left: 50%;
-            transform: translateX(-50%); width: 20px; height: 12px;
-            background-color: rgba(255,255,255,0.2); border-radius: 50% 50% 0 0;
+            content: ''; position: absolute;
+            bottom: -5px; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 12px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 50% 50% 0 0;
         }
 
-        /* Botón Eliminar */
+        /* Botón de Eliminar (Adaptado para ser <button>) */
         .delete-btn {
-            width: 32px; height: 32px; background-color: #fff;
-            border: 3px solid #ff0000; border-radius: 50%;
+            width: 32px; height: 32px;
+            background-color: #fff;
+            border: 3px solid #ff0000;
+            border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
-            cursor: pointer; text-decoration: none;
+            cursor: pointer;
+            padding: 0; /* Reset de estilos de botón */
+            transition: all 0.2s;
+        }
+        .delete-btn:hover {
+            background-color: #ffe6e6;
+            transform: scale(1.1);
         }
         .x-mark {
-            color: #ff0000; font-family: sans-serif; font-weight: 900;
-            font-size: 18px; line-height: 1;
+            color: #ff0000;
+            font-family: sans-serif;
+            font-weight: 900;
+            font-size: 18px;
+            line-height: 1;
         }
 
-        /* --- COLUMNA DERECHA --- */
+        /* --- COLUMNA DERECHA: BOTONES --- */
         .actions-column {
-            flex: 4; display: flex; flex-direction: column;
-            gap: 50px; justify-content: center; align-items: center;
+            flex: 4;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            justify-content: center;
+            align-items: center;
         }
-        .retro-btn {
-            background-color: #efe6dc; border: 4px solid #000; border-radius: 12px;
-            padding: 15px 10px; width: 100%; max-width: 220px; font-size: 1.1rem;
-            font-weight: 800; color: #0a1f44; cursor: pointer;
-            box-shadow: 8px 8px 0px #000; text-align: center;
-            line-height: 1.2; position: relative; text-decoration: none; display: block;
-        }
-        .retro-btn:active { transform: translate(4px, 4px); box-shadow: 4px 4px 0px #000; }
-        .btn-content { display: flex; justify-content: space-between; align-items: center; padding: 0 10px; }
 
+        .retro-btn {
+            background-color: #efe6dc;
+            border: 4px solid #000;
+            border-radius: 12px;
+            padding: 15px 10px;
+            width: 100%; max-width: 220px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0a1f44;
+            cursor: pointer;
+            box-shadow: 8px 8px 0px #000;
+            text-align: center;
+            line-height: 1.2;
+            text-decoration: none; /* Para enlaces que parecen botones */
+            display: inline-block;
+        }
+
+        .retro-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
             .window-body { flex-direction: column; padding: 20px; }
             .user-list-container, .actions-column { width: 100%; }
@@ -113,44 +195,47 @@
                 <div class="dot yellow"></div>
                 <div class="dot green"></div>
             </div>
-            <div class="window-title">{{ titulo | default('Amigos') }}</div>
+            <div class="window-title">Amigos</div>
         </div>
 
         <div class="window-body">
 
             <div class="user-list-container">
                 <ul class="user-list">
+
                     {% for amigo in amigos %}
                     <li class="friend-item">
                         <div class="user-info-left">
-                            <div class="css-avatar" style="{% if amigo.color %}background-color: {{ amigo.color }};{% endif %}"></div>
-                            <span>{{ amigo.nombre }}</span>
+                            <div class="css-avatar"></div>
+
+                            <span>{{ amigo.nombre_usuario }}</span>
                         </div>
 
-                        <a href="{{ url_for('eliminar_amigo', id=amigo.id) if eliminar_amigo else '#' }}" class="delete-btn">
-                            <span class="x-mark">✖</span>
-                        </a>
+                        <form action="{{ url_for('amigos.borrar_amigo') }}" method="POST">
+                            <input type="hidden" name="nombre_amigo" value="{{ amigo.nombre_usuario }}">
+                            <button type="submit" class="delete-btn" title="Eliminar amigo">
+                                <span class="x-mark">✖</span>
+                            </button>
+                        </form>
                     </li>
+                    {% else %}
+                    <div class="empty-message">
+                        <p>No tienes amigos añadidos aún.</p>
+                        <p>¡Usa el botón de añadir amigo para buscar gente!</p>
+                    </div>
                     {% endfor %}
 
-                    {# Definimos el total de slots deseados (ej. 9 filas) #}
-                    {% set total_slots = 9 %}
-                    {% set espacios_vacios = total_slots - amigos|length %}
-
-                    {% if espacios_vacios > 0 %}
-                        {% for i in range(espacios_vacios) %}
-                        <li class="friend-item empty"><div class="empty-dot"></div></li>
-                        {% endfor %}
-                    {% endif %}
                 </ul>
             </div>
 
             <div class="actions-column">
-                <a href="{{ url_for('aniadir_amigo.aniadir_amigo') if nuevo_amigo else '#' }}" class="retro-btn">
+
+                <a href="{{ url_for('amigos.aniadir_amigo') }}" class="retro-btn">
                     Añadir<br>Amigo
                 </a>
 
-                <a href="/" class="retro-btn">Volver</a>
+                <a href="/" class="retro-btn">
+                    Volver al<br>Menú Principal
                 </a>
             </div>
         </div>

@@ -220,13 +220,31 @@ class MarcoDex:
     def procesarBorradoUsuario(self, pNomUsuario: str):
         return gestorUsuario.borrarUsuario(pNomUsuario, self.db)
 
-    def procesarModificarDatosAdmin(self, pNomUsuario, pNombre, pAp, pNomUsuarioModif) -> bool:
+    def procesarModificarDatosAdmin(self, pNomUsuario: str, pNombre: str, pAp: str, pNomUsuarioModif: str) -> bool:
         try:
             gestorUsuario.modificarUsuarioEnMemoriaPorAdmin(pNomUsuario, pNombre, pAp, pNomUsuarioModif, self.db)
             return True
         except Exception as e:
             print(f"Error procesarModificar: {e}")
             return False
+
+    def buscarUsuariosConFiltro(self, pNomUsuario: str, pNomUsuarioFiltro: str):
+        """
+        Delega en el GestorUsuario del usuario actual.
+        """
+        gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
+        if gestor:
+            return gestor.buscarUsuariosConFiltro(pNomUsuarioFiltro)
+        return []
+
+    def aniadirAmigo(self, pNomUsuario: str, pNomUsuarioAmigo: str) -> bool:
+        """
+        Delega en el GestorUsuario del usuario actual.
+        """
+        gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
+        if gestor:
+            return gestor.aniadirAmigo(pNomUsuarioAmigo)
+        return False
 
 if __name__ == "__main__":
     pass

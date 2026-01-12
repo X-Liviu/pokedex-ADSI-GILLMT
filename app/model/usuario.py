@@ -72,7 +72,7 @@ class Usuario:
             return elEquipo.getMejorPokemon()
         else:
             return -1
-
+    """
     def ainadirAmigo(self, nombre):
         resultado = False
         if not self._esAmigo(nombre):
@@ -81,7 +81,7 @@ class Usuario:
             # self.lista_amigos.append(nuevoAmigo)
             # resultado = not resultado
         return resultado
-
+    """
     """
     def _esAmigo(self, nombre):
         resultado = False
@@ -113,7 +113,6 @@ class Usuario:
         if pNuevaContra and len(pNuevaContra) > 0:
             self.contrasena = pNuevaContra
 
-    # --- GETTERS ---
     def getNombre(self) -> str:
         return self.nombre
 
@@ -128,3 +127,25 @@ class Usuario:
 
     def getContrasena(self) -> str:
         return self.contrasena
+
+    def esAmigo(self, pNomUsuarioAmigo: str) -> bool:
+        for amigo in self.amigos:
+            if amigo.getNomUsuario() == pNomUsuarioAmigo:
+                return True
+        return False
+
+    def aniadirAmigo(self, pNomUsuarioAmigo: str) -> bool:
+        if not self.esAmigo(pNomUsuarioAmigo):
+            nuevo_amigo = Usuario(
+                nombre="Unknown",
+                apellido="Unknown",
+                nombre_usuario=pNomUsuarioAmigo,
+                correo="",
+                contrasena="",
+                rol="NOVERIF",
+                lista_equipos=[],
+                db=None
+            )
+            self.amigos.append(nuevo_amigo)
+            return True
+        return False

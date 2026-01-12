@@ -328,7 +328,17 @@ class gestorUsuario:
         resultado = db.select(sql, ())
 
         for fila in resultado:
-            # 1. Crear objeto Usuario
+            sql = """
+                  SELECT NombreUsuario1 \
+                  FROM AmigoDe \
+                  WHERE NombreUsuario2 = ?
+                  UNION
+                  SELECT NombreUsuario2 \
+                  FROM AmigoDe \
+                  WHERE NombreUsuario1 = ? \
+                  """
+            rdo = db.select(sql, (fila['Nombre'], fila['Nombre']))
+
             nuevo_usuario = Usuario(
                 nombre=fila['Nombre'],
                 apellido=fila['Apellido'],
@@ -337,7 +347,8 @@ class gestorUsuario:
                 contrasena=fila['Contrasena'],
                 rol=fila['Rol'],
                 lista_equipos=[],
-                db=db
+                db=db,
+                amigos = rdo
             )
 
             # 2. Añadir a la lista en memoria

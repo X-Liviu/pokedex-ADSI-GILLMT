@@ -289,6 +289,7 @@ VALUES ('GorkaX', DATETIME('now', '-2 month'), '🐛 Bug detectado: Algunos usua
 INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
 VALUES ('LauraX', DATETIME('now', '-2 month', '-15 day'), '¡Solo me falta Celebi para completar la Pokédex de Johto! 🌿🧚‍♀️ ¿Es verdad que aparece en el Encinar si usas la GS Ball? 🤔');
 
+
 -- NO se deberían mostrar --
 INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
 VALUES ('MarcoX', DATETIME('now', '-4 month'), 'Probando la nueva Marcodex. ¿Esto funciona? 🎤🐢 (Este mensaje es antiguo y no debería salir).');

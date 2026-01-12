@@ -13,11 +13,9 @@
         <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
 
         <div class="datos-usuario">
-            <div class="fila-superior">
-                <h2 class="titulo-nombre">Nombre Usuario:</h2>
-                <h2 class="top-ranking">#{{info_usuario.puesto}}</h2>
-            </div>
-            <a>{{info_usuario.nombre}}</a>
+            <a class="titulo-nombre">Nombre Usuario:</a>
+            <a class="top-ranking">#{{info_usuario.puesto}}</a>
+            <a class="nombre">{{info_usuario.nombre}}</a>
         </div>
     </div>
 
@@ -34,7 +32,7 @@
         {% endfor %}
     </div>
 
-    <a href="{{url_for('ranking.ranking')}}" class="boton-volver-estilo">volver</a>
+    <a href="{{url_for('ranking.ranking')}}" class="boton-volver-estilo">Volver</a>
 
     {% if info_usuario.estado_amigo == 1%}
     <form method="POST">

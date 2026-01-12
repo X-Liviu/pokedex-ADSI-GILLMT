@@ -1,86 +1,135 @@
-.seccion-cabecera-perfil {
-    display: flex;
-    align-items: normal; /* Alinea verticalmente respecto a la foto */
+@font-face {
+    src: url("fuentes/Pokemon Solid.ttf");
+    font-family: 'Pokemon';
 }
 
-.datos-usuario {
-    flex-grow: 1;        /* Hace que el contenedor de texto ocupe todo el ancho restante */
-    padding-right: 60px; /* Margen opcional a la derecha para que no pegue al borde */
-    padding-top: 40px;
+body {
+    margin: 0;
+    padding: 0;
     font-family: 'Arial', sans-serif;
+    background-color: #fdfaf7;
 }
 
-.fila-superior {
-    display: flex;
-    justify-content: space-between; /* Empuja el Puesto a la derecha */
-    align-items: center;            /* Alinea los dos H2 en la misma línea */
+a
+{
+    white-space: nowrap;
 }
 
-.foto-perfil {
-    width: 250px;
-    height: 250px;
+/* Borde superior que ocupa el ancho */
+.svg-cabecera {
+    width: 100%;
+    min-width: 800px;
+    height: auto;
+    display: block;
+}
+
+.seccion-cabecera-perfil {
+    position: absolute;
     padding: 25px 60px;
 }
 
-.datos-usuario a {
+.foto-perfil
+{
+    position: absolute;
+    width: 250px;
+    height: 250px;
+}
+
+.datos-usuario
+{
+    position: absolute;
+    left: 350px;
+    top: 60px;
+}
+
+.titulo-nombre
+{
+    position: absolute;
+    font-size: 24px;
+    font-weight: bold;
+    top: 0px;
+    left: 0px;
+}
+
+.top-ranking
+{
+    position: absolute;
+    font-size: 36px;
+    font-weight: bold;
+    left: 850px;
+    top: 0px;
+    font-family: Pokemon;
+    color: #ffcb05;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #254bb1;
+    text-align: center;
+
+
+}
+.nombre
+{
+    position: absolute;
+    top: 40px;
+    left: 0px;
     font-size: 20px;
-    display: block; /* Para que el valor del nombre baje a la siguiente línea */
 }
-
-.top-ranking {
-    color: #000000; /* Opcional: un color distinto para el puesto */
-}
-
 
 .subtitulo-pokemon
 {
-    padding: 0px 60px;
-    font-family: 'Arial', sans-serif;
+    position: absolute;
+    top: 375px;
+    left: 60px;
 }
 
-.lista-pokemon {
+.lista-pokemon
+{
+    position: absolute;
     display: flex;
-    flex-direction: row; /* Asegura que van de lado a lado */
     flex-wrap: wrap;
-    justify-content: flex-start; /* Los pega todos a la izquierda */
-    padding: 0px 80px;           /* Quita rellenos del contenedor */
-    gap: 5px;            /* Único control de separación (ajusta a tu gusto) */
+    top: 450px;
+    left: 60px;
+    gap: 5px;
 }
 
-.pokemon {
-    display: flex;
-    flex-direction: column;
+.pokemon
+{
+    display: grid;
+    justify-items: center;
     align-items: center;
-    padding: 0;           /* Eliminamos todo el padding interno */
-    margin: 0;            /* Eliminamos todo el margen externo */
-    width: min-content;   /* ¡Clave! El div no medirá más que su contenido */
 }
 
-.pokemon img {
-    display: block;       /* Quita el espacio extra que tienen las imágenes debajo */
-    width: 100px;         /* Ajusta el tamaño real que quieras */
-    height: auto;
+.nombre-especie
+{
+    grid-column: 1;
+    grid-row: 1;
 }
 
-.nombre-especie, .nombre-custom {
-    text-align: center;
-    white-space: nowrap;  /* Evita que el nombre se rompa en dos líneas */
-    font-size: 18px;      /* Ajusta el tamaño de letra */
-    margin: 0;
-    padding: 2px 0;       /* Mínima separación vertical entre texto e imagen */
-    font-family: 'Arial', sans-serif;
+.foto-pokemon
+{
+    grid-column: 1;
+    grid-row: 2;
 }
 
+.nombre-custom
+{
+    grid-column: 1;
+    grid-row: 3;
+}
 
 /* --- BOTÓN VOLVER --- */
 .boton-volver-estilo {
-    position: fixed;
-    left: 50%;
-    margin-left: 280px;
-    bottom: 50px;
+    display: flex;             /* Activa Flexbox */
+    align-items: center;       /* Centra verticalmente */
+    justify-content: center;   /* Centra horizontalmente */
+
+    /* Tu código original */
+    position: absolute;
+    left: 1200px;
+    top: 600px;
+    width: 80px;
+    height: 40px;
     background-color: #ebe1d8;
     color: #001637;
-    padding: 10px 25px;
     border-radius: 10px;
     font-weight: bold;
     text-decoration: none;

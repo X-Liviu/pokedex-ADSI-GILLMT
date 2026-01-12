@@ -12,9 +12,9 @@ def modificar_equipo_blueprint(db: Connection) -> Blueprint:
 
     @bp_modificar_equipo.route("/modificar-equipo/<int:num_equipo>", methods=["GET", "POST"])
     def modificar_equipo(num_equipo):
-        nombre_sesion = session.get('username')
+        nombre_sesion = session.get('usuario')
         if not nombre_sesion:
-            return redirect(url_for('iniciar_sesion'))
+            return redirect(url_for('identificacion.identificacion'))
 
         # A. Carga inicial
         if request.method == "GET":

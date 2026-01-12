@@ -96,6 +96,8 @@ def create_app():
         # 1. Protección de ruta (Si no hay usuario, fuera)
         if 'usuario' not in session:
             return redirect(url_for('identificacion.identificacion'))
+        else:
+            gestorUsuario.cargarUsuario(session['usuario'], db) #cargar el usuario en gestorUsuario
 
         # 2. Generamos el HTML del menú
         html_content = menu_principal_controller.mostrar_menu()

@@ -7,13 +7,9 @@ def changelog_blueprint(db):
     @bp_changelog.route('/changelog')
     def show_changelog():
         mDex = MarcoDex.getMyMarcoDex(db)
+        nombreUsuario = session.get('usuario')
 
-        if mDex.tiene_amigos():
-            # PRUEBA
-            if not session.get('username'):
-                session['username'] = 'Horchata'
-
-            nombreUsuario = session.get('username')
+        if mDex.tieneAmigos(nombreUsuario):
 
             lista_noticias = mDex.mostrar_changelog(nombreUsuario, '')
             return render_template('changelog.html', noticias=lista_noticias)

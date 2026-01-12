@@ -47,19 +47,17 @@
             color: black;
         }
 
-        /* --- CAMBIO: Añadido display: block para que el <a> coja tamaño --- */
         .dot {
             width: 18px;
             height: 18px;
             border-radius: 50%;
             border: 2px solid black;
-            display: block; /* Necesario porque <a> es inline por defecto */
-            text-decoration: none; /* Quitar subrayado si lo hubiera */
+            display: block;
+            text-decoration: none;
         }
 
-        .red { background: #ff4d4d; cursor: pointer; } /* Cursor manita para indicar click */
-        .red:hover { background: #ff0000; } /* Efecto visual opcional */
-
+        .red { background: #ff4d4d; cursor: pointer; }
+        .red:hover { background: #ff0000; }
         .yellow { background: #ffcc00; }
         .green { background: #00cc00; }
 
@@ -71,14 +69,12 @@
             align-items: center;
         }
 
-        /* --- CAMBIO 1: Reducir el tamaño del logo --- */
         .center-logo-img {
             height: 70px;
             width: auto;
             z-index: 10;
             border: none;
             outline: none;
-            /* Lo centramos un poco mejor verticalmente */
             position: absolute;
             top: 200px;
         }
@@ -116,6 +112,92 @@
         .btn-center-below-logo { top: 280px; font-size: 1rem; padding: 10px 20px; }
         .btn-bottom-center-large { bottom: 40px; font-size: 1.3rem; padding: 15px 40px; }
 
+        /* --- ESTILOS DE LA TARJETA DE USUARIO (IZQUIERDA) --- */
+        .user-badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: white;
+            border: 2px solid black;
+            border-radius: 12px;
+            padding: 8px 12px;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 3px 3px 0px #000;
+            z-index: 15;
+            min-width: 120px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background-color: var(--pink);
+            border: 2px solid black;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 1px 1px 0px #000;
+        }
+
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .user-info .u-name {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #000;
+            line-height: 1.1;
+            margin-bottom: 3px;
+        }
+
+        .user-info .u-role {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            background: #000;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* --- NUEVO: ESTILOS DEL BOTÓN LOGOUT (DERECHA) --- */
+        .logout-corner-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: white;
+            border: 2px solid black;
+            border-radius: 12px;
+            padding: 8px 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 3px 3px 0px #000;
+            z-index: 25;
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            font-size: 0.9rem;
+            transition: all 0.1s;
+        }
+
+        .logout-corner-btn:hover {
+            background: #ffcccc; /* Un rojo muy clarito al pasar el mouse */
+            border-color: black;
+        }
+
+        .logout-corner-btn:active {
+            transform: translate(2px, 2px);
+            box-shadow: 1px 1px 0px #000;
+            background: #ff9999;
+        }
+
     </style>
 </head>
 <body>
@@ -123,13 +205,38 @@
     <div class="window">
         <div class="window-header">
             <a href="{{ url_for('identificacion.logout') }}" class="dot red" title="Cerrar Sesión"></a>
-
             <div class="dot yellow"></div>
             <div class="dot green"></div>
             <span style="margin-left: 15px;">Menú Principal</span>
         </div>
 
         <div class="menu-area">
+
+            {% if session.get('usuario') %}
+            <div class="user-badge">
+                <div class="user-avatar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" fill="black"/>
+                        <path d="M20.5899 22C20.5899 18.13 16.7399 15 11.9999 15C7.25991 15 3.40991 18.13 3.40991 22" stroke="black" stroke-width="3" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <div class="user-info">
+                    <span class="u-name">{{ session.get('usuario') }}</span>
+                    <span class="u-role">{{ session.get('rol', 'USER') }}</span>
+                </div>
+            </div>
+            {% endif %}
+
+            <a href="{{ url_for('identificacion.logout') }}" class="logout-corner-btn">
+                <span>Cerrar Sesión</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15 4H18C19.1046 4 20 4.89543 20 6V18C20 19.1046 19.1046 20 18 20H15" stroke="black" stroke-width="3" stroke-linecap="round"/>
+                    <path d="M8 12L15 12M15 12L12 9M15 12L12 15" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M3 6V18" stroke="black" stroke-width="3" stroke-linecap="round"/>
+                </svg>
+            </a>
+
+
             <a href="{{ url_for('lista_pokemon.lista_pokemon') }}" class="menu-btn btn-top-center">Lista Pokémon</a>
             <a href="{{ url_for('crear_equipo.crear_equipo', origen='menu') }}" class="menu-btn btn-left-top">Crear Equipo</a>
             <a href="{{ url_for('ver_equipos.ver_equipos') }}" class="menu-btn btn-left-mid">Mis Equipos</a>

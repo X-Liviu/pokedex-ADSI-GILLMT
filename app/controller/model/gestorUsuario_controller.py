@@ -42,6 +42,34 @@ class gestorUsuario:
 
         return False
 
+    # Dentro de la clase gestorUsuario
+
+    @classmethod
+    def cargarUsuario(cls, nombre_usuario, db):
+
+        sql = "SELECT * FROM Usuario WHERE NombreUsuario = ?"
+        resultado = db.select(sql, (nombre_usuario,))
+
+        if resultado and len(resultado) > 0:
+            fila = resultado[0]
+
+                # 3. Reconstruimos el objeto Usuario (igual que en iniciarSesion)
+            usuario_obj = Usuario(
+                nombre=fila['Nombre'],
+                apellido=fila['Apellido'],
+                nombre_usuario=fila['NombreUsuario'],
+                correo=fila['Correo'],
+                contrasena=fila['Contrasena'],
+                rol=fila['Rol'],
+                lista_equipos=[],  # O cargar equipos si es necesario
+                db=db
+            )
+
+            # 4. Creamos el gestor y lo guardamos en el diccionario
+            nuevo_gestor = cls(db, usuario_obj)
+            cls._instancias_usuarios[nombre_usuario] = nuevo_gestor
+        return None
+
     @classmethod
     def getMyGestorUsuario(cls, nombre_usuario, db=None):
         return cls._instancias_usuarios.get(nombre_usuario)

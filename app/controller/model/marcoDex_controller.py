@@ -134,10 +134,8 @@ class MarcoDex:
     def cadenaEvolutiva(self, nombreEspecie) :
         return gestorPokeDex.cadenaEvolutiva(nombreEspecie)
 
-    def tiene_amigos(self, usuario):
-        if gestorUsuario.getMyGestorUsuario() != None:
-            return gestorUsuario.getMyGestorUsuario().tiene_amigos(usuario)
-        return False
+    def tieneAmigos(self, usuario):
+        return gestorUsuario.getMyGestorUsuario(usuario).tieneAmigos()
 
     def mostrar_changelog(self, usuario, filtro):
         #clase de gestor_noticia por crear
@@ -151,9 +149,6 @@ class MarcoDex:
 
     def aplicarFiltro(self, filtro: str, valor: str) -> str:
         return PokeDex.get_instance().filtrarPokedex(filtro, valor)
-
-    def tieneAmigos(self) -> bool:
-        return gestorUsuario.getMyGestorUsuario().tiene_amigos()
 
     def iniciarSesion(self, pNomUsuario: str, pContrasena: str) -> bool:
         return gestorUsuario.iniciarSesion(pNomUsuario, pContrasena, self.db)

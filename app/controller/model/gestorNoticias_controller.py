@@ -47,7 +47,7 @@ class gestorNoticias:
             json_noticia.append({
                 "NombreUsuario": fila["NombreUsuario"],
                 "FechaHora": fila["FechaHora"],
-                "contenido": fila["Contenido"]
+                "Contenido": fila["Contenido"]
             })
 
         return json_noticia

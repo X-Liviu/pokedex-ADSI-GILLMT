@@ -16,11 +16,10 @@ def changelog_blueprint(db):
         else:
             return render_template('error_no_amigos.html')
 
-    @bp_changelog.route('/changelog')
+    @bp_changelog.route('/filtro')
     def filtrar():
-
         mDex = MarcoDex.getMyMarcoDex(db)
-        nombreUsuario = session.get('username')
+        nombreUsuario = session.get('usuario')
         filtro = request.args.get('usuario')
         lista_noticias = mDex.mostrar_changelog(nombreUsuario, filtro)
         return render_template('changelog.html', noticias=lista_noticias)

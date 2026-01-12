@@ -45,7 +45,7 @@
             gap: 10px;
             font-size: 1.2rem;
             font-weight: bold;
-            flex-shrink: 0; /* Evita que el header se aplaste */
+            flex-shrink: 0;
         }
 
         .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid black; }
@@ -58,7 +58,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Importante para contener el scroll dentro */
+            overflow: hidden;
         }
 
         .search-bar {
@@ -71,30 +71,26 @@
             background: white;
             margin-bottom: 20px;
             box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
-            flex-shrink: 0; /* Evita que la barra de búsqueda desaparezca */
+            flex-shrink: 0;
         }
 
         .search-input { border: none; outline: none; flex: 1; font-family: inherit; font-weight: bold; color: #555; }
         .btn-filter { background: var(--pink-header); border: 2px solid black; border-radius: 15px; padding: 5px 15px; font-weight: bold; cursor: pointer; font-family: inherit; margin-left: 10px; box-shadow: 2px 2px 0px #000; }
         .btn-filter:active { transform: translate(2px, 2px); box-shadow: none; }
 
-        /* --- AQUÍ ESTÁ LA MAGIA DEL SCROLL --- */
         .event-list-container {
-            flex: 1; /* Ocupa todo el espacio restante */
-            overflow-y: auto; /* Activa el scroll vertical */
+            flex: 1;
+            overflow-y: auto;
             padding-right: 10px;
-            min-height: 0; /* Truco de Flexbox para que el scroll funcione bien */
-
-            /* Espacio extra abajo para que el último elemento no quede tapado por el botón Volver */
+            min-height: 0;
             padding-bottom: 70px;
         }
 
-        /* Estilos de la barra de scroll */
         .event-list-container::-webkit-scrollbar { width: 12px; }
         .event-list-container::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 5px;
-            border: 2px solid black; /* Borde estilo neubrutalism */
+            border: 2px solid black;
         }
         .event-list-container::-webkit-scrollbar-thumb {
             background: var(--pink-item);
@@ -107,7 +103,7 @@
 
         .event-list { display: flex; flex-direction: column; gap: 12px; }
 
-        .event-item { width: 90%; background: var(--pink-item); border-radius: 15px; display: flex; flex-direction: column; justify-content: center; padding: 10px 15px; color: black; border: 2px solid transparent; transition: transform 0.1s; flex-shrink: 0; /* Evita que los items se aplasten */ }
+        .event-item { width: 90%; background: var(--pink-item); border-radius: 15px; display: flex; flex-direction: column; justify-content: center; padding: 10px 15px; color: black; border: 2px solid transparent; transition: transform 0.1s; flex-shrink: 0; }
         .event-item:hover { border: 2px solid black; }
 
         .event-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; border-bottom: 1px solid rgba(0,0,0,0.2); padding-bottom: 3px; }
@@ -117,7 +113,6 @@
 
         .empty-message { text-align: center; color: #777; font-style: italic; margin-top: 50px; font-size: 1.2rem; }
 
-        /* Botón Volver */
         .btn-back { position: absolute; bottom: 20px; right: 30px; background: #f2e9e4; border: var(--border); padding: 10px 30px; border-radius: 12px; font-weight: bold; box-shadow: var(--shadow); cursor: pointer; text-decoration: none; color: black; z-index: 10; }
         .btn-back:active { transform: translate(2px, 2px); box-shadow: 2px 2px 0px #000; }
     </style>
@@ -140,7 +135,8 @@
                        id="inputBusqueda"
                        name="usuario"
                        class="search-input"
-                       placeholder="Filtrar por Usuario">
+                       placeholder="Filtrar por Usuario"
+                       value="{{ request.args.get('usuario', '') }}">
 
                 <button type="submit" class="btn-filter">Filtrar</button>
             </form>
@@ -150,18 +146,18 @@
 
                     {% if noticias %}
                         {% for noticia in noticias %}
-                        <div class="event-item" data-usuario="{{ noticia.NombreUsuario | lower }}">
+                        <div class="event-item">
                             <div class="event-header">
                                 <span class="user-name">{{ noticia.NombreUsuario }}</span>
                                 <span class="event-date">{{ noticia.FechaHora }}</span>
                             </div>
-                            <div class="event-body">{{ noticia.contenido }}</div>
+                            <div class="event-body">{{ noticia.Contenido }}</div>
                         </div>
                         {% endfor %}
 
                     {% else %}
                         <div class="empty-message">
-                            No hay noticias recientes.
+                            No hay noticias recientes que coincidan.
                         </div>
                     {% endif %}
 
@@ -169,27 +165,7 @@
             </div>
         </div>
 
-        <a href="/" class="btn-back">Volver</a>
-    </div>
+        <a href="/" class="btn-back">Volver</a>    </div>
 
-    <script>
-        // Tu script de búsqueda en cliente (opcional si ya usas backend)
-        const input = document.getElementById('inputBusqueda');
-        if(input){
-             input.addEventListener('keyup', function() {
-                const texto = this.value.toLowerCase();
-                const items = document.querySelectorAll('.event-item');
-
-                items.forEach(item => {
-                    const nombreUsuario = item.getAttribute('data-usuario');
-                    if (nombreUsuario.includes(texto)) {
-                        item.style.display = 'flex';
-                    } else {
-                        item.style.display = 'none';
-                    }
-                });
-            });
-        }
-    </script>
-</body>
+    </body>
 </html>

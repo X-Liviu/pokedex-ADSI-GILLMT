@@ -8,6 +8,7 @@ from app.database.connection import Connection
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 from app.controller.model.gestorNoticias_controller import gestorNoticias
 from app.controller.model.gestorAPI_controller import GestorAPI
+from app.controller.model.especie_controller import Especie
 
 from typing import Dict
 
@@ -151,7 +152,50 @@ class MarcoDex:
         return PokeDex.get_instance().filtrarPokedex(filtro, valor)
 
     def iniciarSesion(self, pNomUsuario: str, pContrasena: str) -> bool:
-        return gestorUsuario.iniciarSesion(pNomUsuario, pContrasena, self.db)
+        exito = gestorUsuario.iniciarSesion(pNomUsuario, pContrasena, self.db)
+        if exito:
+            self.precargarDatos(pNomUsuario)
+        return exito
+
+    def precargarDatos(self, pNomUsuario: str = None):
+        """
+        Paso 14aa: precargarDatos()
+        Carga Especies en Pokedex y dispara la carga de datos del usuario.
+        """
+        # --- CARGA DE POKEDEX (Pasos 15aa - 25aa) ---
+        # Paso 15aa: execSQL
+        sql = "SELECT * FROM EspeciePokemon"
+        # Nota: Ajusté la query porque en tu schema EspeciePokemon ya suele tener la región.
+        # Si necesitas JOIN explícito: "SELECT * FROM EspeciePokemon E JOIN Region R ON E.Region = R.NombreRegion"
+
+        resultado = self.db.select(sql, ())  # Pasos 16aa, 17aa (implícito en select)
+
+        mi_pokedex = PokeDex.get_instance()
+
+        for fila in resultado:  # Paso 17aa: next()
+            # Pasos 18aa - 23aa: get...
+            nomPokemon = fila['Nombre']
+            descr = fila['Descripcion']
+            legendario = bool(fila['Legendario'])
+            altMedia = float(fila['AlturaMedia'])
+            pesoMedio = float(fila['PesoMedia'])
+            region = fila['Region']
+
+            # Paso 24aa: añadirPokemon a la Pokedex
+            mi_pokedex.añadirPokemon(nomPokemon, descr, legendario, altMedia, pesoMedio, region)
+            print(f"   [ESPECIE] '{nomPokemon}' cargado en la Pokedex.")
+        print(f"[DEBUG] Pokedex lista con {len(mi_pokedex.listaEspecies)} especies.")
+
+        # --- CARGA DE DATOS DE USUARIO (Pasos 26aa en adelante) ---
+        # Recuperamos el gestor del usuario actual para delegar la carga de sus equipos y amigos
+        # Si venimos de iniciarSesion, pNomUsuario está disponible.
+        if pNomUsuario:
+            gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
+            if gestor:
+                # Paso 26aa: precargarEquipos
+                gestor.precargarEquipos()
+                # Paso 38aa: precargarAmigos
+                gestor.precargarAmigos()
 
     def getRol(self, nombre_usuario: str) -> str:
         """

@@ -100,3 +100,23 @@ class PokeDex:
             return laEspecie.cadenaEvolutiva()
         else:
             return -1
+
+    def añadirPokemon(self, nomPokemon, descr, legendario, altMedia, pesoMedio, region):
+        """
+        Paso 24aa: Crea la instancia de Especie y la añade a la lista.
+        """
+        # Paso 25aa: especies.add(new EspeciePokemon(...))
+        # Añadimos los argumentos que faltan con valores por defecto para evitar el TypeError
+        nueva_especie = Especie(
+            nombre=nomPokemon,
+            descripcion=descr,
+            legendario=legendario,
+            alturaMedia=altMedia,
+            pesoMedio=pesoMedio,
+            movimientos=[],      # Argumento requerido por Especie.__init__
+            tipos=[],            # Argumento requerido por Especie.__init__
+            imagen="",           # Argumento requerido por Especie.__init__
+            evoluciones=[],      # Argumento requerido por Especie.__init__
+            preevoluciones=[]    # Argumento requerido por Especie.__init__
+        )
+        self.listaEspecies.append(nueva_especie)

@@ -105,3 +105,75 @@ class Equipo:
                 rareza = Pokemon.rareza
                 elPokemon = Pokemon
         return elPokemon.getInfo()
+
+    def addPokemon(self, nombreEspecie, nombrePokemon, datos_bd=None):
+        """
+        Paso 36aa: addPokemon.
+        Modificado para soportar carga de datos existentes (datos_bd)
+        o generación nueva (lógica original).
+        """
+        # 1. Obtenemos la especie desde el Singleton PokeDex
+        especie_obj = PokeDex.get_instance().buscarEspecie(nombreEspecie)
+
+        if not especie_obj:
+            return -1  # Especie no encontrada
+
+        # Si NO estamos cargando desde BD, hacemos validaciones de "Ya existe en el equipo"
+        # Si estamos cargando (datos_bd != None), confiamos en la BD y saltamos validación estricta
+        if datos_bd is None:
+            for pokemon in self.lista_pokemon:
+                if pokemon.nombre_custom == nombrePokemon:
+                    return -2
+                elif pokemon.especie == nombreEspecie:
+                    return -3
+
+        # Lógica de Datos
+        if datos_bd:
+            # --- MODO CARGA (Desde BD) ---
+            # Usamos los datos guardados en la base de datos
+            nuevoId = datos_bd['id_real']
+            rareza = datos_bd['rareza']
+            es_shiny = datos_bd['shiny']
+            altura = datos_bd['altura']
+            peso = datos_bd['peso']
+            imagen = datos_bd['imagen']
+
+            # Actualizamos el contador de IDs para que al añadir nuevos no colisionen
+            # Asumimos que el ID es algo como "101", "102" (Equipo 1, pokemon 1)
+            # Extraemos el último dígito o ajustamos ultimo_id_pokemon
+            try:
+                # Si tu ID es int concatenado (ej: 11 para equipo 1 pokemon 1)
+                # esto es un ejemplo simple, adáptalo a tu lógica de IDs
+                self.ultimo_id_pokemon += 1
+            except:
+                pass
+
+        else:
+            # --- MODO CREACIÓN (Nuevo Pokemon) ---
+            datos_especie = especie_obj.getInfo()
+
+            # Generamos ID
+            self.ultimo_id_pokemon += 1
+            nuevoId = int(str(self.numEquipo) + str(self.ultimo_id_pokemon))
+
+            # Probabilidad Shiny y Stats random
+            es_shiny = random.random() < 0.1
+            rareza = datos_especie.get("rareza", 0.0)  # O random
+            altura = datos_especie.get("alturaMedia", 0.0)
+            peso = datos_especie.get("pesoMedio", 0.0)
+            imagen = datos_especie.get("imagen", "")
+
+        # 4. Creación del objeto Pokemon (Step 37aa implícito: crear y añadir)
+        newPokemon = Pokemon(
+            pokemon_id=nuevoId,
+            nombre_custom=nombrePokemon,
+            rareza=rareza,
+            shiny=es_shiny,
+            altura=altura,
+            peso=peso,
+            especie=nombreEspecie,
+            imagen=imagen
+        )
+
+        self.lista_pokemon.append(newPokemon)
+        return 1  # Éxito

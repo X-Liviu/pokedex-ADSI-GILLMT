@@ -42,9 +42,9 @@ class gestorUsuario:
                 correo=fila['Correo'],
                 contrasena=fila['Contrasena'],
                 rol=fila['Rol'],
-                lista_equipos=[],  # Se cargará vacía de momento
+                lista_equipos=[],
                 db=db,
-                amigos = resultado
+                amigos=[]  # CAMBIO: Inicializamos como lista vacía de objetos
             )
 
             # 3. Guardamos la instancia en el diccionario (Cache)
@@ -57,38 +57,33 @@ class gestorUsuario:
 
     @classmethod
     def cargarUsuario(cls, nombre_usuario, db):
+        # 1. Consultamos los datos básicos del usuario
+        sql_usuario = "SELECT * FROM Usuario WHERE NombreUsuario = ?"
+        resultado_usuario = db.select(sql_usuario, (nombre_usuario,))
 
-        sql = "SELECT * FROM Usuario WHERE NombreUsuario = ?"
-        resultado = db.select(sql, (nombre_usuario,))
+        # Verificamos que el usuario realmente existe en la BD
+        if resultado_usuario and len(resultado_usuario) > 0:
+            fila = resultado_usuario[0]
 
-        if resultado and len(resultado) > 0:
-            fila = resultado[0]
-            sql = """
-                  SELECT NombreUsuario1 \
-                  FROM AmigoDe \
-                  WHERE NombreUsuario2 = ?
-                  UNION
-                  SELECT NombreUsuario2 \
-                  FROM AmigoDe \
-                  WHERE NombreUsuario1 = ? \
-                  """
-            resultado = db.select(sql, (nombre_usuario, nombre_usuario))
-                # 3. Reconstruimos el objeto Usuario (igual que en iniciarSesion)
+            # 2. Reconstruimos el objeto Usuario con lista de amigos vacía []
+            # La precarga de amigos se hará en MarcoDex.precargarDatos
             usuario_obj = Usuario(
-                nombre=fila['Nombre'],
+                nombre=fila['Nombre'],  # Aquí ya no fallará si el SELECT fue '*'
                 apellido=fila['Apellido'],
                 nombre_usuario=fila['NombreUsuario'],
                 correo=fila['Correo'],
                 contrasena=fila['Contrasena'],
                 rol=fila['Rol'],
-                lista_equipos=[],  # O cargar equipos si es necesario
+                lista_equipos=[],
                 db=db,
-                amigos = resultado
+                amigos=[]  # Inicializamos como lista vacía para evitar errores de tipo
             )
 
-            # 4. Creamos el gestor y lo guardamos en el diccionario
+            # 3. Creamos el gestor y lo guardamos en la caché
             nuevo_gestor = cls(db, usuario_obj)
             cls._instancias_usuarios[nombre_usuario] = nuevo_gestor
+            return nuevo_gestor
+
         return None
 
     @classmethod
@@ -532,3 +527,91 @@ class gestorUsuario:
                 return False
 
         return False  # Ya era amigo o error
+
+    def precargarEquipos(self):
+        """
+        Paso 26aa: precargarEquipos() con trazas de seguimiento.
+        """
+        nomUsuario = self.usuario.getNomUsuario()
+        print(f"\n[DEBUG] Iniciando precarga de equipos para el usuario: {nomUsuario}")
+
+        sql2 = """
+               SELECT e.numEquipo, p.numPokemon, p.NombreCustom, p.NombreEspecie
+               FROM Equipo e
+                        INNER JOIN PokemonEnEquipo pe ON e.numEquipo = pe.idEquipoInterno
+                        INNER JOIN Pokemon p ON pe.idPokemon = p.idPokemon
+               WHERE e.NombreUsuario = ? \
+               """
+
+        resultado = self.db.select(sql2, (nomUsuario,))
+
+        # Contador local para el print
+        total_pokes = 0
+
+        for fila in resultado:
+            numEquipo = int(fila['numEquipo'])
+            nombreEspecie = fila['NombreEspecie']
+            nombreCustom = fila['NombreCustom']
+
+            # (Datos extra para el objeto...)
+            datos_extra = {
+                "id_real": int(fila['numPokemon']),
+                "rareza": 0.0,  # Ajustar según columnas reales de tu BD
+                "shiny": False,
+                "altura": 0.0,
+                "peso": 0.0,
+                "imagen": ""
+            }
+
+            # Paso 34aa: Cargar/Asegurar equipo en memoria
+            self.usuario.cargarEquipo(numEquipo)
+
+            # Paso 35aa: Añadir el pokemon al equipo
+            self.usuario.añadirPokemon(nombreEspecie, nombreCustom, numEquipo, datos_bd=datos_extra)
+
+            total_pokes += 1
+            print(f"   -> [POKEMON] Añadido '{nombreCustom}' ({nombreEspecie}) al Equipo #{numEquipo}")
+
+        print(f"[DEBUG] Fin de precarga: {total_pokes} pokemons distribuidos en los equipos de {nomUsuario}.\n")
+
+    def precargarAmigos(self):
+        """
+        Paso 38aa: precargarAmigos()
+        """
+        # Paso 39aa
+        nomUsuario = self.usuario.getNomUsuario()
+
+        # Paso 40aa: execSQL
+        sql3 = """
+               SELECT u.Nombre, u.Apellido, u.NombreUsuario
+               FROM AmigoDe a
+                        INNER JOIN Usuario u
+                                   ON a.NombreUsuario2 = u.NombreUsuario
+               WHERE a.NombreUsuario1 = ? \
+               """
+
+        resultado = self.db.select(sql3, (nomUsuario,))  # Pasos 41aa, 42aa
+
+        for fila in resultado:
+            # Pasos 43aa - 45aa
+            nombreAmigo = fila['Nombre']
+            apellidoAmigo = fila['Apellido']
+            nombreUsuarioAmigo = fila['NombreUsuario']
+
+            # Paso 46aa: amigoNuevo = new Usuario(...)
+            # Creamos un usuario "ligero" (solo datos básicos, sin DB connection necesaria para ser listado)
+            amigoNuevo = Usuario(
+                nombre=nombreAmigo,
+                apellido=apellidoAmigo,
+                nombre_usuario=nombreUsuarioAmigo,
+                correo="",
+                contrasena="",
+                rol="NOVERIF",
+                lista_equipos=[],
+                amigos=[],
+                db=None
+            )
+
+            # Paso 47aa: elUsuario.cargarAmigo(amigoNuevo)
+            self.usuario.cargarAmigo(amigoNuevo)
+            print(f"DEBUG: Usuario {self.usuario.nombre_usuario} cargado con {len(self.usuario.amigos)} amigos en memoria.")

@@ -150,3 +150,32 @@ class Usuario:
             self.amigos.append(nuevo_amigo)
             return True
         return False
+
+    def cargarEquipo(self, numEquipo: int) -> int:
+        """
+        Paso 34aa: Busca si el equipo existe, si no, lo crea en memoria.
+        """
+        equipo = self.buscarEquipo(numEquipo)
+        if equipo is None:
+            nuevo_equipo = Equipo(numEquipo)
+            self.lista_equipos.append(nuevo_equipo)
+        return 1
+
+    def añadirPokemon(self, nombreEspecie: str, nombreCustom: str, numEquipo: int, datos_bd: dict = None) -> int:
+        """
+        Paso 35aa: añadirPokemon
+        Delega en la clase Equipo. Se añade parametro opcional datos_bd para la carga.
+        """
+        equipo = self.buscarEquipo(numEquipo)
+        if equipo:
+            # Paso 36aa: addPokemon llamando a Equipo
+            return equipo.addPokemon(nombreEspecie, nombreCustom, datos_bd)
+        return -1  # Equipo no encontrado
+
+    def cargarAmigo(self, amigoNuevo):
+        """
+        Paso 47aa: Añade el objeto Usuario amigo a la lista local.
+        """
+        # Evitamos duplicados en memoria si se llama varias veces
+        if not any(a.nombre_usuario == amigoNuevo.nombre_usuario for a in self.amigos):
+            self.amigos.append(amigoNuevo)

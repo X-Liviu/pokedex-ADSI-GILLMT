@@ -443,16 +443,16 @@ class gestorUsuario:
 
     def aniadirAmigo(self, pNomUsuarioAmigo: str) -> bool:
         """
-        Pasos 19-26a: Coordina la adición en memoria y luego en BD.
+        Pasos 19-25a: Coordina la adición en memoria y luego en BD.
         """
         # Paso 20: Llamada a Usuario.aniadirAmigo (Memoria)
         exito_memoria = self.usuario.aniadirAmigo(pNomUsuarioAmigo)
 
         if exito_memoria:
-            # Paso 25a: Obtener nombre usuario actual
+            # Paso 24a: Obtener nombre usuario actual
             nom_usuario_actual = self.usuario.getNomUsuario()
 
-            # Paso 26a: execSQL INSERT en Base de Datos
+            # Paso 25a: execSQL INSERT en Base de Datos
             sql = "INSERT INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES (?, ?)"
             try:
                 self.db.insert(sql, (nom_usuario_actual, pNomUsuarioAmigo))

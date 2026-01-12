@@ -15,7 +15,8 @@ def detalles_equipo_blueprint(db: Connection) -> Blueprint:
         nombre_sesion = session.get('username')
 
         if not nombre_sesion:
-            return redirect(url_for('iniciar_sesion'))  # Redirección si no hay sesión
+            # --- CORRECCIÓN 2: Apuntar al blueprint correcto del login ---
+            return redirect(url_for('identificacion.identificacion'))
 
         # Pedimos a MarcoDex la info de ese equipo concreto
         # mDex usará el nombre de usuario para buscar en su gestorUsuario

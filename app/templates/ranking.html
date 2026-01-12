@@ -2,35 +2,48 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Ranking</title>
-    <link rel="stylesheet" href={{ url_for("static", filename="ranking.css") }}>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ranking Usuarios</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='ranking.css') }}">
 </head>
 <body>
-    <!---
-    <h2>Ranking</h2>
-    ---->
+
+    <img src="{{ url_for('static', filename='imagenes/borde.svg') }}" class="svg-cabecera" alt="cabecera">
 
     <div class="podium-wrapper">
 
         {% if usuarios.usuarios|length >= 1 %}
+        {% set top1 = usuarios.usuarios[0] %}
         <div class="first_place_container">
-            <div class="puesto_numero">{{usuarios.usuarios[0].puesto}}</div>
-            <a class="nombre_burbuja" href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuarios.usuarios[0].nombre)}} ">{{usuarios.usuarios[0].nombre}}</a>
+            <img src="{{ url_for('static', filename='imagenes/corona.svg') }}" class="svg-podio" alt="Corona">
+            <div class="puesto_numero">{{ top1.puesto }}</div>
+            <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top1.nombre) }}">
+                <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
+                {{ top1.nombre }}
+            </a>
         </div>
         {% endif %}
 
         {% if usuarios.usuarios|length >= 2 %}
         <div class="second_third_row">
 
+            {% set top2 = usuarios.usuarios[1] %}
             <div class="first_place_container">
-                <div class="puesto_numero">{{usuarios.usuarios[1].puesto}}</div>
-                <a class="nombre_burbuja" href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuarios.usuarios[1].nombre)}} ">{{usuarios.usuarios[1].nombre}}</a>
+                <div class="puesto_numero">{{ top2.puesto }}</div>
+                <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top2.nombre) }}">
+                    <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
+                    {{ top2.nombre }}
+                </a>
             </div>
 
             {% if usuarios.usuarios|length >= 3 %}
+            {% set top3 = usuarios.usuarios[2] %}
             <div class="first_place_container">
-                <div class="puesto_numero">{{usuarios.usuarios[2].puesto}}</div>
-                <a class="nombre_burbuja" href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuarios.usuarios[2].nombre)}} ">{{usuarios.usuarios[2].nombre}}</a>
+                <div class="puesto_numero">{{ top3.puesto }}</div>
+                <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top3.nombre) }}">
+                    <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
+                    {{ top3.nombre }}
+                </a>
             </div>
             {% endif %}
 
@@ -38,33 +51,24 @@
         {% endif %}
 
     </div>
-
-    <table>
-        {% for usuario in usuarios.usuarios%}
-        <tr>
-            {% if usuario.puesto > 3 %}
-            <td><a href = "{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuario.nombre)}} "> {{usuario.nombre}}</a></td>
-            <td>{{usuario.rareza}}</td>
-            <td>{{usuario.puesto}}</td>
-            {% endif %}
-        </tr>
-        {% endfor %}
-    </table>
 
     <div class="ranking-scroll-container">
     {% for usuario in usuarios.usuarios %}
         {% if loop.index > 3 %}
         <div class="ranking-list-item">
             <div class="puesto-lista">{{ usuario.puesto }}</div>
-
-            <div class="nombre-lista-burbuja">
+            <a class="nombre-lista-burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuario.nombre) }}">
+                <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
                 {{ usuario.nombre }}
-            </div>
+            </a>
         </div>
         {% endif %}
     {% endfor %}
     </div>
 
-    <a href="/">volver</a>
+    <div class="contenedor-volver">
+        <a href="/" class="boton-volver-estilo">Volver</a>
+    </div>
+
 </body>
 </html>

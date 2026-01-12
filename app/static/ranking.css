@@ -1,19 +1,41 @@
-/* Contenedor padre que agrupa todo */
+/* --- RESET Y BASE --- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #fdfaf7;
+}
+
+/* Borde superior que ocupa el ancho */
+.svg-cabecera {
+    width: 100%;
+    min-width: 800px;
+    height: auto;
+    display: block;
+}
+
+/* --- PODIO (TOP 3) --- */
 .podium-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
-    margin-top: 75px;
-    font-family: 'Arial', sans-serif;
+    margin-top: 20px;
 }
 
-/* Estilo base para cada puesto */
 .first_place_container {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: fit-content;
+    position: relative;
+}
+
+.svg-podio {
+    width: 120px;
+    height: auto;
+    margin-bottom: 15px;
+    display: block;
 }
 
 .puesto_numero {
@@ -22,69 +44,108 @@
     margin-bottom: 5px;
 }
 
+/* Burbujas del Podio (Estilo Cápsula con Foto) */
 .nombre_burbuja {
     background: #ce5888;
     color: black;
-    padding: 12px 45px; /* Tamaño de cápsula cómodo */
+    padding: 6px 25px 6px 10px; /* Menos padding a la izquierda para la foto */
     border-radius: 50px;
     font-weight: bold;
     white-space: nowrap;
-    text-decoration: none; /* no underline */
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 2px solid #000;
 }
 
-/* FILA DE ABAJO (2º y 3º) */
+/* Fila de 2º y 3º */
 .second_third_row {
     display: flex;
     justify-content: center;
-
-    /* 1. SEPARACIÓN HORIZONTAL: Aumentada a 250px */
-    gap: 250px;
-
-    /* 2. SEPARACIÓN VERTICAL: Espacio respecto al primero */
-    margin-top: 60px;
-
+    gap: 150px;
+    margin-top: 50px;
     width: 100%;
 }
 
-/* Contenedor que limita la vista a 4 filas */
-.ranking-scroll-container {
-    max-height: 220px; /* Ajustado para que quepan aprox 4 filas */
-    overflow-y: auto;  /* Activa el scroll vertical */
-    width: fit-content;
-    margin: 30px auto; /* Centra la lista en la página */
-    padding-right: 15px; /* Espacio para que el scroll no tape el texto */
+/* --- FOTO DE PERFIL (Sin fondos ni bordes extra) --- */
+.foto-perfil {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    object-fit: cover;
+    background-color: transparent; /* Eliminado el fondo gris/blanco */
+    border: none;                  /* Eliminado el borde circular */
+    display: block;
 }
 
-/* Cada fila de la lista */
+/* --- LISTA RANKING (SCROLL) --- */
+.ranking-scroll-container {
+    max-height: 220px;
+    overflow-y: auto;
+    width: 90%;
+    max-width: 380px;
+    margin: 60px auto 30px auto;
+    padding-right: 15px;
+    scrollbar-gutter: stable;
+}
+
 .ranking-list-item {
     display: flex;
     align-items: center;
-    gap: 15px;        /* Espacio entre número y nombre */
+    gap: 15px;
     margin-bottom: 12px;
-    font-family: 'Arial', sans-serif;
+    width: 100%;
+    font-weight: bold;
 }
 
 .puesto-lista {
-    font-weight: bold;
-    font-size: 1.1rem;
-    min-width: 30px;  /* Asegura que los números no muevan el nombre */
+    min-width: 25px;
+    text-align: center;
 }
 
 .nombre-lista-burbuja {
     background: #ce5888;
     color: black;
-    padding: 8px 25px;
+    padding: 5px 15px 5px 8px;
     border-radius: 50px;
     font-weight: bold;
     white-space: nowrap;
-    display: inline-block;
+    text-decoration: none;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
-/* Personalización opcional de la barra de scroll para que sea fina */
+/* Scrollbar personalizada */
 .ranking-scroll-container::-webkit-scrollbar {
     width: 6px;
 }
 .ranking-scroll-container::-webkit-scrollbar-thumb {
     background: #ce5888;
     border-radius: 10px;
+}
+
+/* --- BOTÓN VOLVER --- */
+.boton-volver-estilo {
+    position: fixed;
+    left: 50%;
+    margin-left: 280px;
+    bottom: 50px;
+    background-color: #ebe1d8;
+    color: #001637;
+    padding: 10px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    border: 3px solid black;
+    box-shadow: -8px 8px 0px 0px rgba(0, 0, 0, 1);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.boton-volver-estilo:hover {
+    transform: translate(-4px, 4px);
+    box-shadow: -4px 4px 0px 0px rgba(0, 0, 0, 1);
 }

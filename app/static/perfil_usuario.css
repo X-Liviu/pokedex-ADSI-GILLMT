@@ -1,0 +1,145 @@
+@font-face {
+    src: url("fuentes/Pokemon Solid.ttf");
+    font-family: 'Pokemon';
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #fdfaf7;
+}
+
+a
+{
+    white-space: nowrap;
+}
+
+/* Borde superior que ocupa el ancho */
+.svg-cabecera {
+    width: 100%;
+    min-width: 800px;
+    height: auto;
+    display: block;
+}
+
+.seccion-cabecera-perfil {
+    position: absolute;
+    padding: 25px 60px;
+}
+
+.foto-perfil
+{
+    position: absolute;
+    width: 250px;
+    height: 250px;
+}
+
+.datos-usuario
+{
+    position: absolute;
+    left: 350px;
+    top: 60px;
+}
+
+.titulo-nombre
+{
+    position: absolute;
+    font-size: 24px;
+    font-weight: bold;
+    top: 0px;
+    left: 0px;
+}
+
+.top-ranking
+{
+    position: absolute;
+    font-size: 36px;
+    font-weight: bold;
+    left: 850px;
+    top: 0px;
+    font-family: Pokemon;
+    color: #ffcb05;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #254bb1;
+    text-align: center;
+
+
+}
+.nombre
+{
+    position: absolute;
+    top: 40px;
+    left: 0px;
+    font-size: 20px;
+}
+
+.subtitulo-pokemon
+{
+    position: absolute;
+    top: 375px;
+    left: 60px;
+}
+
+.lista-pokemon
+{
+    position: absolute;
+    display: flex;
+    flex-wrap: wrap;
+    top: 450px;
+    left: 60px;
+    gap: 5px;
+}
+
+.pokemon
+{
+    display: grid;
+    justify-items: center;
+    align-items: center;
+}
+
+.nombre-especie
+{
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.foto-pokemon
+{
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.nombre-custom
+{
+    grid-column: 1;
+    grid-row: 3;
+}
+
+/* --- BOTÓN VOLVER --- */
+.boton-volver-estilo {
+    display: flex;             /* Activa Flexbox */
+    align-items: center;       /* Centra verticalmente */
+    justify-content: center;   /* Centra horizontalmente */
+
+    /* Tu código original */
+    position: absolute;
+    left: 1200px;
+    top: 600px;
+    width: 80px;
+    height: 40px;
+    background-color: #ebe1d8;
+    color: #001637;
+    border-radius: 10px;
+    font-weight: bold;
+    text-decoration: none;
+    border: 3px solid black;
+    box-shadow: -8px 8px 0px 0px rgba(0, 0, 0, 1);
+    transition: all 0.2s ease;
+    z-index: 100;
+}
+
+.boton-volver-estilo:hover {
+    transform: translate(-4px, 4px);
+    box-shadow: -4px 4px 0px 0px rgba(0, 0, 0, 1);
+}

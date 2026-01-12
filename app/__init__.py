@@ -54,7 +54,7 @@ def init_db():
 
         try:
             # 1. Crear las tablas
-            with open('app/database/schema.sql') as f:
+            with open('app/database/schema.sql', encoding='utf-8') as f:
                 conn.executescript(f.read())
 
             # 2. CARGA AUTOMÁTICA DE LA API

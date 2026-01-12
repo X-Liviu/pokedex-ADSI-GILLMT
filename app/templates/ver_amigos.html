@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amigos Interface</title>
+    <style>
+        /* --- ESTILOS GENERALES --- */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+            user-select: none;
+        }
+
+        /* Ventana Principal */
+        .window {
+            width: 100%; max-width: 850px;
+            background-color: white;
+            border: 4px solid #000;
+            border-radius: 25px;
+            overflow: hidden;
+            font-weight: bold;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        /* Cabecera Rosa */
+        .window-header {
+            background-color: #ff5eb9;
+            padding: 15px 20px;
+            border-bottom: 4px solid #000;
+            display: flex; align-items: center; gap: 15px;
+        }
+
+        /* Semáforo */
+        .traffic-lights { display: flex; gap: 8px; }
+        .dot { width: 22px; height: 22px; border-radius: 50%; border: 3px solid #000; }
+        .dot.red { background-color: #ff3b30; }
+        .dot.yellow { background-color: #ffcc00; }
+        .dot.green { background-color: #28cd41; }
+        .window-title { font-size: 1.5rem; color: #000; }
+
+        /* Cuerpo: Aquí se define la estructura Izquierda/Derecha */
+        .window-body {
+            display: flex;
+            padding: 40px;
+            gap: 40px;
+            min-height: 500px;
+        }
+
+        /* --- COLUMNA IZQUIERDA: LISTA (Ocupa más espacio) --- */
+        .user-list-container {
+            flex: 6; /* 60% del espacio */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100%;
+        }
+
+        /* Estilo del item de amigo */
+        .friend-item {
+            background-color: #d16d8c; /* Rosa oscuro similar a la foto */
+            height: 55px;
+            border-radius: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px 0 15px;
+            color: #3b0d1e;
+            font-size: 1.1rem;
+            border: 3px solid transparent; /* Reserva de espacio para borde */
+        }
+
+        /* Items vacíos (círculos oscuros) */
+        .friend-item.empty {
+            background-color: #d16d8c;
+            justify-content: flex-start;
+        }
+        .empty-dot {
+            width: 24px; height: 24px;
+            background-color: #7a2e4a;
+            border-radius: 50%;
+        }
+
+        /* Información del usuario (Avatar + Nombre) */
+        .user-info-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Avatar CSS (Sin imágenes externas) */
+        .css-avatar {
+            width: 32px; height: 32px;
+            background-color: #6d1b36; /* Color vino oscuro base */
+            border-radius: 50%;
+            border: 2px solid rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        /* Un pequeño detalle para simular una "cabeza" sin cargar imagen */
+        .css-avatar::after {
+            content: ''; position: absolute;
+            bottom: -5px; left: 50%; transform: translateX(-50%);
+            width: 20px; height: 12px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 50% 50% 0 0;
+        }
+
+        /* Botón de Eliminar (X Roja) */
+        .delete-btn {
+            width: 32px; height: 32px;
+            background-color: #fff;
+            border: 3px solid #ff0000;
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            cursor: pointer;
+        }
+        .x-mark {
+            color: #ff0000;
+            font-family: sans-serif;
+            font-weight: 900;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        /* --- COLUMNA DERECHA: BOTONES (Centrados verticalmente) --- */
+        .actions-column {
+            flex: 4; /* 40% del espacio */
+            display: flex;
+            flex-direction: column;
+            gap: 50px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Estilo Botón Retro */
+        .retro-btn {
+            background-color: #efe6dc; /* Beige */
+            border: 4px solid #000;
+            border-radius: 12px;
+            padding: 15px 10px;
+            width: 100%; max-width: 220px;
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #0a1f44;
+            cursor: pointer;
+            box-shadow: 8px 8px 0px #000;
+            text-align: center;
+            line-height: 1.2;
+            position: relative;
+        }
+
+        .retro-btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 4px 4px 0px #000;
+        }
+
+        /* Ajuste para el icono de casa en el botón de volver */
+        .btn-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 10px;
+        }
+        .home-icon {
+            font-size: 1.2rem;
+            border: 2px solid #000;
+            border-radius: 50%;
+            width: 24px; height: 24px;
+            display: flex; justify-content: center; align-items: center;
+            background: transparent;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .window-body { flex-direction: column; padding: 20px; }
+            .user-list-container, .actions-column { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="window">
+        <div class="window-header">
+            <div class="traffic-lights">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+            </div>
+            <div class="window-title">Amigos</div>
+        </div>
+
+        <div class="window-body">
+
+            <div class="user-list-container">
+                <ul class="user-list">
+                    <li class="friend-item">
+                        <div class="user-info-left">
+                            <div class="css-avatar"></div>
+                            <span>TataBatata</span>
+                        </div>
+                        <div class="delete-btn"><span class="x-mark">✖</span></div>
+                    </li>
+                    <li class="friend-item">
+                        <div class="user-info-left">
+                            <div class="css-avatar" style="background-color: #8f4b2e;"></div> <span>MarcoMan123</span>
+                        </div>
+                        <div class="delete-btn"><span class="x-mark">✖</span></div>
+                    </li>
+                    <li class="friend-item">
+                        <div class="user-info-left">
+                            <div class="css-avatar" style="background-color: #4b2e1b;"></div>
+                            <span>Aldeano345</span>
+                        </div>
+                        <div class="delete-btn"><span class="x-mark">✖</span></div>
+                    </li>
+                    <li class="friend-item">
+                        <div class="user-info-left">
+                            <div class="css-avatar"></div>
+                            <span>Fufu89</span>
+                        </div>
+                        <div class="delete-btn"><span class="x-mark">✖</span></div>
+                    </li>
+                    <li class="friend-item">
+                        <div class="user-info-left">
+                            <div class="css-avatar"></div>
+                            <span>Machacas333</span>
+                        </div>
+                        <div class="delete-btn"><span class="x-mark">✖</span></div>
+                    </li>
+
+                    <li class="friend-item empty"><div class="empty-dot"></div></li>
+                    <li class="friend-item empty"><div class="empty-dot"></div></li>
+                    <li class="friend-item empty"><div class="empty-dot"></div></li>
+                    <li class="friend-item empty"><div class="empty-dot"></div></li>
+                </ul>
+            </div>
+
+            <div class="actions-column">
+                <button class="retro-btn">
+                    Añadir<br>Amigo
+                </button>
+
+                <button class="retro-btn">
+                    <div class="btn-content">
+                        Volver al<br>Menú Principal
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

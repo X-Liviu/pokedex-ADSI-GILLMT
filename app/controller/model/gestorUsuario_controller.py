@@ -6,7 +6,7 @@ from app.model.usuario import Usuario
 
 class gestorUsuario:
     _instancias_usuarios = {}
-    _modificaciones_temporales = {}
+    _cambios_pendientes = {}
 
     listaUsuariosParaAdmin = []
 
@@ -43,30 +43,9 @@ class gestorUsuario:
         return False
 
     @classmethod
-    def getMyGestorUsuario(cls, nombre_usuario, db):
-        # Si el usuario no está en memoria (por ejemplo, tras reiniciar servidor), lo recuperamos de la BD
-        if nombre_usuario not in cls._instancias_usuarios:
-
-            sql = "SELECT * FROM Usuario WHERE NombreUsuario = ?"
-            resultado = db.select(sql, (nombre_usuario,))
-
-            if resultado and len(resultado) > 0:
-                fila = resultado[0]
-                usuario = Usuario(
-                    nombre=fila['Nombre'],
-                    apellido=fila['Apellido'],
-                    nombre_usuario=fila['NombreUsuario'],
-                    correo=fila['Correo'],
-                    contrasena=fila['Contrasena'],
-                    rol=fila['Rol'],
-                    lista_equipos=[],  # TODO: Aquí se deberían cargar los equipos existentes si fuera necesario
-                    db=db
-                )
-                cls._instancias_usuarios[nombre_usuario] = cls(db, usuario)
-            else:
-                return None  # Usuario no encontrado en BD
-
+    def getMyGestorUsuario(cls, nombre_usuario, db=None):
         return cls._instancias_usuarios.get(nombre_usuario)
+
 
     def crearEquipo(self):
         return self.usuario.addEquipo()
@@ -208,18 +187,18 @@ class gestorUsuario:
             "usuario": pUsuarioNuevo,
             "contrasena": pNuevaContra
         }
-        gestorUsuario._modificaciones_temporales[pNomUsuario] = datos
+        gestorUsuario._cambios_pendientes[pNomUsuario] = datos
 
     def recuperarModificacionTemporal(self, pNomUsuario: str) -> Usuario:
         # Recuperamos el diccionario
-        datos = gestorUsuario._modificaciones_temporales.get(pNomUsuario)
+        datos = gestorUsuario._cambios_pendientes.get(pNomUsuario)
         if not datos:
             return None
 
         return Usuario(datos['nombre'], datos['apellido'], datos['usuario'],
                        datos['correo'], datos['contrasena'], 'VERIF', [], None) #TODO revisar lo del rol por defecto de ahora
 
-    def modificarUsuarioEnMemoriaYBD(self, pNom: str, pAp: str, pCorreo: str, pUsuarioNuevo: str, pNuevaContra: str) -> Usuario:
+    def modificarUsuarioEnMemoriaYBD(self, pNom: str, pAp: str, pCorreo: str, pUsuarioNuevo: str, pNuevaContra: str):
         # --- LÓGICA DE MEZCLA INTELIGENTE ---
         # Si el input viene vacío, cogemos el dato que ya tiene el usuario.
         final_nom = pNom if pNom and pNom.strip() else self.usuario.getNombre()
@@ -255,34 +234,37 @@ class gestorUsuario:
                 del gestorUsuario._instancias_usuarios[nombre_viejo_where]
             gestorUsuario._instancias_usuarios[final_usuario] = self
 
-        return self.usuario
-
-    def validarCredencialesYGuardarCambios(self, pNomUsuario: str, pContrasena: str): #TODO ahora se devuelve el objeto entero, intentar cambiar por String o boolean como lo tenía antes si es posible
-        # 1. Validar Contraseña (Llamada a Usuario)
+    def validarCredencialesYGuardarCambios(self, pNomUsuario: str, pContrasena: str) -> str:
+        """
+        Paso 10b: validarCredencialesYGuardarCambios(...) : String
+        Retorna:
+            - str: El nombre de usuario definitivo (nuevo o viejo) si todo salió bien.
+            - None: Si la contraseña era incorrecta o hubo un error.
+        """
+        # Paso 11b: validarPassword
         if not self.usuario.validarPassword(pContrasena):
-            return None # Devolvemos None si falla
+            return None  # Equivale a False (contraseña incorrecta)
 
-        # 2. Recuperar Modificación Temporal
-        u_temp = self.recuperarModificacionTemporal(pNomUsuario)
-        if not u_temp:
-            return None # Devolvemos None si falla
+        # Paso 12ba: recuperarModificacionTemporal
+        datosUsuarioModif = self.recuperarModificacionTemporal(pNomUsuario)
+        if not datosUsuarioModif:
+            return None # Error interno: no había datos temporales
 
-        # 3. Modificar en Memoria y BD
-        # Guardamos el resultado (que es el objeto Usuario actualizado) en una variable
-        usuario_actualizado = self.modificarUsuarioEnMemoriaYBD(
-            u_temp.getNombre(),
-            u_temp.getApellido(),
-            u_temp.getCorreo(),
-            u_temp.getNomUsuario(),
-            u_temp.getContrasena()
-        )
+        # Paso 13ba (Lógica): Deconstrucción
+        elNombre = datosUsuarioModif.getNombre()
+        elAp = datosUsuarioModif.getApellido()
+        elCorreo = datosUsuarioModif.getCorreo()
+        elNomUsuario = datosUsuarioModif.getNomUsuario()
+        laContra = datosUsuarioModif.getContrasena()
 
-        # Limpiar temporal
-        if pNomUsuario in gestorUsuario._modificaciones_temporales:
-            del gestorUsuario._modificaciones_temporales[pNomUsuario]
+        # Ejecución de la modificación persistente
+        self.modificarUsuarioEnMemoriaYBD(elNombre, elAp, elCorreo, elNomUsuario, laContra)
 
-        # IMPORTANTE: Devolvemos el objeto usuario, no un booleano
-        return usuario_actualizado
+        # Limpieza
+        if pNomUsuario in gestorUsuario._cambios_pendientes:
+            del gestorUsuario._cambios_pendientes[pNomUsuario]
+
+        return self.usuario.getNomUsuario()
 
     @classmethod
     def obtenerUsuariosParaAdmin(cls, db):

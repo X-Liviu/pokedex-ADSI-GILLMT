@@ -188,7 +188,6 @@ class MarcoDex:
         -1: ERROR CRÍTICO (Usuario no encontrado)
         """
         gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
-
         if gestor is None:
             # El usuario de la sesión no existe en la BD.
             return -1
@@ -203,14 +202,19 @@ class MarcoDex:
             gestor.modificarUsuarioEnMemoriaYBD(pNom, pAp, pCorreo, pUsuarioNuevo, pNuevaContra)
             return 0
 
-    def confirmarConContraseña(self, pNomUsuario: str, pContraseña: str): #TODO ahora se devuelve el objeto entero, intentar cambiar por String o boolean como lo tenía antes si es posible
+    def confirmarConContraseña(self, pNomUsuario: str, pContraseña: str) -> str:
+        """
+        Paso 9b: confirmarConContraseña(...) : String
+        Retorna el nuevo nombre de usuario si éxito, o None si fallo.
+        """
         gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
-        return gestor.validarCredencialesYGuardarCambios(pNomUsuario, pContraseña)
 
-    # --- MÉTODOS AUXILIARES ---
-    def getUsuarioObjeto(self, nombre_usuario):
-        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
-        return gestor.usuario if gestor else None
+        # Si la sesión no existe en memoria, no se puede confirmar
+        if gestor is None:
+            return None
+
+        # Paso 10b: Llama al gestor y devuelve el string resultante
+        return gestor.validarCredencialesYGuardarCambios(pNomUsuario, pContraseña)
 
     def pedirUsuariosParaAdmin(self):
         return gestorUsuario.obtenerUsuariosParaAdmin(self.db)

@@ -24,14 +24,6 @@
             <p>Estás intentando modificar datos sensibles (Usuario o Contraseña).</p>
             <p><strong>Por favor, confirma tu contraseña actual para guardar los cambios.</strong></p>
 
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="flash-msg">{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-
             <form action="{{ url_for('confirmar.confirmar_cambios') }}" method="POST" style="width: 100%; text-align: center;">
                 <input type="password" name="password_actual" placeholder="Tu contraseña actual" required>
                 <br><br>

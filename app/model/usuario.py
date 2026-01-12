@@ -114,17 +114,17 @@ class Usuario:
             self.contrasena = pNuevaContra
 
     # --- GETTERS ---
-    def getNombre(self):
+    def getNombre(self) -> str:
         return self.nombre
 
-    def getApellido(self):
+    def getApellido(self) -> str:
         return self.apellido
 
-    def getCorreo(self):
+    def getCorreo(self) -> str:
         return self.correo
 
-    def getNomUsuario(self):
+    def getNomUsuario(self) -> str:
         return self.nombre_usuario
 
-    def getContrasena(self):
+    def getContrasena(self) -> str:
         return self.contrasena

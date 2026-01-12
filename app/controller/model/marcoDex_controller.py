@@ -139,7 +139,7 @@ class MarcoDex:
 
     def mostrar_changelog(self, usuario, filtro):
         #clase de gestor_noticia por crear
-        return gestorNoticias.getGestorNoticias.mostrar_changelog(usuario,filtro)
+        return gestorNoticias.getGestorNoticias(usuario).mostrar_changelog(usuario,filtro)
 
     def mostrarPokedex(self) -> str:
         return PokeDex.get_instance().mostrarPokedex()

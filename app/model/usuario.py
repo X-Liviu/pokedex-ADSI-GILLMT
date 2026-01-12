@@ -2,7 +2,7 @@ from app.model.equipo import Equipo
 
 class Usuario:
     def __init__(self, nombre: str, apellido: str, nombre_usuario: str,
-                 correo: str, contrasena: str, rol: str, lista_equipos: list, db):
+                 correo: str, contrasena: str, rol: str, lista_equipos: list, amigos: list, db):
         self.nombre = nombre
         self.apellido = apellido
         self.nombre_usuario = nombre_usuario
@@ -11,7 +11,7 @@ class Usuario:
         self.rol = rol
         self.lista_equipos = lista_equipos
         self.db = db
-        self.amigos = []
+        self.amigos = amigos
 
     def addEquipo(self) :
         if self.tieneEquipos() :

@@ -23,6 +23,16 @@ class gestorUsuario:
 
         if resultado and len(resultado) > 0:
             fila = resultado[0]
+            sql = """
+                  SELECT NombreUsuario1 \
+                  FROM AmigoDe \
+                  WHERE NombreUsuario2 = ?
+                  UNION
+                  SELECT NombreUsuario2 \
+                  FROM AmigoDe \
+                  WHERE NombreUsuario1 = ? \
+                  """
+            resultado = db.select(sql, (pNomUsuario, pNomUsuario))
 
             # 2. Creamos el objeto Usuario
             usuario_obj = Usuario(
@@ -33,7 +43,8 @@ class gestorUsuario:
                 contrasena=fila['Contrasena'],
                 rol=fila['Rol'],
                 lista_equipos=[],  # Se cargará vacía de momento
-                db=db
+                db=db,
+                amigos = resultado
             )
 
             # 3. Guardamos la instancia en el diccionario (Cache)
@@ -52,7 +63,16 @@ class gestorUsuario:
 
         if resultado and len(resultado) > 0:
             fila = resultado[0]
-
+            sql = """
+                  SELECT NombreUsuario1 \
+                  FROM AmigoDe \
+                  WHERE NombreUsuario2 = ?
+                  UNION
+                  SELECT NombreUsuario2 \
+                  FROM AmigoDe \
+                  WHERE NombreUsuario1 = ? \
+                  """
+            resultado = db.select(sql, (nombre_usuario, nombre_usuario))
                 # 3. Reconstruimos el objeto Usuario (igual que en iniciarSesion)
             usuario_obj = Usuario(
                 nombre=fila['Nombre'],
@@ -62,7 +82,8 @@ class gestorUsuario:
                 contrasena=fila['Contrasena'],
                 rol=fila['Rol'],
                 lista_equipos=[],  # O cargar equipos si es necesario
-                db=db
+                db=db,
+                amigos = resultado
             )
 
             # 4. Creamos el gestor y lo guardamos en el diccionario

@@ -51,7 +51,7 @@ def init_db():
     if not os.path.exists(Config.DB_PATH):
         print("No se encontró base de datos. Creando nueva desde schema.sql...")
         conn = sqlite3.connect(Config.DB_PATH)
-        with open('app/database/schema.sql') as f:
+        with open('app/database/schema.sql', encoding='utf-8') as f:
             conn.executescript(f.read())
         conn.close()
         print("Base de datos creada exitosamente.")

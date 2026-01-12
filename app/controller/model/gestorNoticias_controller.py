@@ -10,11 +10,13 @@ class gestorNoticias:
         self.db = Connection()
 
     @classmethod
-    def getGestorNoticias(cls, db: Connection):
+    def getGestorNoticias(cls, db=None):
+        if cls.myGestorNoticias is None:
+            cls.myGestorNoticias = gestorNoticias()
         return cls.myGestorNoticias
 
 
-    def mostrar_changelog(self, usuario,filtro):
+    def mostrar_changelog(self, usuario, filtro):
         sql = """
             SELECT 
                 P.NombreUsuario, 
@@ -33,7 +35,7 @@ class gestorNoticias:
                 FROM AmigoDe A 
                 WHERE A.NombreUsuario2 = ?
             )
-            AND NombreUsuario LIKE ?%
+            AND NombreUsuario LIKE ? || '%'
 
             ORDER BY P.FechaHora DESC;
         """

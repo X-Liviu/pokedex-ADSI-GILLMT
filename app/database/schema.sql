@@ -222,3 +222,79 @@ INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('AshKetch
 
 -- Amigos para 'GorkaX' (Admin):
 INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('GorkaX', 'IkerX');
+
+-- 7. NOTICIAS DE USUARIOS
+
+-- se deberían mostrar --
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('GorkaX', DATETIME('now', '-2 day'), '⚠️ Atención entrenadores: Se acerca una actualización en el sistema de Rankings. ¡Aseguraos de guardar vuestros equipos! 🛠️📊');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('AshKetchum', DATETIME('now', '-3 hour'), '¡Pikachu y yo acabamos de ganar una batalla imposible! ⚡🧢 Nunca hay que rendirse. ¡A por la siguiente medalla! 🏅');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('LiviuX', DATETIME('now', '-1 day'), '¡NO ME LO CREO! 😱 Acabo de encontrarme un Charizard Variocolor (Shiny) salvaje. 🔥✨ ¡La suerte está de mi lado hoy!');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('Misty', DATETIME('now', '-2 day'), 'Busco entrenador experto en tipo Agua para intercambio. Ofrezco Starmie con IVs perfectos. 💧⭐ Solo ofertas serias, por favor.');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('GaryOak', DATETIME('now', '-3 day'), 'Mientras vosotros seguís atrapando Rattatas, yo ya estoy entrenando para la Liga. 👋😎 Nos vemos en la cima (o no). #MarcodexChampion');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('TataX', DATETIME('now', '-7 day'), 'Estoy montando un equipo monotype de Hada 🧚‍♀️. ¿Alguien me recomienda un buen tanque defensivo? Estaba pensando en Clefable. 💕');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('Brock', DATETIME('now', '-14 day'), 'La clave para un Onix fuerte no es solo el entrenamiento, es una buena dieta de rocas ricas en minerales. 🪨🍲 ¡Mis recetas nunca fallan!');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('IkerX', DATETIME('now', '-1 month'), '¡Torneo amistoso este fin de semana en Ciudad Verde! 🌲⚔️ Inscripciones abiertas por mensaje privado. ¡Demostrad vuestro poder!');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('LauraX', DATETIME('now', '-2 month'), '¿Alguien sabe dónde puedo conseguir una Piedra Noche? 🌑 Mi Murkrow la necesita urgentemente. ¡Ayuda! 🦅');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('GorkaX', DATETIME('now', '-30 minute'), '🔧 Mantenimiento: Estamos ajustando los servidores del PC de Bill. Si notáis lag al transferir Pokémon, es normal. 💻🔌');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('MarcoX', DATETIME('now', '-5 hour'), '¡Increíble! El Team Rocket me ha intentado robar el bocadillo en vez de al Pikachu. 🍙😠 Están desesperados... 🚀');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('LauraX', DATETIME('now', '-12 hour'), 'Hay una Incursión de Tyranitar 5⭐ cerca del gimnasio. ¿Quién se apunta? Necesito gente con tipo Lucha. 🦖👊');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('IkerX', DATETIME('now', '-1 day', '-2 hour'), 'Tras 300 huevos... ¡Por fin salió! Scizor Firme con Técnica Experto. 🥚🦀✨ La paciencia da sus frutos.');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('AshKetchum', DATETIME('now', '-3 day', '-5 hour'), '¿Alguien sabe dónde hacen las mejores hamburguesas en Ciudad Trigal? 🍔 Snorlax y yo nos morimos de hambre. 🤤');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('TataX', DATETIME('now', '-5 day'), '¡Milotic ha ganado la cinta de Belleza en el Concurso Pokémon! 🎀💅 Mirad qué brillo tiene sus escamas. ¡Guapísimo! 💖');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('Brock', DATETIME('now', '-7 day', '-1 hour'), 'La Agente Mara de Ciudad Plateada tiene algo especial... 😍 Lástima que su Growlithe casi me muerde la pierna. 👮‍♀️🐕 #AmorImposible');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('GaryOak', DATETIME('now', '-14 day'), 'He visto vuestros equipos en el Ranking... patéticos. 📉😂 A ver si entrenáis más y lloráis menos. ¡Nos vemos en la Liga! 👋');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('LiviuX', DATETIME('now', '-21 day'), 'Necesito a alguien de confianza para evolucionar a mi Haunter. 👻🤝 Lo paso, evoluciona a Gengar y me lo devolvéis. ¿Voluntarios?');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('Misty', DATETIME('now', '-1 month', '-2 day'), 'Psyduck ha vuelto a salir de la Pokéball solo y le duele la cabeza... otra vez. 🦆🤕 ¡Qué paciencia hay que tener! 💧');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('GorkaX', DATETIME('now', '-2 month'), '🐛 Bug detectado: Algunos usuarios reportan que MissingNo está apareciendo en la costa de Isla Canela. ¡NO LO ATRAPÉIS! Corrompe la partida. 🚫👾');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('LauraX', DATETIME('now', '-2 month', '-15 day'), '¡Solo me falta Celebi para completar la Pokédex de Johto! 🌿🧚‍♀️ ¿Es verdad que aparece en el Encinar si usas la GS Ball? 🤔');
+
+-- NO se deberían mostrar --
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('MarcoX', DATETIME('now', '-4 month'), 'Probando la nueva Marcodex. ¿Esto funciona? 🎤🐢 (Este mensaje es antiguo y no debería salir).');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('AshKetchum', DATETIME('now', '-6 month'), 'Hoy salgo de Pueblo Paleta. ¡Voy a ser el mejor que habrá jamás! 🎒🌍');
+
+INSERT INTO Publica (NombreUsuario, FechaHora, Contenido)
+VALUES ('GaryOak', DATETIME('now', '-1 year'), 'Eligiendo a Squirtle. Claramente la mejor opción. 🐢💧 ¡Adiós perdedores!');

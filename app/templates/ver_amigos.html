@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amigos Interface</title>
+    <title>Mis Amigos</title>
     <style>
         /* --- ESTILOS GENERALES --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -45,7 +45,7 @@
         .dot.green { background-color: #28cd41; }
         .window-title { font-size: 1.5rem; color: #000; }
 
-        /* Cuerpo: Aquí se define la estructura Izquierda/Derecha */
+        /* Cuerpo */
         .window-body {
             display: flex;
             padding: 40px;
@@ -53,11 +53,14 @@
             min-height: 500px;
         }
 
-        /* --- COLUMNA IZQUIERDA: LISTA (Ocupa más espacio) --- */
+        /* --- COLUMNA IZQUIERDA: LISTA --- */
         .user-list-container {
-            flex: 6; /* 60% del espacio */
+            flex: 6;
             display: flex;
             flex-direction: column;
+            overflow-y: auto; /* Scroll si hay muchos amigos */
+            max-height: 500px;
+            padding-right: 10px; /* Espacio para scrollbar */
         }
 
         .user-list {
@@ -70,7 +73,7 @@
 
         /* Estilo del item de amigo */
         .friend-item {
-            background-color: #d16d8c; /* Rosa oscuro similar a la foto */
+            background-color: #d16d8c;
             height: 55px;
             border-radius: 25px;
             display: flex;
@@ -79,37 +82,40 @@
             padding: 0 10px 0 15px;
             color: #3b0d1e;
             font-size: 1.1rem;
-            border: 3px solid transparent; /* Reserva de espacio para borde */
+            border: 3px solid transparent;
+            transition: transform 0.1s;
         }
 
-        /* Items vacíos (círculos oscuros) */
-        .friend-item.empty {
-            background-color: #d16d8c;
-            justify-content: flex-start;
-        }
-        .empty-dot {
-            width: 24px; height: 24px;
-            background-color: #7a2e4a;
-            border-radius: 50%;
+        .friend-item:hover {
+            transform: scale(1.01);
+            filter: brightness(1.05);
         }
 
-        /* Información del usuario (Avatar + Nombre) */
+        /* Mensaje cuando no hay amigos */
+        .empty-message {
+            text-align: center;
+            color: #888;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* Información del usuario */
         .user-info-left {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        /* Avatar CSS (Sin imágenes externas) */
+        /* Avatar CSS */
         .css-avatar {
             width: 32px; height: 32px;
-            background-color: #6d1b36; /* Color vino oscuro base */
+            background-color: #6d1b36;
             border-radius: 50%;
             border: 2px solid rgba(0,0,0,0.1);
             position: relative;
             overflow: hidden;
+            flex-shrink: 0;
         }
-        /* Un pequeño detalle para simular una "cabeza" sin cargar imagen */
         .css-avatar::after {
             content: ''; position: absolute;
             bottom: -5px; left: 50%; transform: translateX(-50%);
@@ -118,7 +124,7 @@
             border-radius: 50% 50% 0 0;
         }
 
-        /* Botón de Eliminar (X Roja) */
+        /* Botón de Eliminar (Adaptado para ser <button>) */
         .delete-btn {
             width: 32px; height: 32px;
             background-color: #fff;
@@ -126,6 +132,12 @@
             border-radius: 50%;
             display: flex; justify-content: center; align-items: center;
             cursor: pointer;
+            padding: 0; /* Reset de estilos de botón */
+            transition: all 0.2s;
+        }
+        .delete-btn:hover {
+            background-color: #ffe6e6;
+            transform: scale(1.1);
         }
         .x-mark {
             color: #ff0000;
@@ -135,19 +147,18 @@
             line-height: 1;
         }
 
-        /* --- COLUMNA DERECHA: BOTONES (Centrados verticalmente) --- */
+        /* --- COLUMNA DERECHA: BOTONES --- */
         .actions-column {
-            flex: 4; /* 40% del espacio */
+            flex: 4;
             display: flex;
             flex-direction: column;
-            gap: 50px;
+            gap: 30px;
             justify-content: center;
             align-items: center;
         }
 
-        /* Estilo Botón Retro */
         .retro-btn {
-            background-color: #efe6dc; /* Beige */
+            background-color: #efe6dc;
             border: 4px solid #000;
             border-radius: 12px;
             padding: 15px 10px;
@@ -159,28 +170,13 @@
             box-shadow: 8px 8px 0px #000;
             text-align: center;
             line-height: 1.2;
-            position: relative;
+            text-decoration: none; /* Para enlaces que parecen botones */
+            display: inline-block;
         }
 
         .retro-btn:active {
             transform: translate(4px, 4px);
             box-shadow: 4px 4px 0px #000;
-        }
-
-        /* Ajuste para el icono de casa en el botón de volver */
-        .btn-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 10px;
-        }
-        .home-icon {
-            font-size: 1.2rem;
-            border: 2px solid #000;
-            border-radius: 50%;
-            width: 24px; height: 24px;
-            display: flex; justify-content: center; align-items: center;
-            background: transparent;
         }
 
         /* Responsive */
@@ -206,58 +202,41 @@
 
             <div class="user-list-container">
                 <ul class="user-list">
-                    <li class="friend-item">
-                        <div class="user-info-left">
-                            <div class="css-avatar"></div>
-                            <span>TataBatata</span>
-                        </div>
-                        <div class="delete-btn"><span class="x-mark">✖</span></div>
-                    </li>
-                    <li class="friend-item">
-                        <div class="user-info-left">
-                            <div class="css-avatar" style="background-color: #8f4b2e;"></div> <span>MarcoMan123</span>
-                        </div>
-                        <div class="delete-btn"><span class="x-mark">✖</span></div>
-                    </li>
-                    <li class="friend-item">
-                        <div class="user-info-left">
-                            <div class="css-avatar" style="background-color: #4b2e1b;"></div>
-                            <span>Aldeano345</span>
-                        </div>
-                        <div class="delete-btn"><span class="x-mark">✖</span></div>
-                    </li>
-                    <li class="friend-item">
-                        <div class="user-info-left">
-                            <div class="css-avatar"></div>
-                            <span>Fufu89</span>
-                        </div>
-                        <div class="delete-btn"><span class="x-mark">✖</span></div>
-                    </li>
-                    <li class="friend-item">
-                        <div class="user-info-left">
-                            <div class="css-avatar"></div>
-                            <span>Machacas333</span>
-                        </div>
-                        <div class="delete-btn"><span class="x-mark">✖</span></div>
-                    </li>
 
-                    <li class="friend-item empty"><div class="empty-dot"></div></li>
-                    <li class="friend-item empty"><div class="empty-dot"></div></li>
-                    <li class="friend-item empty"><div class="empty-dot"></div></li>
-                    <li class="friend-item empty"><div class="empty-dot"></div></li>
+                    {% for amigo in amigos %}
+                    <li class="friend-item">
+                        <div class="user-info-left">
+                            <div class="css-avatar"></div>
+
+                            <span>{{ amigo.nombre_usuario }}</span>
+                        </div>
+
+                        <form action="{{ url_for('amigos.borrar_amigo') }}" method="POST">
+                            <input type="hidden" name="nombre_amigo" value="{{ amigo.nombre_usuario }}">
+                            <button type="submit" class="delete-btn" title="Eliminar amigo">
+                                <span class="x-mark">✖</span>
+                            </button>
+                        </form>
+                    </li>
+                    {% else %}
+                    <div class="empty-message">
+                        <p>No tienes amigos añadidos aún.</p>
+                        <p>¡Usa el botón de añadir amigo para buscar gente!</p>
+                    </div>
+                    {% endfor %}
+
                 </ul>
             </div>
 
             <div class="actions-column">
-                <button class="retro-btn">
-                    Añadir<br>Amigo
-                </button>
 
-                <button class="retro-btn">
-                    <div class="btn-content">
-                        Volver al<br>Menú Principal
-                    </div>
-                </button>
+                <a href="{{ url_for('amigos.aniadir_amigo') }}" class="retro-btn">
+                    Añadir<br>Amigo
+                </a>
+
+                <a href="/" class="retro-btn">
+                    Volver al<br>Menú Principal
+                </a>
             </div>
         </div>
     </div>

@@ -33,15 +33,52 @@
             display: flex; flex-direction: column; padding: 30px 40px; min-height: 550px;
         }
 
-        /* Buscador */
-        .search-container { margin-bottom: 25px; position: relative; width: 100%; max-width: 400px; }
-        .search-input {
-            width: 100%; padding: 12px 15px 12px 45px; border: 3px solid #000;
-            border-radius: 25px; font-size: 1rem; outline: none; font-style: italic;
+        /* --- ESTILOS DEL BUSCADOR (Corregidos) --- */
+        .search-container {
+            margin-bottom: 10px; /* Reducido un poco para dejar sitio al texto de aviso */
+            position: relative;
+            width: 100%;
+            max-width: 400px;
         }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            border: 3px solid #000;
+            border-radius: 25px;
+            font-size: 1rem;
+            outline: none;
+            font-style: italic;
+        }
+
+        .search-btn {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .search-icon {
-            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-            width: 20px; height: 20px; pointer-events: none;
+            width: 20px;
+            height: 20px;
+            pointer-events: none;
+        }
+
+        /* Nuevo estilo para la nota informativa */
+        .search-hint {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 25px;
+            margin-left: 15px;
+            font-style: italic;
         }
 
         /* Contenido */
@@ -52,14 +89,13 @@
         }
 
         .user-item {
-            background-color: #cc5c86; min-height: 60px; border-radius: 25px; /* Un poco más alto para caber 2 líneas */
+            background-color: #cc5c86; min-height: 60px; border-radius: 25px;
             display: flex; align-items: center; padding: 0 15px;
             color: #3b0d1e; font-size: 1.1rem; cursor: pointer;
             border: 3px solid transparent; transition: all 0.2s;
         }
         .user-icon { width: 25px; height: 25px; background-color: #6d1b36; border-radius: 50%; margin-right: 15px; flex-shrink: 0; }
 
-        /* Estilos para texto nombre/nick */
         .user-info-text { display: flex; flex-direction: column; justify-content: center; }
         .user-fullname { font-weight: 800; line-height: 1.1; }
         .user-nickname { font-size: 0.85rem; opacity: 0.8; font-weight: normal; }
@@ -108,14 +144,19 @@
 
         <div class="window-body">
 
-            <div class="search-container">
-                <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                </svg>
-                <input type="text" class="search-input" id="buscador"
-                       placeholder="Buscar por Nombre o Usuario..."
-                       onkeyup="filtrarUsuarios()">
-            </div>
+           <form action="{{ url_for('amigos.aniadir_amigo') }}" method="GET" class="search-container">
+                <button type="submit" class="search-btn" title="Buscar">
+                    <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </button>
+
+                <input type="text" class="search-input" name="q" id="buscador"
+                placeholder="Buscar por Nombre o Usuario..."
+                value="{{ busqueda if busqueda else '' }}">
+           </form>
+
+           <p class="search-hint">* Solo se mostrarán usuarios que aún no sean tus amigos.</p>
 
             <div class="content-area">
 
@@ -149,7 +190,7 @@
                         </button>
                     </form>
 
-                    <button type="button" class="btn-volver" onclick="window.history.back()">
+                    <button type="button" class="btn-volver" onclick="window.location.href='{{ url_for('amigos.ver_amigos') }}'">
                         Volver
                     </button>
                 </div>
@@ -161,22 +202,6 @@
     <script>
         let usuarioSeleccionadoElemento = null;
         let usuarioSeleccionadoId = null;
-
-        // FILTRADO
-        function filtrarUsuarios() {
-            const texto = document.getElementById('buscador').value.toLowerCase();
-            const items = document.querySelectorAll('.user-item');
-
-            items.forEach(item => {
-                const infoBusqueda = item.getAttribute('data-search');
-
-                if (infoBusqueda.includes(texto)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
-            });
-        }
 
         // SELECCIÓN
         function seleccionarUsuario(elementoDiv, nombreUsuario, esAmigoStr) {
@@ -207,7 +232,7 @@
             actualizarBoton(nombreUsuario, esAmigo);
         }
 
-        // 3. ESTADO DEL BOTÓN
+        // ESTADO DEL BOTÓN
         function actualizarBoton(id, esAmigo) {
             const btn = document.getElementById('btnAnadir');
 

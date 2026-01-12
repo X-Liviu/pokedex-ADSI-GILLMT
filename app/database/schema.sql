@@ -164,49 +164,61 @@ CREATE TABLE Evolucion (
 );
 
 
---- INSERTAR DATOS DE PRUEBA (Refactorizados) ---
+--- INSERTAR DATOS DE PRUEBA ---
 
--- A. Insertar Usuarios (Solo VERIF, ADMIN, NOVERIF)
-INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol)
-VALUES ('LiviuX', 'Liviu', 'Deleanu', 'ash@pueblopaleta.com', '1234', 'VERIF');
-
-INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol)
-VALUES ('TataX', 'Tabata', 'Morente', 'tata@kanto.net', '1234', 'VERIF');
-
-INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol)
-VALUES ('GorkaX', 'Gorka', 'Bidaguren', 'gorki@pokedex.org', '1234', 'ADMIN');
-
-INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol)
-VALUES ('LauraX', 'Laura', 'Calvo', 'laura@celeste.com', '1234', 'VERIF');
-
-INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol)
-VALUES ('MarcoX', 'Marco', 'Lartategui', 'marco@teamrocket.com', '1234', 'NOVERIF');
-
-INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol)
-VALUES ('IkerX', 'Iker', 'Fuente', 'iker@oak.net', '1234', 'VERIF');
+-- A. Insertar Usuarios Originales
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol) VALUES ('LiviuX', 'Liviu', 'Deleanu', 'ash@pueblopaleta.com', '1234', 'VERIF');
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol) VALUES ('TataX', 'Tabata', 'Morente', 'tata@kanto.net', '1234', 'VERIF');
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol) VALUES ('GorkaX', 'Gorka', 'Bidaguren', 'gorki@pokedex.org', '1234', 'ADMIN');
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol) VALUES ('LauraX', 'Laura', 'Calvo', 'laura@celeste.com', '1234', 'VERIF');
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol) VALUES ('MarcoX', 'Marco', 'Lartategui', 'marco@teamrocket.com', '1234', 'NOVERIF');
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol) VALUES ('IkerX', 'Iker', 'Fuente', 'iker@oak.net', '1234', 'VERIF');
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol) VALUES ('AshKetchum', 'Ash', 'Ketchum', 'real_ash@kanto.com', '1234', 'VERIF');
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol) VALUES ('GaryOak', 'Gary', 'Oak', 'gary_champ@kanto.com', '1234', 'VERIF');
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol) VALUES ('Misty', 'Misty', 'Waterflower', 'misty@cerulean.com', '1234', 'VERIF');
+INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol) VALUES ('Brock', 'Brock', 'Harrison', 'brock@pewter.com', '1234', 'VERIF');
 
 
 -- B. Datos necesarios para que los equipos funcionen (Región, Especie)
-INSERT OR IGNORE INTO Pokedex VALUES ("Kanto", "Primera");
-INSERT OR IGNORE INTO EspeciePokemon VALUES ("Pikachu", "Ratón eléctrico", FALSE, 0.4, 6.0, "Kanto");
-INSERT OR IGNORE INTO EspeciePokemon VALUES ("Eevee", "Evolución", FALSE, 0.3, 6.5, "Kanto");
+INSERT OR IGNORE INTO Pokedex VALUES ('Kanto', 'Primera');
+INSERT OR IGNORE INTO EspeciePokemon VALUES ('Pikachu', 'Ratón eléctrico', FALSE, 0.4, 6.0, 'Kanto');
+INSERT OR IGNORE INTO EspeciePokemon VALUES ('Eevee', 'Evolución', FALSE, 0.3, 6.5, 'Kanto');
 
 -- C. Pokémons individuales (Instancias)
 -- Pikachu de Ash
-INSERT OR IGNORE INTO Pokemon (idPokemon, NombreCustom, Rareza, Shiny, Altura, Peso, NombreEspecie, Imagen)
-VALUES (1, "Pikachu", 5, FALSE, 0.4, 6.0, "Pikachu", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png");
+INSERT OR IGNORE INTO Pokemon (idPokemon, numPokemon, NombreCustom, Rareza, Shiny, Altura, Peso, NombreEspecie, Imagen)
+VALUES (1, 25, 'Pikachu', 5, FALSE, 0.4, 6.0, 'Pikachu', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png');
 
 -- Eevee de Gary
-INSERT OR IGNORE INTO Pokemon (idPokemon, NombreCustom, Rareza, Shiny, Altura, Peso, NombreEspecie, Imagen)
-VALUES (2, "Eevee", 4, FALSE, 0.3, 6.5, "Eevee", "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png");
+INSERT OR IGNORE INTO Pokemon (idPokemon, numPokemon, NombreCustom, Rareza, Shiny, Altura, Peso, NombreEspecie, Imagen)
+VALUES (2, 133, 'Eevee', 4, FALSE, 0.3, 6.5, 'Eevee', 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/133.png');
 
--- D. Equipos (Vinculados a los nuevos usuarios Ash y Gary)
-INSERT OR IGNORE INTO Equipo (idEquipo, numEquipo, NombreUsuario) VALUES (1, 1, "AshKetchum");
-INSERT OR IGNORE INTO Equipo (idEquipo, numEquipo, NombreUsuario) VALUES (2, 1, "GaryOak");
+-- D. Equipos (Vinculados a Ash y Gary, que ahora ya existen)
+INSERT OR IGNORE INTO Equipo (idEquipo, numEquipo, NombreUsuario) VALUES (1, 1, 'AshKetchum');
+INSERT OR IGNORE INTO Equipo (idEquipo, numEquipo, NombreUsuario) VALUES (2, 1, 'GaryOak');
 
 -- E. Relación Pokemon - Equipo
 INSERT OR IGNORE INTO PokemonEnEquipo (idEquipoInterno, idPokemon) VALUES (1, 1); -- Pikachu en equipo de Ash
 INSERT OR IGNORE INTO PokemonEnEquipo (idEquipoInterno, idPokemon) VALUES (2, 2); -- Eevee en equipo de Gary
 
 -- F. Opción ChatBot
-INSERT OR IGNORE INTO OpcionChatbot VALUES("1", "Dado un equipo Pokémon, devolver cual es el mejor.")
+INSERT OR IGNORE INTO OpcionChatbot VALUES('1', 'Dado un equipo Pokémon, devolver cual es el mejor.');
+
+-- G. AMIGOS (NUEVA SECCIÓN)
+-- Amigos para 'LiviuX':
+INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('LiviuX', 'TataX');
+INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('LiviuX', 'GorkaX');
+INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('LiviuX', 'AshKetchum');
+INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('LiviuX', 'Misty');
+
+-- Amigos para 'TataX':
+INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('TataX', 'LiviuX');
+INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('TataX', 'LauraX');
+
+-- Amigos para 'AshKetchum':
+INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('AshKetchum', 'GaryOak');
+INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('AshKetchum', 'Misty');
+INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('AshKetchum', 'Brock');
+
+-- Amigos para 'GorkaX' (Admin):
+INSERT OR IGNORE INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES ('GorkaX', 'IkerX');

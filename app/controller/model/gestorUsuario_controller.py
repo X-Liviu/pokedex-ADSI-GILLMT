@@ -380,3 +380,87 @@ class gestorUsuario:
             # 3. Update SQL
             sql = "UPDATE Usuario SET NombreUsuario=?, Nombre=?, Apellido=? WHERE NombreUsuario=?"
             db.update(sql, (final_usuario, final_nom, final_ap, pNomUsuarioOriginal))
+
+    def buscarUsuariosConFiltro(self, pNomUsuarioFiltro: str):
+        """
+        Pasos 7-16: Busca usuarios en BD, crea objetos temporales y devuelve lista de diccionarios.
+        """
+        usuarios_por_filtro = []  # Paso 9: ArrayList<Usuario>
+        diccionario_usuarios = []
+
+        # --- PASO 8: Obtener nombre de usuario explícitamente ---
+        # Llamamos al método del usuario y guardamos el resultado en una variable local
+        nomUsuario = self.usuario.getNomUsuario()
+
+        # Pasos 10-11: SQL Query
+        # Buscamos usuarios que coincidan con el filtro
+        # Y que NO sean el propio usuario (NombreUsuario != ?)
+        # Y que NO existan ya en la tabla AmigoDe (NOT EXISTS...)
+        sql = """
+              SELECT Nombre, Apellido, NombreUsuario
+              FROM Usuario
+              WHERE LOWER(NombreUsuario) LIKE ?
+                AND NombreUsuario != ?
+            AND NOT EXISTS (
+                SELECT 1 FROM AmigoDe 
+                WHERE NombreUsuario1 = ? AND NombreUsuario2 = Usuario.NombreUsuario
+            )
+            LIMIT 1000 \
+              """
+
+        # Preparamos el filtro con los comodines (%) para el LIKE
+        wildcard = f"%{pNomUsuarioFiltro.lower()}%"
+
+        # Ejecución SQL (Paso 11)
+        # AHORA USAMOS LA VARIABLE 'nomUsuario' QUE OBTUVIMOS EN EL PASO 8
+        # Orden de parámetros:
+        # 1. wildcard -> para el LIKE
+        # 2. nomUsuario -> para evitar listarse a uno mismo (NombreUsuario != ?)
+        # 3. nomUsuario -> para comprobar si ya es amigo (NombreUsuario1 = ?)
+        filas = self.db.select(sql, (wildcard, nomUsuario, nomUsuario))
+
+        # Pasos 13-17: Recorrer resultados y crear objetos
+        for fila in filas:
+            # Paso 14-16: Extraer datos de la fila (ResultSet)
+            nombre = fila['Nombre']
+            apellido = fila['Apellido']
+            nombre_usuario_bd = fila['NombreUsuario']
+
+            # Paso 17: usuariosPorFiltro.add(new Usuario(...))
+            # Creamos objetos Usuario temporales
+            u_temp = Usuario(nombre, apellido, nombre_usuario_bd, "", "", "NOVERIF", [], self.db)
+            usuarios_por_filtro.append(u_temp)
+
+            # Preparar la salida JSON (Diccionarios para Jinja2)
+            diccionario_usuarios.append({
+                "nombre": u_temp.nombre,
+                "apellido": u_temp.apellido,
+                "NombreUsuario": u_temp.nombre_usuario,
+                "es_amigo": False
+            })
+
+        return diccionario_usuarios
+
+    def aniadirAmigo(self, pNomUsuarioAmigo: str) -> bool:
+        """
+        Pasos 19-26a: Coordina la adición en memoria y luego en BD.
+        """
+        # Paso 20: Llamada a Usuario.aniadirAmigo (Memoria)
+        exito_memoria = self.usuario.aniadirAmigo(pNomUsuarioAmigo)
+
+        if exito_memoria:
+            # Paso 25a: Obtener nombre usuario actual
+            nom_usuario_actual = self.usuario.getNomUsuario()
+
+            # Paso 26a: execSQL INSERT en Base de Datos
+            sql = "INSERT INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES (?, ?)"
+            try:
+                self.db.insert(sql, (nom_usuario_actual, pNomUsuarioAmigo))
+                return True
+            except Exception as e:
+                print(f"Error al añadir amigo en BD: {e}")
+                # (Opcional) Si falla BD, se debería revertir memoria,
+                # pero seguimos el diagrama estrictamente.
+                return False
+
+        return False  # Ya era amigo o error

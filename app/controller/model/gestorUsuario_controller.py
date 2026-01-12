@@ -518,58 +518,46 @@ class gestorUsuario:
         return False  # Ya era amigo o error
 
     def precargarEquipos(self):
-        """
-        Paso 26aa: precargarEquipos
-        """
-        # Paso 27aa
         nomUsuario = self.usuario.getNomUsuario()
-        print(f"\n[DEBUG] Iniciando precarga de equipos para el usuario: {nomUsuario}")
-        # Paso 28aa: execSQL
+        # CAMBIO: Usamos LEFT JOIN para traer equipos aunque estén vacíos
         sql2 = """
-               SELECT e.numEquipo, \
-                      p.numPokemon, \
-                      p.NombreCustom, \
+               SELECT e.numEquipo,
+                      p.numPokemon,
+                      p.NombreCustom,
                       p.NombreEspecie,
-                      p.Rareza, \
-                      p.Shiny, \
-                      p.Altura, \
-                      p.Peso, \
+                      p.Rareza,
+                      p.Shiny,
+                      p.Altura,
+                      p.Peso,
                       p.Imagen
                FROM Equipo e
-                        INNER JOIN PokemonEnEquipo pe ON e.numEquipo = pe.idEquipoInterno
-                        INNER JOIN Pokemon p ON pe.idPokemon = p.numPokemon
+                        LEFT JOIN PokemonEnEquipo pe ON e.numEquipo = pe.idEquipoInterno
+                        LEFT JOIN Pokemon p ON pe.idPokemon = p.numPokemon
                WHERE e.NombreUsuario = ?
                """
-        # NOTA: Ajusta los nombres de columnas (numPokemon vs idPokemon) a tu BD real.
 
-        resultado = self.db.select(sql2, (nomUsuario,))  # Pasos 29aa
+        resultado = self.db.select(sql2, (nomUsuario,))
 
-        total_pokes = 0
-        for fila in resultado:  # Paso 30aa: next()
-            # Paso 31aa - 33aa
+        for fila in resultado:
             numEquipo = int(fila['numEquipo'])
-            nombreEspecie = fila['NombreEspecie']
-            nombreCustom = fila['NombreCustom']
 
-            # Empaquetamos datos extra para restaurar estado (necesario para Paso 36aa modificado)
-            datos_bd = {
-                "id_real": int(fila['numPokemon']),
-                "rareza": fila['Rareza'],
-                "shiny": bool(fila['Shiny']),
-                "altura": fila['Altura'],
-                "peso": fila['Peso'],
-                "imagen": fila['Imagen']
-            }
-
-            # Paso 34aa: cargarEquipo(numEquipo)
+            # 1. Siempre cargamos/creamos el equipo, tenga o no pokémon
             self.usuario.cargarEquipo(numEquipo)
 
-            # Paso 35aa: añadirPokemon (Delegamos en usuario)
-            self.usuario.añadirPokemon(nombreEspecie, nombreCustom, numEquipo, datos_bd)
-            total_pokes += 1
-            print(f"   -> [POKEMON] Añadido '{nombreCustom}' ({nombreEspecie}) al Equipo #{numEquipo}")
+            # 2. Solo intentamos añadir el Pokémon si EXISTE (si no es None por el Left Join)
+            if fila['numPokemon'] is not None:
+                nombreEspecie = fila['NombreEspecie']
+                nombreCustom = fila['NombreCustom']
 
-        print(f"[DEBUG] Fin de precarga: {total_pokes} pokemons distribuidos en los equipos de {nomUsuario}.\n")
+                datos_bd = {
+                    "id_real": int(fila['numPokemon']),
+                    "rareza": fila['Rareza'],
+                    "shiny": bool(fila['Shiny']),
+                    "altura": fila['Altura'],
+                    "peso": fila['Peso'],
+                    "imagen": fila['Imagen']
+                }
+                self.usuario.añadirPokemon(nombreEspecie, nombreCustom, numEquipo, datos_bd)
 
     def precargarAmigos(self):
         """

@@ -119,16 +119,6 @@
         <h2 class="titulo-ventana">Crear Nuevo Equipo</h2>
     </div>
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div style="padding: 20px 30px 0 30px;">
-          {% for message in messages %}
-            <div class="alerta-error">{{ message }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
-
     <div class="contenido">
         <div class="columna">
             <h3 style="margin: 0; color: #333;">Selecciona Pokémon:</h3>

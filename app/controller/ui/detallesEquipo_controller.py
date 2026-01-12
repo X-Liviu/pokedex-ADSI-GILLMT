@@ -12,7 +12,7 @@ def detalles_equipo_blueprint(db: Connection) -> Blueprint:
 
     @bp_detalles.route("/detalles-equipo/<int:num>")
     def detalles(num: int):
-        nombre_sesion = session.get('username')
+        nombre_sesion = session.get('usuario')
 
         if not nombre_sesion:
             # --- CORRECCIÓN 2: Apuntar al blueprint correcto del login ---

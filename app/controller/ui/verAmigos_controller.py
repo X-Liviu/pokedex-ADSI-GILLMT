@@ -11,7 +11,7 @@ def ver_amigos_blueprint(db: Connection):
     def ver_amigos():
         usuario_actual = session.get('usuario')
         if not usuario_actual:
-            return redirect(url_for('login.login'))
+            return redirect(url_for('identificacion.identificacion'))
 
         # NOTA: Para ver la lista completa (borrar amigo), necesitarías implementar
         # un método 'obtenerListaAmigos' o similar en MarcoDex/GestorUsuario

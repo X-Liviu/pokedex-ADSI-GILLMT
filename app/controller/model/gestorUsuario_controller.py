@@ -518,6 +518,7 @@ class gestorUsuario:
         return False  # Ya era amigo o error
 
     def precargarEquipos(self):
+        self.usuario.lista_equipos=[]
         nomUsuario = self.usuario.getNomUsuario()
         # CAMBIO: Usamos LEFT JOIN para traer equipos aunque estén vacíos
         sql2 = """
@@ -531,7 +532,7 @@ class gestorUsuario:
                       p.Peso,
                       p.Imagen
                FROM Equipo e
-                        LEFT JOIN PokemonEnEquipo pe ON e.numEquipo = pe.idEquipoInterno
+                        LEFT JOIN PokemonEnEquipo pe ON e.idEquipo = pe.idEquipoInterno
                         LEFT JOIN Pokemon p ON pe.idPokemon = p.numPokemon
                WHERE e.NombreUsuario = ?
                """

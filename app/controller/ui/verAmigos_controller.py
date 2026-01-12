@@ -26,8 +26,8 @@ def ver_amigos_blueprint(db: Connection):
     # RUTA 2: AÑADIR AMIGO (ACTUALIZADA)
     @bp_amigos.route("/aniadir_amigo", methods=['GET', 'POST'])
     def aniadir_amigo():
-        usuario_actual = session.get('usuario')
-        if not usuario_actual:
+        pNomUsuario = session.get('usuario')
+        if not pNomUsuario:
             return redirect(url_for('login.login'))
 
         mDex = MarcoDex.getMyMarcoDex(db)
@@ -39,21 +39,20 @@ def ver_amigos_blueprint(db: Connection):
 
         # 1. BÚSQUEDA
         if query:
-            usuarios_encontrados = mDex.buscarUsuariosConFiltro(usuario_actual, query)
+            usuarios_encontrados = mDex.buscarUsuariosConFiltro(pNomUsuario, query)
 
         # 2. AÑADIR (POST del botón añadir)
         if request.method == 'POST' and 'nombre_usuario_seleccionado' in request.form:
-            amigo_a_aniadir = request.form['nombre_usuario_seleccionado']
-            if amigo_a_aniadir:
-                exito = mDex.aniadirAmigo(usuario_actual, amigo_a_aniadir) #<-- AQUÍ
-
+            pNomUsuarioAmigo = request.form['nombre_usuario_seleccionado']
+            if pNomUsuarioAmigo:
+                exito = mDex.aniadirAmigo(pNomUsuario, pNomUsuarioAmigo)
                 if exito:
-                    flash(f"¡{amigo_a_aniadir} añadido a tus amigos!", "success")
+                    flash(f"¡{pNomUsuarioAmigo} añadido a tus amigos!", "success")
                     # Refrescamos la búsqueda para que desaparezca de la lista o cambie estado
                     if query:
-                        usuarios_encontrados = mDex.buscarUsuariosConFiltro(usuario_actual, query)
+                        usuarios_encontrados = mDex.buscarUsuariosConFiltro(pNomUsuario, query)
                 else:
-                    flash(f"No se pudo añadir a {amigo_a_aniadir}.", "error")
+                    flash(f"No se pudo añadir a {pNomUsuarioAmigo}.", "error")
 
         return render_template('aniadir_amigo.html', usuarios=usuarios_encontrados, busqueda=query)
 

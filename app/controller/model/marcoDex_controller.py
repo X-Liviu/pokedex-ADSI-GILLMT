@@ -1,5 +1,4 @@
 import string
-from flask import session
 
 from app.controller.model.chatbot_controller import ChatBot
 from app.controller.model.gestorPokeDex_controller import gestorPokeDex
@@ -226,7 +225,7 @@ class MarcoDex:
     def procesarBorradoUsuario(self, pNomUsuario: str):
         return gestorUsuario.borrarUsuario(pNomUsuario, self.db)
 
-    def procesarModificarDatosAdmin(self, pNomUsuario, pNombre, pAp, pNomUsuarioModif) -> bool:
+    def procesarModificarDatosAdmin(self, pNomUsuario: str, pNombre: str, pAp: str, pNomUsuarioModif: str) -> bool:
         try:
             gestorUsuario.modificarUsuarioEnMemoriaPorAdmin(pNomUsuario, pNombre, pAp, pNomUsuarioModif, self.db)
             return True
@@ -234,31 +233,22 @@ class MarcoDex:
             print(f"Error procesarModificar: {e}")
             return False
 
-    def buscarUsuariosConFiltro(self, nombre_usuario_sesion: str, pNomUsuarioFiltro: str):
+    def buscarUsuariosConFiltro(self, pNomUsuario: str, pNomUsuarioFiltro: str):
         """
         Delega en el GestorUsuario del usuario actual.
         """
-        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario_sesion, self.db)
+        gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
         if gestor:
             return gestor.buscarUsuariosConFiltro(pNomUsuarioFiltro)
         return []
 
-    def aniadirAmigo(self, pNomUsuarioAmigo: str) -> bool:
+    def aniadirAmigo(self, pNomUsuario: str, pNomUsuarioAmigo: str) -> bool:
         """
-        Cumple el Paso 18 del diagrama: 1 solo parámetro.
-        El contexto (quién es el usuario actual) se obtiene de la sesión global.
+        Delega en el GestorUsuario del usuario actual.
         """
-        # 1. Recuperamos el usuario de la sesión aquí dentro (Contexto)
-        nombre_usuario_sesion = session.get('usuario') # <-- SE HA HECHO ESTE APAÑO PARA SEGUIR EL DIAGRAMA DE SECUENCIA Y QUE SÓLO SE PASE UN PARÁMETRO a AÑADIR AMIGO
-
-        if not nombre_usuario_sesion:
-            return False
-
-        # 2. Delegamos al Gestor (Paso 19)
-        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario_sesion, self.db)
+        gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
         if gestor:
             return gestor.aniadirAmigo(pNomUsuarioAmigo)
-
         return False
 
 if __name__ == "__main__":

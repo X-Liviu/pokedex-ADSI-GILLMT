@@ -137,14 +137,15 @@ class Usuario:
     def aniadirAmigo(self, pNomUsuarioAmigo: str) -> bool:
         if not self.esAmigo(pNomUsuarioAmigo):
             nuevo_amigo = Usuario(
-                nombre="Unknown",
-                apellido="Unknown",
+                nombre="Desconocido",  # O los datos que tengas ahí
+                apellido="",
                 nombre_usuario=pNomUsuarioAmigo,
                 correo="",
                 contrasena="",
                 rol="NOVERIF",
                 lista_equipos=[],
-                db=None
+                db=self.db,
+                amigos=[]  # <--- AÑADE ESTO (o amigos=None)
             )
             self.amigos.append(nuevo_amigo)
             return True

@@ -9,7 +9,7 @@ class GestorAPI:
     """
 
     @staticmethod
-    def obtener_pokemons_iniciales() -> List[Dict[str, Any]]:
+    def cargarPokemons() -> List[Dict[str, Any]]:
         lista_datos = []
         print("--- CONECTANDO CON POKEAPI (Esto puede tardar unos segundos) ---")
 

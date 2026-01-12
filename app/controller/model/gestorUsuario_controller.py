@@ -244,8 +244,17 @@ class gestorUsuario:
         if not datos:
             return None
 
-        return Usuario(datos['nombre'], datos['apellido'], datos['usuario'],
-                       datos['correo'], datos['contrasena'], 'VERIF', [], None) #TODO revisar lo del rol por defecto de ahora
+        return Usuario(
+            datos['nombre'],
+            datos['apellido'],
+            datos['usuario'],
+            datos['correo'],
+            datos['contrasena'],
+            'VERIF',
+            [],
+            db=self.db,  # <--- AÑADIR ESTO
+            amigos=None  # Y dejar esto explícito
+        ) #TODO revisar lo del rol por defecto de ahora
 
     def modificarUsuarioEnMemoriaYBD(self, pNom: str, pAp: str, pCorreo: str, pUsuarioNuevo: str, pNuevaContra: str):
         # --- LÓGICA DE MEZCLA INTELIGENTE ---
@@ -328,17 +337,7 @@ class gestorUsuario:
         resultado = db.select(sql, ())
 
         for fila in resultado:
-            sql = """
-                  SELECT NombreUsuario1 \
-                  FROM AmigoDe \
-                  WHERE NombreUsuario2 = ?
-                  UNION
-                  SELECT NombreUsuario2 \
-                  FROM AmigoDe \
-                  WHERE NombreUsuario1 = ? \
-                  """
-            rdo = db.select(sql, (fila['Nombre'], fila['Nombre']))
-
+            # 1. Crear objeto Usuario
             nuevo_usuario = Usuario(
                 nombre=fila['Nombre'],
                 apellido=fila['Apellido'],
@@ -348,7 +347,7 @@ class gestorUsuario:
                 rol=fila['Rol'],
                 lista_equipos=[],
                 db=db,
-                amigos = rdo
+                amigos=[]
             )
 
             # 2. Añadir a la lista en memoria
@@ -488,8 +487,17 @@ class gestorUsuario:
 
             # Paso 17: usuariosPorFiltro.add(new Usuario(...))
             # Creamos objetos Usuario temporales
-            u_temp = Usuario(nombre, apellido, nombre_usuario_bd, "", "", "NOVERIF", [], self.db)
-            usuarios_por_filtro.append(u_temp)
+            u_temp = Usuario(
+                nombre,
+                apellido,
+                nombre_usuario_bd,
+                "",
+                "",
+                "NOVERIF",
+                [],
+                self.db,
+                []  # <--- AÑADE ESTA LISTA VACÍA (Argumento 'amigos')
+            )
 
             # Preparar la salida JSON (Diccionarios para Jinja2)
             diccionario_usuarios.append({

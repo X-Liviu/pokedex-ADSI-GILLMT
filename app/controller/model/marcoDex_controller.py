@@ -1,7 +1,6 @@
 import string
 
 from app.controller.model.chatbot_controller import ChatBot
-from app.controller.model.gestorPokeDex_controller import gestorPokeDex
 from app.controller.model.pokeDex_controller import PokeDex
 from app.controller.model.ranking_controller import Ranking
 from app.model.utils.custom_types import Custom_types
@@ -127,13 +126,13 @@ class MarcoDex:
         return gestorUsuario.getMyGestorUsuario(self.db).mejorPokemon(numEquipo)
 
     def obtenerEfectos(self, nombreEspecie) :
-        return gestorPokeDex.obtenerEfectos(nombreEspecie)
+        return PokeDex.obtenerEfectos(nombreEspecie)
 
     def caracteristicasPokemon(self, nombreEspecie) :
-        return gestorPokeDex.caracteristicasPokemon(nombreEspecie)
+        return PokeDex.caracteristicasPokemon(nombreEspecie)
 
     def cadenaEvolutiva(self, nombreEspecie) :
-        return gestorPokeDex.cadenaEvolutiva(nombreEspecie)
+        return PokeDex.cadenaEvolutiva(nombreEspecie)
 
     def tieneAmigos(self, usuario):
         return gestorUsuario.getMyGestorUsuario(usuario).tieneAmigos()
@@ -251,12 +250,11 @@ class MarcoDex:
     def precargaInicioApp(conn):
         """
         Método estático llamado desde __init__.py al crear la BD.
-        Recibe una conexión cruda de sqlite3 (no el wrapper Connection).
         """
         cursor = conn.cursor()
 
         # 1. Obtener datos limpios de la API
-        lista_pokemons = GestorAPI.obtener_pokemons_iniciales()
+        lista_pokemons = GestorAPI.cargarPokemons()
 
         if not lista_pokemons:
             return

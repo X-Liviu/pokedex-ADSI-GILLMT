@@ -281,10 +281,6 @@ class MarcoDex:
 
         print("Guardando datos en la Base de Datos...")
 
-        # 2. Asegurar que existe la Región (Kanto) en la tabla Pokedex
-        # Tu schema dice: Region TEXT PRIMARY KEY, Generacion TEXT
-        cursor.execute("INSERT OR IGNORE INTO Pokedex (Region, Generacion) VALUES (?, ?)", ('Kanto', 'Primera'))
-
         # Queries preparadas
         sql_especie = """
                       INSERT OR IGNORE INTO EspeciePokemon

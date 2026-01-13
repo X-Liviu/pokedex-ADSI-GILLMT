@@ -13,8 +13,7 @@ class GestorAPI:
         lista_datos = []
         print("--- CONECTANDO CON POKEAPI (Esto puede tardar unos segundos) ---")
 
-        # Vamos a cargar del 1 al 15 (Bulbasaur a Beedrill) para probar rápido.
-        # Cambia el 16 por 152 para cargar toda la primera generación.
+        # Vamos a cargar del 1 al 15 (Bulbasaur a Beedrill) para probar.
         for i in range(1, 16):
             try:
                 # 1. Obtener objeto Pokemon (stats, tipos, altura...)

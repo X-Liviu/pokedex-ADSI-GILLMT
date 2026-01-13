@@ -6,6 +6,7 @@ from flask import Flask, session, redirect, url_for
 # MAEs
 from app.controller.model.marcoDex_controller import MarcoDex
 from app.controller.model.gestorUsuario_controller import gestorUsuario
+from app.controller.model.ranking_controller import Ranking
 
 # Blueprints
 from app.controller.ui.chatbot_controller import chatbot_blueprint
@@ -142,6 +143,7 @@ def create_app(setup_database_once):
     """
     # 1. Limpieza de memoria (Singletons)
     MarcoDex.myMarcoDex = None
+    Ranking.myRanking = None # Lo necesito hacer para que mi test funcione
     gestorUsuario._instancias_usuarios = {}
     gestorUsuario.listaUsuariosParaAdmin = []
 

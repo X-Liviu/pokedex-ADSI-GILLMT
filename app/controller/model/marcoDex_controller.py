@@ -137,14 +137,11 @@ class MarcoDex:
             # Paso 14aa: Cargar datos globales (Pokedex)
             # Respetamos que precargarDatos() sea void y sin argumentos.
             self.precargarDatos()
-
             # Recuperamos el gestor del usuario actual para cargar sus datos privados
             gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
             if gestor:
-                # Paso 26aa: Precargar Equipos del usuario
+                print("hay gestor")
                 gestor.precargarEquipos()
-
-                # Paso 38aa: Precargar Amigos del usuario
                 gestor.precargarAmigos()
 
         return exito

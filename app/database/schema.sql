@@ -95,8 +95,9 @@ CREATE TABLE AmigoDe (
     NombreUsuario1 TEXT,
     NombreUsuario2 TEXT,
     PRIMARY KEY (NombreUsuario1, NombreUsuario2),
-    FOREIGN KEY (NombreUsuario1) REFERENCES Usuario(NombreUsuario),
-    FOREIGN KEY (NombreUsuario2) REFERENCES Usuario(NombreUsuario)
+    -- Añadimos ON UPDATE CASCADE y ON DELETE CASCADE (opcional, para borrar amigos si se borra el usuario)
+    FOREIGN KEY (NombreUsuario1) REFERENCES Usuario(NombreUsuario) ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (NombreUsuario2) REFERENCES Usuario(NombreUsuario) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 -- 10. Publica

@@ -42,7 +42,7 @@ class Especie:
             "tipos": self.tipos,
             "imagen": self.imagen
         }
-        return datos
+        return json.dumps(datos, indent=4)
 
     def cadenaEvolutiva(self):
         if (len(self.preevoluciones) == 0) & (len(self.evoluciones) == 0):

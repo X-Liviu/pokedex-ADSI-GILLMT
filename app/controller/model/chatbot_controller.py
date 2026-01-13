@@ -7,17 +7,14 @@ class ChatBot: pass
 class ChatBot :
 
     myChatBot: ChatBot = None
-    def __init__(self, db: Connection):
-        if ChatBot.myChatBot == None:
-            self.db: Connection = db
-            ChatBot.myChatBot = self
-        else:
-            raise Custom_types.SingletonError()
+    def __init__(self):
+        self.db = Connection()
+
 
     @classmethod
-    def getChatBot(cls, db: Connection) -> ChatBot:
-        if cls.myChatBot == None:
-            ChatBot(db)
+    def getChatBot(cls, db=None):
+        if cls.myChatBot is None:
+            cls.myChatBot = ChatBot()
         return cls.myChatBot
 
     def mostrarOpciones(self) :

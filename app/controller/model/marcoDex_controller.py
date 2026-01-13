@@ -97,8 +97,8 @@ class MarcoDex:
     def mostrarOpciones(self):
         return ChatBot.getChatBot(self.db).mostrarOpciones()
 
-    def mejorPokemon(self, numEquipo):
-        return gestorUsuario.getMyGestorUsuario(self.db).mejorPokemon(numEquipo)
+    def mejorPokemon(self, nombre_usuario, numEquipo):
+        return gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db).mejorPokemon(numEquipo)
 
     def obtenerEfectos(self, nombreEspecie) :
         return PokeDex.obtenerEfectos(nombreEspecie)

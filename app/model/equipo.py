@@ -102,7 +102,7 @@ class Equipo:
         elPokemon = self.lista_pokemon[0]
         for Pokemon in range(1, len(self.lista_pokemon)):
             if max <= Pokemon.rareza:
-                rareza = Pokemon.rareza
+                max = Pokemon.rareza
                 elPokemon = Pokemon
         return elPokemon.getInfo()
 

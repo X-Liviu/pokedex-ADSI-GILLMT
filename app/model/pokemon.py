@@ -24,8 +24,7 @@ class Pokemon:
             "especie": self.especie,
             "imagen": self.imagen
         }
-        return datos
-        #return json.dumps(datos, indent=4)
+        return json.dumps(datos, indent=4)
 
     def clonarPokemon(self):
         return Pokemon(

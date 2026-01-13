@@ -2,169 +2,50 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ChatBot</title>
+    <title>Chatbot Pokémon</title>
     <style>
-        :root {
-            --window-border: #000;
-            --header-pink: #ff79c6;
-            --bg-white: #ffffff;
-            --input-gray: #d9d9d9;
-        }
-
-        body {
-            background-color: #f0f0f0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-        }
-
-        /* Estructura de la ventana principal */
-        .window {
-            width: 600px;
-            height: 550px;
-            background-color: var(--bg-white);
-            border: 3px solid var(--window-border);
-            border-radius: 25px;
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-        }
-
-        /* Cabecera Rosa (Imagen original) */
-        .window-header {
-            background-color: var(--header-pink);
-            height: 45px;
-            border-bottom: 3px solid var(--window-border);
-            display: flex;
-            align-items: center;
-            padding-left: 20px;
-            flex-shrink: 0;
-        }
-
-        .dot {
-            width: 15px; height: 15px; border-radius: 50%;
-            margin-right: 10px; border: 2.5px solid #000;
-        }
-        .dot-red { background: #ff5f56; }
-        .dot-yellow { background: #ffbd2e; }
-        .dot-green { background: #27c93f; }
-
-        /* Contenedor de mensajes */
-        .chat-content {
-            flex: 1;
-            padding: 25px;
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background-color: white;
-        }
-
-        .msg-bot {
-            align-self: flex-start;
-            color: #000;
-            font-size: 1.1em;
-            line-height: 1.5;
-            max-width: 90%;
-        }
-
-        .msg-user {
-            align-self: flex-end;
-            background-color: #f2f2f2;
-            padding: 8px 18px;
-            border-radius: 20px;
-            border: 2px solid #333;
-            font-weight: bold;
-            max-width: 75%;
-        }
-
-        /* Barra de entrada inferior */
-        .input-form {
-            padding: 20px;
-            background-color: white;
-            border-top: 1px solid #eee;
-        }
-
-        .input-container {
-            background-color: var(--input-gray);
-            border-radius: 30px;
-            display: flex;
-            align-items: center;
-            padding: 5px 20px;
-            border: 3px solid #000;
-        }
-
-        input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            outline: none;
-            padding: 10px;
-            font-size: 18px;
-            color: #000;
-        }
-
-        .send-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .send-icon {
-            width: 30px;
-            height: 30px;
-            fill: #000;
-        }
-
-        hr { width: 100%; border: 0; border-top: 2px solid #eee; margin: 10px 0; }
+        :root { --pink: #ff79c6; --gray: #d9d9d9; --border: #000; }
+        body { background: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
+        .window { width: 600px; height: 550px; background: #fff; border: 3px solid var(--border); border-radius: 25px; display: flex; flex-direction: column; overflow: hidden; }
+        .window-header { background: var(--pink); height: 45px; border-bottom: 3px solid var(--border); display: flex; align-items: center; padding-left: 20px; }
+        .dot { width: 15px; height: 15px; border-radius: 50%; margin-right: 10px; border: 2.5px solid #000; }
+        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
+        .chat-content { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .msg-bot { align-self: flex-start; width: 90%; }
+        .msg-user { align-self: flex-end; background: #eee; padding: 8px 15px; border-radius: 15px; border: 2px solid #333; font-weight: bold; }
+        .input-form { padding: 20px; }
+        .input-container { background: var(--gray); border-radius: 30px; border: 3px solid #000; display: flex; align-items: center; padding: 5px 20px; }
+        input { flex: 1; background: transparent; border: none; outline: none; padding: 10px; font-size: 18px; }
+        button { background: none; border: none; cursor: pointer; }
+        hr { border: 0; border-top: 2px solid #eee; margin: 10px 0; }
+        pre { white-space: pre-wrap; word-wrap: break-word; } /* Para que el JSON largo no rompa la caja */
     </style>
 </head>
 <body>
-
-<div class="window">
-    <div class="window-header">
-        <div class="dot dot-red"></div>
-        <div class="dot dot-yellow"></div>
-        <div class="dot dot-green"></div>
-    </div>
-
-    <div class="chat-content" id="chatBox">
-        {% for mensaje in historial %}
-            <div class="msg-{{ mensaje.role }}">
-                {{ mensaje.content | safe }}
-            </div>
-            {% if mensaje.separador %}
-                <hr>
-            {% endif %}
-        {% endfor %}
-    </div>
-
-    <form class="input-form" method="POST" action="{{ url_for('chatbot.chatbot_view') }}">
-        <div class="input-container">
-            <input type="text" name="mensaje" autocomplete="off" autofocus>
-            <button type="submit" class="send-btn">
-                <svg class="send-icon" viewBox="0 0 24 24">
-                    <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" />
-                </svg>
-            </button>
+    <div class="window">
+        <div class="window-header">
+            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
         </div>
-    </form>
-</div>
-
-<script>
-    // Mantener siempre el scroll al final al cargar mensajes
-    window.onload = function() {
-        var chatBox = document.getElementById('chatBox');
-        chatBox.scrollTop = chatBox.scrollHeight;
-    };
-</script>
-
+        <div class="chat-content" id="chatBox">
+            {% for mensaje in historial %}
+                <div class="msg-{{ mensaje.role }}">{{ mensaje.content | safe }}</div>
+                {% if mensaje.separador %}<hr>{% endif %}
+            {% endfor %}
+        </div>
+        <form class="input-form" method="POST" action="{{ url_for('chatbot.chatbot_view') }}">
+            <div class="input-container">
+                <input type="text" name="mensaje" autocomplete="off" autofocus>
+                <button type="submit">
+                    <svg width="28" height="28" viewBox="0 0 24 24"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/></svg>
+                </button>
+            </div>
+        </form>
+    </div>
+    <script>
+        window.onload = function() {
+            var cb = document.getElementById('chatBox');
+            cb.scrollTop = cb.scrollHeight;
+        };
+    </script>
 </body>
 </html>

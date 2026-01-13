@@ -10,6 +10,7 @@ class Connection:
             Config.DB_PATH,
             check_same_thread=False
         )
+        self.connection.execute("PRAGMA foreign_keys = ON")
         self.connection.row_factory = sqlite3.Row
         self.__initialized = True
 

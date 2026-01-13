@@ -79,7 +79,8 @@ CREATE TABLE Equipo (
     idEquipo INTEGER PRIMARY KEY AUTOINCREMENT,
     numEquipo INTEGER,
     NombreUsuario TEXT,
-    FOREIGN KEY (NombreUsuario) REFERENCES Usuario(NombreUsuario)
+    -- AÑADIR ON UPDATE CASCADE AQUÍ:
+    FOREIGN KEY (NombreUsuario) REFERENCES Usuario(NombreUsuario) ON UPDATE CASCADE
 );
 
 -- 8. Tabla: Opción Chatbot
@@ -106,7 +107,8 @@ CREATE TABLE Publica (
     FechaHora DATETIME,
     Contenido TEXT,
     PRIMARY KEY (NombreUsuario, FechaHora),
-    FOREIGN KEY (NombreUsuario) REFERENCES Usuario(NombreUsuario)
+    -- AÑADIR ON UPDATE CASCADE AQUÍ:
+    FOREIGN KEY (NombreUsuario) REFERENCES Usuario(NombreUsuario) ON UPDATE CASCADE
 );
 
 -- 11. PokemonEnEquipo

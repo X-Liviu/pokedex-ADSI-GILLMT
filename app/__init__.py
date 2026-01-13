@@ -51,6 +51,7 @@ def init_db():
     if not os.path.exists(Config.DB_PATH):
         print("No se encontró base de datos. Creando nueva desde schema.sql...")
         conn = sqlite3.connect(Config.DB_PATH)
+        conn.execute("PRAGMA foreign_keys = ON")
 
         try:
             # 1. Crear las tablas

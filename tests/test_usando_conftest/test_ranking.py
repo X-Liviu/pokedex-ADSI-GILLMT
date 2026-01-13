@@ -14,5 +14,5 @@ def test_ranking(client):
 
     respuesta = client.get("/perfil_usuario/GaryOak")
 
-    print(respuesta.data)
+    assert b"Eres" in respuesta.data
 

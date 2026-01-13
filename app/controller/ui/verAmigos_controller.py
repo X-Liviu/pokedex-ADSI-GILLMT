@@ -13,14 +13,11 @@ def ver_amigos_blueprint(db: Connection):
         if not usuario_actual:
             return redirect(url_for('identificacion.identificacion'))
 
-        # NOTA: Para ver la lista completa (borrar amigo), necesitarías implementar
-        # un método 'obtenerListaAmigos' o similar en MarcoDex/GestorUsuario
-        # que rellene la lista memoria desde BD si está vacía.
-        # Por ahora lo dejamos como estaba en tu código original.
         marco = MarcoDex.getMyMarcoDex(db)
-        # Asumimos que tienes un método para obtener lista (no pedido en este prompt)
-        # lista_amigos = marco.obtenerListaAmigos(usuario_actual)
-        lista_amigos = []
+
+        # IMPLEMENTACIÓN: Llamamos al método que devuelve la lista de diccionarios
+        lista_amigos = marco.obtenerListaAmigos(usuario_actual)
+
         return render_template('ver_amigos.html', amigos=lista_amigos)
 
     # RUTA 2: AÑADIR AMIGO (ACTUALIZADA)
@@ -28,7 +25,7 @@ def ver_amigos_blueprint(db: Connection):
     def aniadir_amigo():
         pNomUsuario = session.get('usuario')
         if not pNomUsuario:
-            return redirect(url_for('login.login'))
+            return redirect(url_for('identificacion.identificacion'))
 
         mDex = MarcoDex.getMyMarcoDex(db)
         usuarios_encontrados = []
@@ -56,10 +53,26 @@ def ver_amigos_blueprint(db: Connection):
 
         return render_template('aniadir_amigo.html', usuarios=usuarios_encontrados, busqueda=query)
 
-    # RUTA 3: BORRAR AMIGO (Sin cambios por ahora)
+    # RUTA 3: BORRAR AMIGO (IMPLEMENTADA)
     @bp_amigos.route("/borrar_amigo", methods=['POST'])
     def borrar_amigo():
-        # ... (Tu implementación de borrado) ...
+        usuario_actual = session.get('usuario')
+        if not usuario_actual:
+            return redirect(url_for('identificacion.identificacion'))
+
+        # Obtenemos el nombre del amigo desde el formulario oculto en el HTML
+        nombre_amigo = request.form.get('nombre_amigo')
+
+        if nombre_amigo:
+            marco = MarcoDex.getMyMarcoDex(db)
+
+            # Pasos 4 a 11 del diagrama ocurren aquí dentro
+            # Aunque devuelve la lista JSON, al ser una petición web normal,
+            # redirigimos a la vista principal para repintar
+            marco.procesarBorradoAmigo(nombre_amigo, usuario_actual)
+
+            flash(f"Amigo {nombre_amigo} eliminado.", "success")
+
         return redirect(url_for('amigos.ver_amigos'))
 
     return bp_amigos

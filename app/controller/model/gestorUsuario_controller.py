@@ -628,3 +628,44 @@ class gestorUsuario:
             self.usuario.cargarAmigo(amigoNuevo)
             print(
                 f"DEBUG: Usuario {self.usuario.nombre_usuario} cargado con {len(self.usuario.amigos)} amigos en memoria.")
+
+    def obtenerListaAmigos(self):
+        """
+        Método auxiliar necesario para que la interfaz pueda pintar la lista.
+        Devuelve una lista de diccionarios (JSON-like).
+        """
+        lista_diccionarios = []
+        if self.usuario.amigos:
+            for amigo in self.usuario.amigos:
+                lista_diccionarios.append({
+                    "nombre": amigo.nombre,
+                    "apellido": amigo.apellido,
+                    "nombre_usuario": amigo.nombre_usuario,
+                    # Puedes añadir más campos si la vista lo requiere
+                })
+        return lista_diccionarios
+
+    def borrarAmigo(self, pNomUsuarioAmigo: str):
+        """
+        Paso 5 del flujo.
+        1. Elimina de memoria (Usuario).
+        2. Elimina de BD.
+        3. Retorna la lista actualizada de amigos (en formato Diccionario/JSON).
+        """
+        # Paso 6: Llamada a Usuario.borrarAmigo
+        usuario_borrado = self.usuario.borrarAmigo(pNomUsuarioAmigo)
+
+        if usuario_borrado:
+            # Paso 10: Obtener mi nombre de usuario
+            mi_nombre = self.usuario.getNomUsuario()
+
+            # Paso 11: execSQL (DELETE)
+            sql = "DELETE FROM AmigoDe WHERE NombreUsuario1 = ? AND NombreUsuario2 = ?"
+            try:
+                self.db.delete(sql, (mi_nombre, pNomUsuarioAmigo))
+                print(f"Amigo {pNomUsuarioAmigo} eliminado de BD correctamente.")
+            except Exception as e:
+                print(f"Error borrando amigo de BD: {e}")
+
+        # Retorno solicitado: JSON (Lista de diccionarios actualizada)
+        return self.obtenerListaAmigos()

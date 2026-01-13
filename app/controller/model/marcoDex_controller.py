@@ -320,5 +320,24 @@ class MarcoDex:
         conn.commit()
         print(f"¡Base de datos poblada con {len(lista_pokemons)} especies nuevas!")
 
+    def obtenerListaAmigos(self, nombre_usuario: str):
+        """
+        Necesario para el paso 2 (Ver Amigos) del flujo general.
+        """
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)
+        if gestor:
+            return gestor.obtenerListaAmigos()
+        return []
+
+    def procesarBorradoAmigo(self, pNomUsuarioAmigo: str, nombre_usuario_actual: str):
+        """
+        Paso 4 del flujo.
+        Delega en el GestorUsuario y retorna la lista actualizada.
+        """
+        gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario_actual, self.db)
+        if gestor:
+            return gestor.borrarAmigo(pNomUsuarioAmigo)
+        return []
+
 if __name__ == "__main__":
     pass

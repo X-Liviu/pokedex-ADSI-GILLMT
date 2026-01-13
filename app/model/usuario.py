@@ -180,3 +180,27 @@ class Usuario:
         # Verificamos duplicados por si acaso
         if not any(a.nombre_usuario == amigoNuevo.nombre_usuario for a in self.amigos):
             self.amigos.append(amigoNuevo)
+
+    def buscarAmigo(self, pNomUsuarioAmigo: str):
+        """
+        Paso 7: Busca el objeto Usuario en la lista de amigos local.
+        """
+        for amigo in self.amigos:
+            if amigo.getNomUsuario() == pNomUsuarioAmigo:
+                return amigo
+        return None
+
+    def borrarAmigo(self, pNomUsuarioAmigo: str):
+        """
+        Paso 6: Orquesta la búsqueda y eliminación en memoria.
+        Retorna el objeto Usuario borrado (o None).
+        """
+        # Paso 7
+        amigoABorrar = self.buscarAmigo(pNomUsuarioAmigo)
+
+        if amigoABorrar:
+            # Paso 9: amigos.remove(amigoABorrar)
+            self.amigos.remove(amigoABorrar)
+            return amigoABorrar
+
+        return None

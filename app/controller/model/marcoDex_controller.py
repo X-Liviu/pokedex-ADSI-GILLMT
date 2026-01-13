@@ -157,7 +157,7 @@ class MarcoDex:
         resultado = self.db.select(sql, ())  # Pasos 16aa
 
         mi_pokedex = PokeDex.get_instance()
-
+        mi_pokedex.reiniciarPokedex()
         # Paso 17aa: Recorrer resultados
         for fila in resultado:
             # Pasos 18aa - 23aa: Obtener datos

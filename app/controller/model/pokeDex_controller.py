@@ -120,3 +120,10 @@ class PokeDex:
             preevoluciones=[]    # Argumento requerido por Especie.__init__
         )
         self.listaEspecies.append(nueva_especie)
+
+    def reiniciarPokedex(self):
+        """
+        Vacía la lista de especies para evitar duplicados al recargar datos.
+        """
+        self.listaEspecies = []
+        print("[DEBUG] Pokedex reiniciada (Memoria limpia).")

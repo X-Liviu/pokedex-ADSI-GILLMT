@@ -1,14 +1,13 @@
 import pytest
 import os
 import sqlite3
-
-from flask import Flask, session, redirect, url_for, make_response
+from flask import Flask, session, redirect, url_for
 
 # MAEs
 from app.controller.model.marcoDex_controller import MarcoDex
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 
-# Custom UI
+# Blueprints
 from app.controller.ui.chatbot_controller import chatbot_blueprint
 from app.controller.ui.verRanking_controller import ranking_blueprint
 from app.controller.ui.changelog_controller import changelog_blueprint
@@ -21,30 +20,45 @@ from app.controller.ui.verAmigos_controller import ver_amigos_blueprint
 from app.controller.ui.modificarDatos_controller import modificar_datos_blueprint
 from app.controller.ui.identificacion_controller import identificacion_blueprint
 from app.controller.ui.registrarse_controller import registrarse_blueprint
-from app.controller.ui.confirmarContrasena_controller import confirmar_contrasena_blueprint
 from app.controller.ui.verListaUsuarios_controller import ver_lista_usuarios_blueprint
+from app.controller.ui.confirmarContrasena_controller import confirmar_contrasena_blueprint
 from app.controller.ui import menu_principal_controller
 
-# Se especifican las rutas que estan en root, no queremos que el directorio tests sea root
-ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
-TEMPLATES_DIR = os.path.join(ROOT_DIR, "app", "templates")
-STATIC_DIR = os.path.join(ROOT_DIR, "app", "static")
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+# Rutas
+PROJECT_ROOT = os.getcwd()
+TEMPLATES_DIR = os.path.join(PROJECT_ROOT, "app", "templates")
+STATIC_DIR = os.path.join(PROJECT_ROOT, "app", "static")
+# Usamos un nombre fijo para la BD de test. NO LA BORRAREMOS si ya tiene datos.
+DB_PATH = os.path.join(PROJECT_ROOT, "ranking_test_optimized.sqlite")
+
+# Usuarios originales del schema.sql que NO debemos borrar
+SEED_USERS = [
+    'LiviuX', 'TataX', 'GorkaX', 'LauraX', 'MarcoX', 'IkerX',
+    'AshKetchum', 'GaryOak', 'Misty', 'Brock'
+]
+
 
 class Config:
-    DB_PATH = os.path.join(BASE_DIR, "ranking_test.sqlite")
+    DB_PATH = DB_PATH
     SECRET_KEY = "test_ranking"
+    TESTING = True
+
 
 class Connection:
-
     def __init__(self):
-        self.connection = sqlite3.connect(
-            Config.DB_PATH,
-            check_same_thread=False
-        )
+        self.connection = sqlite3.connect(Config.DB_PATH, check_same_thread=False)
         self.connection.row_factory = sqlite3.Row
-        self.__initialized = True
+        # Activamos Foreign Keys para que funcione el ON DELETE CASCADE si existe
+        self.connection.execute("PRAGMA foreign_keys = ON")
 
+    def execute(self, sentence, parameters=None):
+        cursor = self.connection.cursor()
+        if parameters:
+            cursor.execute(sentence, parameters)
+        else:
+            cursor.execute(sentence)
+        self.connection.commit()
+        return cursor
 
     def select(self, sentence, parameters=None):
         cursor = self.connection.cursor()
@@ -63,12 +77,9 @@ class Connection:
         else:
             cursor.execute(sentence)
         self.connection.commit()
-
-        # ESTO ES LO QUE FALTA: Capturamos el ID generado
         last_id = cursor.lastrowid
-
         cursor.close()
-        return last_id  # Devolvemos el ID para usarlo en las otras tablas
+        return last_id
 
     def update(self, sentence, parameters=None):
         cursor = self.connection.cursor()
@@ -79,7 +90,6 @@ class Connection:
         self.connection.commit()
         cursor.close()
 
-
     def delete(self, sentence, parameters=None):
         cursor = self.connection.cursor()
         if parameters:
@@ -89,56 +99,58 @@ class Connection:
         self.connection.commit()
         cursor.close()
 
+    def close(self):
+        self.connection.close()
 
-def init_db():
+
+@pytest.fixture(scope="session")
+def setup_database_once():
     """
-    Importa la estructura del archivo .sql
-    SOLO si la base de datos no existe aun.
+    Esta fixture se ejecuta UNA SOLA VEZ por toda la sesión de pruebas.
+    Se encarga de crear la BD y cargar la API solo si no existe.
     """
-    print("Verificando base de datos...")
+    if os.path.exists(Config.DB_PATH):
+        print("\n[INFO] Base de datos encontrada. Usando caché (NO se descarga API).")
+        return
 
-    # Si el archivo NO existe, lo creamos
-    if not os.path.exists(Config.DB_PATH):
-        print("No se encontró base de datos. Creando nueva desde schema.sql...")
-        conn = sqlite3.connect(Config.DB_PATH)
+    print("\n[INFO] Creando Base de Datos desde cero y descargando API...")
+    conn = sqlite3.connect(Config.DB_PATH)
+    try:
+        schema_path = os.path.join(PROJECT_ROOT, 'app', 'database', 'schema.sql')
+        with open(schema_path, encoding='utf-8') as f:
+            conn.executescript(f.read())
 
-        try:
-            # 1. Crear las tablas
-            with open('app/database/schema.sql', encoding='utf-8') as f:
-                conn.executescript(f.read())
+        # Carga de la API (Esto es lo lento)
+        MarcoDex.precargaInicioApp(conn)
+        print("[INFO] Carga inicial completada.")
+    except Exception as e:
+        print(f"[ERROR] Fallo inicializando BD: {e}")
+        # Si falla, borramos el archivo corrupto
+        conn.close()
+        if os.path.exists(Config.DB_PATH):
+            os.remove(Config.DB_PATH)
+        raise e
+    finally:
+        conn.close()
 
-            # 2. CARGA AUTOMÁTICA DE LA API
-            # Pasamos la conexión para que MarcoDex la use antes de cerrarla
-            print("Tablas creadas. Llamando a MarcoDex para poblar datos...")
-            MarcoDex.precargaInicioApp(conn)
-
-            print("Base de datos creada e inicializada exitosamente.")
-
-        except Exception as e:
-            print(f"Error crítico inicializando BD: {e}")
-        finally:
-            conn.close()
-    else:
-        # Si YA existe, no hacemos nada para no borrar los datos
-        print("La base de datos ya existe. Iniciando sin sobrescribir.")
 
 @pytest.fixture()
-def create_app():
-    app = Flask(__name__,
-                template_folder=TEMPLATES_DIR,
-                static_folder=STATIC_DIR
-    )
+def create_app(setup_database_once):
+    """
+    Esta fixture se ejecuta POR CADA TEST.
+    Crea la app, conecta a la BD existente y limpia los datos al terminar.
+    """
+    # 1. Limpieza de memoria (Singletons)
+    MarcoDex.myMarcoDex = None
+    gestorUsuario._instancias_usuarios = {}
+    gestorUsuario.listaUsuariosParaAdmin = []
+
+    app = Flask(__name__, template_folder=TEMPLATES_DIR, static_folder=STATIC_DIR)
     app.config.from_object(Config)
 
-    app.config['PROPAGATE_EXCEPTIONS'] = True
-
-    # Inicializar base de datos
-    init_db()
-
-    # Crear conexión a la base de datos (Objeto Connection wrapper)
     db = Connection()
 
-    # Blueprints
+    # Registro de Blueprints
     app.register_blueprint(ranking_blueprint(db))
     app.register_blueprint(ver_equipos_blueprint(db))
     app.register_blueprint(detalles_equipo_blueprint(db))
@@ -156,25 +168,38 @@ def create_app():
 
     @app.route('/')
     def index():
-        # 1. Protección de ruta (Si no hay usuario, fuera)
         if 'usuario' not in session:
             return redirect(url_for('identificacion.identificacion'))
 
         if gestorUsuario.getMyGestorUsuario(session['usuario']) is None:
             gestorUsuario.cargarUsuario(session['usuario'], db)
 
-        # 2. Generamos el HTML del menú
-        html_content = menu_principal_controller.mostrar_menu()
+        return menu_principal_controller.mostrar_menu()
 
-        # Evitar caché del navegador
-        respuesta = make_response(html_content)
-        respuesta.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-        respuesta.headers["Pragma"] = "no-cache"
-        respuesta.headers["Expires"] = "0"
-
-        return respuesta
-
+    # Entrega la app al test
     yield app
+
+    # --- TEARDOWN (Limpieza después del test) ---
+    # Borramos cualquier usuario que NO esté en la lista original (SEED_USERS)
+    # Esto elimina 'NuevoUser123', 'Impostor', etc., dejando la BD lista para el siguiente test.
+
+    placeholders = ','.join(['?'] * len(SEED_USERS))
+
+    try:
+        # Borramos primero de tablas dependientes por si acaso no hay CASCADE
+        # 1. Equipos de usuarios nuevos
+        db.execute(f"DELETE FROM Equipo WHERE NombreUsuario NOT IN ({placeholders})", tuple(SEED_USERS))
+        # 2. Publicaciones de usuarios nuevos
+        db.execute(f"DELETE FROM Publica WHERE NombreUsuario NOT IN ({placeholders})", tuple(SEED_USERS))
+        # 3. Finalmente el Usuario
+        db.execute(f"DELETE FROM Usuario WHERE NombreUsuario NOT IN ({placeholders})", tuple(SEED_USERS))
+
+        # print("Limpieza de BD realizada correctamente.")
+    except Exception as e:
+        print(f"Error en limpieza de BD: {e}")
+
+    db.close()
+
 
 @pytest.fixture()
 def client(create_app):

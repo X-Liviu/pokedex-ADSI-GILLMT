@@ -29,7 +29,7 @@ def test_2_2_login_usuario_vacio(client):
     """
     CU: Iniciar sesión (2.2)
     Campo usuario vacío.
-    Resultado esperado: Aviso de usuario vacío (o incorrecto).
+    Resultado esperado: Aviso de rellenar campos (Validación previa).
     """
     datos_login = {
         'usuario': '',
@@ -37,16 +37,18 @@ def test_2_2_login_usuario_vacio(client):
     }
     respuesta = client.post('/identificacion', data=datos_login, follow_redirects=True)
 
-    # El controlador actual probablemente flash "Usuario o contraseña incorrectos"
-    # al no encontrar al usuario vacío en la BD.
-    assert b"Usuario o contrase\xc3\xb1a incorrectos" in respuesta.data
+    # ACTUALIZADO: Buscamos el mensaje de validación, no el de error de BD
+    # Nota: Flask a veces escapa caracteres, asegúrate de que el texto coincida exactamente
+    # o busca una parte clave del mensaje.
+    mensaje_esperado = "No se permite inicio de sesión con campos vacíos."
+    assert mensaje_esperado.encode('utf-8') in respuesta.data
 
 
 def test_2_3_login_contrasena_vacia(client):
     """
     CU: Iniciar sesión (2.3)
     Campo contraseña vacía.
-    Resultado esperado: Aviso de contraseña vacía (o incorrecto).
+    Resultado esperado: Aviso de rellenar campos.
     """
     datos_login = {
         'usuario': 'AshKetchum',
@@ -54,7 +56,9 @@ def test_2_3_login_contrasena_vacia(client):
     }
     respuesta = client.post('/identificacion', data=datos_login, follow_redirects=True)
 
-    assert b"Usuario o contrase\xc3\xb1a incorrectos" in respuesta.data
+    # ACTUALIZADO
+    mensaje_esperado = "No se permite inicio de sesión con campos vacíos."
+    assert mensaje_esperado.encode('utf-8') in respuesta.data
 
 
 def test_2_4_login_usuario_incorrecto_contra_correcta(client):

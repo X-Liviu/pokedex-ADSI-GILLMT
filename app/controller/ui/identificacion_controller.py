@@ -19,7 +19,7 @@ def identificacion_blueprint(db: Connection) -> Blueprint:
             # --- VALIDACIÓN PREVIA ---
             # Verificamos que los datos hayan llegado antes de molestar a la BD
             if not pNomUsuario or not pContrasena:
-                flash("Por favor, rellene todos los campos.")
+                flash("No se permite inicio de sesión con campos vacíos.")
                 return render_template('pantalla_inicial.html')
 
             try:

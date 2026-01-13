@@ -1,6 +1,4 @@
 import pytest
-from flask import session, url_for
-from app.database.connection import Connection # Necesario importar para el monkeypatch
 from app.controller.model.gestorUsuario_controller import gestorUsuario #Necesario para poder borrar objetos en memoria para probar que la BD falla en el test 2.10
 
 #TESTS DE LIVIU

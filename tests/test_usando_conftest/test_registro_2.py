@@ -1,5 +1,5 @@
 import pytest
-from flask import session
+from app.controller.model.gestorUsuario_controller import gestorUsuario
 
 #TESTS DE LIVIU
 def test_1_1_registro_exitoso(client):
@@ -118,3 +118,71 @@ def test_1_8_registro_contrasenas_diferentes(client):
 
     # Tu controlador actual valida esto llamando al modelo, que devuelve -1
     assert b"Error: Las contrase\xc3\xb1as no coinciden." in respuesta.data
+
+
+def test_1_12_registro_reiterado(client):
+    """
+    CU: Registrarse (1.12)
+    El usuario se registra correctamente, pero luego intenta registrarse
+    de nuevo con los mismos datos.
+    """
+    datos_reiterados = {
+        'nombre': 'Reiterado',
+        'apellido': 'User',
+        'correo': 'reiterado@test.com',
+        'usuario': 'Reiterado123',
+        'contrasena': '123456',
+        'contrasena_rep': '123456'
+    }
+
+    # 1. Primer intento: Debe ser exitoso
+    resp_exito = client.post('/registrarse', data=datos_reiterados, follow_redirects=True)
+    assert resp_exito.status_code == 200
+
+    # Comprobamos que nos ha logueado automáticamente
+    with client.session_transaction() as sess:
+        assert sess['usuario'] == 'Reiterado123'
+
+    # 2. IMPORTANTE: Cerramos sesión para simular que vuelve a intentar registrarse limpio
+    # Si no hacemos esto, dependiendo de la lógica, podría redirigir al index por estar ya logueado.
+    with client.session_transaction() as sess:
+        sess.clear()
+
+    # 3. Segundo intento: Mismos datos -> Debe fallar por duplicado
+    resp_fallo = client.post('/registrarse', data=datos_reiterados, follow_redirects=True)
+
+    # Verificamos mensaje de error (Error -2)
+    assert b"Error: El nombre de usuario o el correo ya est\xc3\xa1n en uso." in resp_fallo.data
+
+
+def test_1_13_registro_fallo_sistema(client, monkeypatch):
+    """
+    CU: Registrarse (1.13)
+    Simulamos caída de Base de Datos usando monkeypatch (Igual que el test 2.10).
+    """
+    datos_fallo = {
+        'nombre': 'Fallo',
+        'apellido': 'System',
+        'correo': 'fallo@sys.com',
+        'usuario': 'FalloSys',
+        'contrasena': '1234',
+        'contrasena_rep': '1234'
+    }
+
+    # 1. Definimos la función que simula el error
+    def mock_registrar_fallido(*args, **kwargs):
+        raise Exception("Simulación: Base de datos caída durante registro")
+
+    # 2. Aplicamos el parche.
+    # MarcoDex.procesarRegistro llama a gestorUsuario.registrarUsuario.
+    # Al romper este último, la excepción subirá hasta el controlador.
+    monkeypatch.setattr(gestorUsuario, "registrarUsuario", mock_registrar_fallido)
+
+    # 3. Ejecutamos la petición
+    respuesta = client.post('/registrarse', data=datos_fallo, follow_redirects=True)
+
+    # 4. Verificaciones
+    assert respuesta.status_code == 200  # La página carga, no explota (Error 500)
+
+    # Buscamos el mensaje que pusimos en el 'except' del controlador actualizado
+    assert b"Error cr\xc3\xadtico: Fallo en el sistema." in respuesta.data

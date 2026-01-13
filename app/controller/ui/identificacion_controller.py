@@ -13,8 +13,14 @@ def identificacion_blueprint(db: Connection) -> Blueprint:
             return redirect(url_for('index'))
 
         if request.method == 'POST':
-            pNomUsuario = request.form['usuario']
-            pContrasena = request.form['contrasena']
+            pNomUsuario = request.form.get('usuario')
+            pContrasena = request.form.get('contrasena')
+
+            # --- VALIDACIÓN PREVIA ---
+            # Verificamos que los datos hayan llegado antes de molestar a la BD
+            if not pNomUsuario or not pContrasena:
+                flash("Por favor, rellene todos los campos.")
+                return render_template('pantalla_inicial.html')
 
             try:
                 # Intentamos conectar y validar

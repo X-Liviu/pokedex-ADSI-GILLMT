@@ -8,6 +8,7 @@ Requiere usar **Python 3.12**, además de las dependencias que se encuentran en 
 pyTelegramBotAPI==4.29.1
 pokebase==1.4.1
 flask==3.1.
+pytest==9.0.2
 ```
 También se utiliza **sqlite3**, que viene por defecto con el intérprete.
 ### Instalación ###
@@ -23,3 +24,4 @@ Donde `python` es el nombre del ejecutable.
 - Flask: https://flask.palletsprojects.com/en/stable/
 - SQLite: https://sqlite.org/
 - sqlite3: https://docs.python.org/3/library/sqlite3.html
+- pytest: https://docs.pytest.org/en/stable/

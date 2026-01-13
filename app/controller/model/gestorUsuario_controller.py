@@ -1,8 +1,8 @@
 import sqlite3
 import random
+from typing import List
 from app.controller.model.gestorCopiasEquipo_controller import gestorCopiasEquipo
 from app.model.usuario import Usuario
-
 
 class gestorUsuario:
     _instancias_usuarios = {}
@@ -160,13 +160,42 @@ class gestorUsuario:
         return self.usuario.mejorPokemon(numEquipo)
 
     def aniadirAmigo(self, nombreUsuario: str) -> bool:
-        resultado: bool = self.usuario.ainadirAmigo(nombreUsuario)
+        resultado: bool = True
+        comandosSQL: str = "INSERT INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES (?, ?);"
+        resultadoSQL: List[sqlite3.row] = None
+
+        try:
+            print(f"NombreUsuario1: {self.usuario.getNombreUsuario()}, NombreUsuario2: {nombreUsuario}")
+            self.db.insert(comandosSQL, (self.usuario.getNomUsuario(), nombreUsuario))
+        except sqlite3.Error:
+            resultado = False
+            print("Error al insertar en la BD")
+
         if resultado:
-            comandosSQL: str = "INSERT INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES (?, ?);"
             try:
-                self.db.insert(comandosSQL, (self.usuario.nombre_usuario, nombreUsuario))
+                print("Ainadido correctamente a la base de datos")
+                comandosSQL = "SELECT * FROM USUARIO WHERE USUARIO.NombreUsuario = ?"
+                resultadoSQL = self.db.select(comandosSQL, (nombreUsuario,))
+                resultado = len(resultadoSQL) > 0
             except sqlite3.Error:
                 resultado = False
+
+        if resultado:
+            # NombreUsuario, Nombre, Apellido, Correo, Contrasena, Rol
+            nuevoAmigo: Usuario = Usuario(
+                resultadoSQL["Nombre"],
+                resultadoSQL["Apellido"],
+                resultadoSQL["NombreUsuario"],
+                resultadoSQL["Correo"],
+                resultadoSQL["Contrasena"],
+                resultadoSQL["Rol"],
+                [],
+                [],
+                self.db
+            )
+
+            self.usuario.aniadirAmigo(nuevoAmigo)
+
         return resultado
 
     def tieneAmigos(self) -> bool:

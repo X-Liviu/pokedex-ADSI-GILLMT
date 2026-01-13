@@ -1,5 +1,5 @@
 # Flask
-from flask import Blueprint, render_template, request, session
+from flask import Blueprint, render_template, request, session, flash, redirect
 
 # Custom Types
 from app.model.utils.custom_types import Custom_types
@@ -16,30 +16,32 @@ def perfil_usuario_blueprint(db: Connection) -> Blueprint:
 
     marcodex_service: MarcoDex = MarcoDex.getMyMarcoDex(db)
 
-    @bp_perfil_usuario.route("/perfil_usuario/<name>", methods=["GET", "POST"])
-    def perfil_usuario(name: str) -> str:
+    @bp_perfil_usuario.route("/perfil_usuario/<otro_usuario>", methods=["GET", "POST"])
+    def perfil_usuario(otro_usuario: str) -> str:
         """
         Usaremos el nombre dado por parametros.
         En la funcion de arriba se declarara un controlador, con
         de perfil usuario, haciendo una consulta que devuelva lo
         que nos interese de la persona seleccionada
         """
-        info_usuario = marcodex_service.mostrarUsuario("usuario", name)
+        usuario_actual = session.get("usuario")
+        info_usuario = marcodex_service.mostrarUsuario(usuario_actual, otro_usuario)
+        resultado_solicitud: int = Custom_types.VerUsuario.NO_SOLICITADO
 
-        if request.method == "GET":
-            pass
-        elif request.method == "POST" and request.form["submit_button"] == "Solicitud amistad":
+        resultado = render_template("perfil_usuario.html", info_usuario=info_usuario,
+                                    resultado_solicitud=resultado_solicitud)
+
+        if request.method == "POST" and request.form["submit_button"] == "Solicitud amistad":
             try:
-                resultado_solicitud: bool = marcodex_service.aniadirAmigo(name)
+                resultado_solicitud: bool = marcodex_service.aniadirAmigo(usuario_actual, otro_usuario)
 
                 if resultado_solicitud:
-                    estado_amigo = Custom_types.VerUsuario.AMIGO_NUEVO
-                else:
-                    estado_amigo = Custom_types.VerUsuario.AMIGO_ERROR
+                    resultado = redirect(f"/perfil_usuario/{otro_usuario}")
             except:
-                estado_amigo = Custom_types.VerUsuario.AMIGO_ERROR
+                flash(f"No se pudo seguir a {otro_usuario}.")
 
         # return render_template("perfil_usuario.html", info_usuario = marcodex_service.mostrarUsuario(session['username'], name) )
-        return render_template("perfil_usuario.html", info_usuario=info_usuario)
+
+        return resultado
 
     return bp_perfil_usuario

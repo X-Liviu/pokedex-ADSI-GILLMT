@@ -73,7 +73,7 @@ class Ranking:
         lista_actual: ListaUsuarios = self._get_lista_usuarios()
         return ( lista_actual.get_index(nombre) + 1)
 
-    def mostrarUsuario(self, pNombreUsuario: str) -> Custom_types.Ranking.Usuario:
+    def mostrarUsuario(self, pNombreUsuario: str, pNombreAmigo: str) -> Custom_types.Ranking.Usuario:
         """
         pre: "pNombreUsuario" no esta vacio
         post: Dado un nombre de usuario, devuelve un diccionario con
@@ -94,11 +94,11 @@ class Ranking:
         WHERE Usuario.NombreUsuario = ?;
         """
 
-        resultado_sql: List[sqlite3.Row] = self.bd.select(sentence, (pNombreUsuario,))
+        resultado_sql: List[sqlite3.Row] = self.bd.select(sentence, (pNombreAmigo,))
 
         if len(resultado_sql) > 0:
-            puesto_actual: int = self._get_puesto_by_nombre(pNombreUsuario)
-            resultado = {"nombre": pNombreUsuario, "equipoEspecie": [], "equipoCustom": [], "fotoPokemon": [],"puesto": puesto_actual}
+            puesto_actual: int = self._get_puesto_by_nombre(pNombreAmigo)
+            resultado = {"nombre": pNombreAmigo, "equipoEspecie": [], "equipoCustom": [], "fotoPokemon": [],"puesto": puesto_actual, "estado_amigo": False}
 
             for fila in resultado_sql:
                 resultado["equipoEspecie"].append(fila["NombreEspecie"])
@@ -106,5 +106,17 @@ class Ranking:
                 sprite_actual = pokebase.pokemon(fila["NombreEspecie"].lower()).sprites.front_default
                 # TODO: La linea sprite actual hay que cambiarla a una llamada de la Pokedex
                 resultado["fotoPokemon"].append(sprite_actual)
+
+            sentence = """
+                SELECT *
+                FROM AmigoDe
+                INNER JOIN Usuario
+                ON Usuario.NombreUsuario = AmigoDe.NombreUsuario1
+                WHERE ( Usuario.NombreUsuario = ? AND AmigoDe.NombreUsuario2 = ? );
+            """
+
+            resultado_sql: List[sqlite3.Row] = self.bd.select(sentence, (pNombreUsuario,pNombreAmigo,))
+
+            resultado["estado_amigo"] = len(resultado_sql) > 0
 
         return resultado

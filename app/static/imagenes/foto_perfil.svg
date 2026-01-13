@@ -4,14 +4,25 @@
 <svg
    version="1.1"
    id="svg1"
-   width="32.859314"
-   height="32.723145"
-   viewBox="0 0 32.859314 32.723144"
+   width="32.359344"
+   height="32.223145"
+   viewBox="0 0 32.359344 32.223144"
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
      id="defs1">
+    <linearGradient
+       id="linearGradient15">
+      <stop
+         style="stop-color:#000000;stop-opacity:0.86079544;"
+         offset="0"
+         id="stop15" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0;"
+         offset="0.77755511"
+         id="stop16" />
+    </linearGradient>
     <filter
        style="color-interpolation-filters:sRGB"
        id="filter4"
@@ -23,43 +34,30 @@
          stdDeviation="2.0331307"
          id="feGaussianBlur4" />
     </filter>
+    <linearGradient
+       xlink:href="#linearGradient15"
+       id="linearGradient1"
+       x1="459.6366"
+       y1="658.50287"
+       x2="437.97363"
+       y2="636.8399"
+       gradientUnits="userSpaceOnUse" />
     <clipPath
        clipPathUnits="userSpaceOnUse"
-       id="clipPath17">
+       id="clipPath1">
       <ellipse
-         style="display:inline;opacity:1;fill:#721e49;fill-opacity:1;stroke-width:0"
-         id="ellipse18"
-         cx="446.10953"
-         cy="650.77209"
+         style="display:inline;opacity:1;fill:#721e49;fill-opacity:1;stroke:none;stroke-width:0.8;stroke-dasharray:none"
+         id="ellipse1"
+         cx="327.86508"
+         cy="719.22205"
          rx="16.179668"
-         ry="16.111591" />
-    </clipPath>
-    <filter
-       style="color-interpolation-filters:sRGB"
-       id="filter18"
-       x="-0.34093642"
-       y="-0.38877652"
-       width="1.6818728"
-       height="1.777553">
-      <feGaussianBlur
-         stdDeviation="5.7000307"
-         id="feGaussianBlur18" />
-    </filter>
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath19">
-      <ellipse
-         style="display:inline;opacity:1;fill:#721e49;fill-opacity:1;stroke-width:0"
-         id="ellipse20"
-         cx="446.10953"
-         cy="650.77209"
-         rx="16.179668"
-         ry="16.111591" />
+         ry="16.111591"
+         transform="rotate(-10.44011)" />
     </clipPath>
   </defs>
   <g
      id="g1"
-     transform="translate(-429.67987,-634.41054)">
+     transform="translate(-429.92984,-634.66054)">
     <image
        width="1122.807"
        height="793.82458"
@@ -68,7 +66,7 @@
        id="image1"
        style="display:none" />
     <ellipse
-       style="display:inline;opacity:1;fill:#721e49;fill-opacity:1;stroke:#000000;stroke-width:0.5;stroke-dasharray:none"
+       style="display:inline;opacity:1;fill:#721e49;fill-opacity:1;stroke:none;stroke-width:0.8;stroke-dasharray:none"
        id="path1"
        cx="446.10953"
        cy="650.77209"
@@ -89,18 +87,21 @@
          rx="5.2873249"
          ry="4.4703994" />
     </g>
-    <path
-       id="rect17"
-       style="display:inline;opacity:1;mix-blend-mode:normal;fill:#000000;fill-opacity:1;stroke-width:0;filter:url(#filter18)"
-       d="m 415.9375,640.9375 v 35.1875 h 40.125 v -11.24609 a 16.179668,16.111591 0 0 1 -5.95312,1.1289 16.179668,16.111591 0 0 1 -16.17969,-16.11133 16.179668,16.111591 0 0 1 2.73242,-8.95898 z"
-       clip-path="url(#clipPath17)" />
+    <ellipse
+       style="display:inline;opacity:1;fill:url(#linearGradient1);fill-opacity:1;stroke:none;stroke-width:0.8;stroke-dasharray:none"
+       id="ellipse14"
+       cx="446.10953"
+       cy="650.77209"
+       rx="16.179668"
+       ry="16.111591" />
     <ellipse
        style="display:inline;opacity:1;mix-blend-mode:normal;fill:#ffffff;fill-opacity:1;stroke-width:0;filter:url(#filter4)"
        id="path4"
-       cx="452.29688"
-       cy="639.17188"
+       cx="443.82462"
+       cy="636.4762"
        rx="4.984375"
        ry="2.265625"
-       clip-path="url(#clipPath19)" />
+       clip-path="url(#clipPath1)"
+       transform="rotate(10.44011,433.73864,612.90917)" />
   </g>
 </svg>

@@ -28,7 +28,7 @@
                 <div class="first_place_container">
                     <img src="{{ url_for('static', filename='imagenes/corona.svg') }}" class="svg-podio" alt="Corona">
                     <div class="puesto_numero">{{ top1.puesto }}</div>
-                    <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top1.nombre) }}">
+                    <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', otro_usuario=top1.nombre) }}">
                         <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
                         {{ top1.nombre }}
                     </a>
@@ -41,7 +41,7 @@
                     {% set top2 = usuarios.usuarios[1] %}
                     <div class="first_place_container">
                         <div class="puesto_numero">{{ top2.puesto }}</div>
-                        <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top2.nombre) }}">
+                        <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', otro_usuario=top2.nombre) }}">
                             <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
                             {{ top2.nombre }}
                         </a>
@@ -51,7 +51,7 @@
                     {% set top3 = usuarios.usuarios[2] %}
                     <div class="first_place_container">
                         <div class="puesto_numero">{{ top3.puesto }}</div>
-                        <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=top3.nombre) }}">
+                        <a class="nombre_burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', otro_usuario=top3.nombre) }}">
                             <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
                             {{ top3.nombre }}
                         </a>
@@ -68,7 +68,7 @@
                     {% if loop.index > 3 %}
                     <div class="ranking-list-item">
                         <div class="puesto-lista">{{ usuario.puesto }}</div>
-                        <a class="nombre-lista-burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', name=usuario.nombre) }}">
+                        <a class="nombre-lista-burbuja" href="{{ url_for('ranking.perfil_usuario.perfil_usuario', otro_usuario=usuario.nombre) }}">
                             <img src="{{ url_for('static', filename='imagenes/foto_perfil.svg') }}" class="foto-perfil" alt="">
                             {{ usuario.nombre }}
                         </a>

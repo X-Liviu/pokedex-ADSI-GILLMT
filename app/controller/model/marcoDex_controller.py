@@ -32,37 +32,12 @@ class MarcoDex:
     def mostrarRanking(self) -> Custom_types.Ranking.Usuarios:
         return Ranking.getMyRanking(self.db).mostrarRanking()
 
-    """
     def mostrarUsuario(self, pNombreUsuario: str, pNombreAmigo: str) -> Custom_types.MarcoDex.Usuario:
-        resultado_ranking: Custom_types.Ranking.Usuario = Ranking.getMyRanking(self.db).mostrarUsuario(pNombreAmigo)
-        resultado_gestor_usuario: Custom_types.GestorUsuario.EstadoAmigo = gestorUsuario.getMyGestorUsuario(pNombreUsuario, self.db).esMiAmigo(pNombreAmigo)
-    
-        return {
-            "nombre": resultado_ranking["nombre"],
-            "equipoEspecie": resultado_ranking["equipoEspecie"],
-            "equipoCustom": resultado_ranking["equipoCustom"],
-            "fotoPokemon": resultado_ranking["fotoPokemon"],
-            "puesto": resultado_ranking["puesto"],
-            "estado_amigo": resultado_gestor_usuario["estado_amigo"],
-        }
-    """
+        return Ranking.getMyRanking(self.db).mostrarUsuario(pNombreUsuario, pNombreAmigo)
 
-    def mostrarUsuario(self, pNombreUsuario: str, pNombreAmigo: str) -> Custom_types.MarcoDex.Usuario:
-        resultado_ranking: Custom_types.Ranking.Usuario = Ranking.getMyRanking(self.db).mostrarUsuario(pNombreAmigo)
-        # resultado_gestor_usuario: Custom_types.GestorUsuario.EstadoAmigo = gestorUsuario.getMyGestorUsuario(pNombreUsuario, self.db).esMiAmigo(pNombreAmigo)
-
-        return {
-            "nombre": resultado_ranking["nombre"],
-            "equipoEspecie": resultado_ranking["equipoEspecie"],
-            "equipoCustom": resultado_ranking["equipoCustom"],
-            "fotoPokemon": resultado_ranking["fotoPokemon"],
-            "puesto": resultado_ranking["puesto"],
-            # "estado_amigo": resultado_gestor_usuario["estado_amigo"],
-        }
-
-    def aniadirAmigo(self, nombreUsuario: str) -> Dict[str, bool]:
-        resultado: Dict[str, bool] = {"Aniadido": False}
-        resultado["Aniadido"] = gestorUsuario.getMyGestorUsuario(self.db).aniadirAmigo(nombreUsuario)
+    def aniadirAmigo(self, nombreUsuario: str, nombreAmigo: str) -> Custom_types.GestorUsuario.EstadoAmigo:
+        resultado: Custom_types.GestorUsuario.EstadoAmigo = {"Aniadido": False}
+        resultado["Aniadido"] = gestorUsuario.getMyGestorUsuario(nombreUsuario, self.db).aniadirAmigo(nombreAmigo)
 
         return resultado
 

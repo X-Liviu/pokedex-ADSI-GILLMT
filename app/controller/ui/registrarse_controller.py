@@ -46,7 +46,7 @@ def registrarse_blueprint(db: Connection) -> Blueprint:
 
                 else:
                     # Fallo de seguridad/BD tras el registro
-                    flash("Error crítico: El usuario se creó pero no se pudo iniciar sesión.")
+                    flash("Error crítico: Algo falló en el sistema.")
                     return render_template('registro.html')
 
         return render_template('registro.html')

@@ -29,7 +29,7 @@ PROJECT_ROOT = os.getcwd()
 TEMPLATES_DIR = os.path.join(PROJECT_ROOT, "app", "templates")
 STATIC_DIR = os.path.join(PROJECT_ROOT, "app", "static")
 # Usamos un nombre fijo para la BD de test. NO LA BORRAREMOS si ya tiene datos.
-DB_PATH = os.path.join(PROJECT_ROOT, "ranking_test_optimized.sqlite")
+DB_PATH = os.path.join(PROJECT_ROOT, "dbtest.sqlite")
 
 # Usuarios originales del schema.sql que NO debemos borrar
 SEED_USERS = [

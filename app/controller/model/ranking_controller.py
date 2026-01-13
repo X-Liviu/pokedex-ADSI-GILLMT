@@ -98,7 +98,13 @@ class Ranking:
 
         if len(resultado_sql) > 0:
             puesto_actual: int = self._get_puesto_by_nombre(pNombreAmigo)
-            resultado = {"nombre": pNombreAmigo, "equipoEspecie": [], "equipoCustom": [], "fotoPokemon": [],"puesto": puesto_actual, "estado_amigo": False}
+            resultado = {"nombre": pNombreAmigo,
+                         "equipoEspecie": [],
+                         "equipoCustom": [],
+                         "fotoPokemon": [],
+                         "puesto": puesto_actual,
+                         "estado_amigo": Custom_types.PerfilUsuario.NO_AMIGO
+                         }
 
             for fila in resultado_sql:
                 resultado["equipoEspecie"].append(fila["NombreEspecie"])
@@ -107,16 +113,20 @@ class Ranking:
                 # TODO: La linea sprite actual hay que cambiarla a una llamada de la Pokedex
                 resultado["fotoPokemon"].append(sprite_actual)
 
-            sentence = """
-                SELECT *
-                FROM AmigoDe
-                INNER JOIN Usuario
-                ON Usuario.NombreUsuario = AmigoDe.NombreUsuario1
-                WHERE ( Usuario.NombreUsuario = ? AND AmigoDe.NombreUsuario2 = ? );
-            """
+            if pNombreUsuario == pNombreAmigo:
+                resultado["estado_amigo"] = Custom_types.PerfilUsuario.TU_MISMO
+            else:
+                sentence = """
+                    SELECT *
+                    FROM AmigoDe
+                    INNER JOIN Usuario
+                    ON Usuario.NombreUsuario = AmigoDe.NombreUsuario1
+                    WHERE ( Usuario.NombreUsuario = ? AND AmigoDe.NombreUsuario2 = ? );
+                """
 
-            resultado_sql: List[sqlite3.Row] = self.bd.select(sentence, (pNombreUsuario,pNombreAmigo,))
+                resultado_sql: List[sqlite3.Row] = self.bd.select(sentence, (pNombreUsuario,pNombreAmigo,))
 
-            resultado["estado_amigo"] = len(resultado_sql) > 0
+                if len(resultado_sql) > 0:
+                    resultado["estado_amigo"] = Custom_types.PerfilUsuario.SI_AMIGO
 
         return resultado

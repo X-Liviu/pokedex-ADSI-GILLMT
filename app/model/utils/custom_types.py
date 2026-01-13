@@ -12,20 +12,20 @@ class Custom_types:
     class MarcoDex:
         Usuario = Dict[str, Any]
 
-    class VerUsuario:
-        NO_SOLICITADO: int = 0
-        AMIGO_NUEVO: int = 1
-        AMIGO_ERROR: int = 2
+    class PerfilUsuario:
+        NO_AMIGO: int = 0
+        SI_AMIGO: int = 1
+        TU_MISMO: int = 2
 
         @classmethod
         def toString(cls, value) -> str:
             resultado: str = "NOT POSSIBLE"
-            if value == cls.NO_SOLICITADO:
-                resultado = "NO SOLICITADO"
-            elif value == cls.AMIGO_NUEVO:
-                resultado = "AMIGO NUEVO"
-            elif value == cls.AMIGO_ERROR:
-                resultado = "AMIGO ERROR"
+            if value == cls.NO_AMIGO:
+                resultado = "NO AMIGO"
+            elif value == cls.TU_MISMO:
+                resultado = "TU MISMO"
+            elif value == cls.SI_AMIGO:
+                resultado = "SI AMIGO"
 
             return resultado
 

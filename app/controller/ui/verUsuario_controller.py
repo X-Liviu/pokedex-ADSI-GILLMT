@@ -26,11 +26,11 @@ def perfil_usuario_blueprint(db: Connection) -> Blueprint:
         """
         usuario_actual = session.get("usuario")
         info_usuario = marcodex_service.mostrarUsuario(usuario_actual, otro_usuario)
-        resultado_solicitud: int = Custom_types.VerUsuario.NO_SOLICITADO
 
-        resultado = render_template("perfil_usuario.html", info_usuario=info_usuario,
-                                    resultado_solicitud=resultado_solicitud)
+        resultado: str = ""
 
+        if request.method == "GET":
+            resultado = render_template("perfil_usuario.html", info_usuario=info_usuario)
         if request.method == "POST" and request.form["submit_button"] == "Solicitud amistad":
             try:
                 resultado_solicitud: bool = marcodex_service.aniadirAmigo(usuario_actual, otro_usuario)
@@ -39,8 +39,6 @@ def perfil_usuario_blueprint(db: Connection) -> Blueprint:
                     resultado = redirect(f"/perfil_usuario/{otro_usuario}")
             except:
                 flash(f"No se pudo seguir a {otro_usuario}.")
-
-        # return render_template("perfil_usuario.html", info_usuario = marcodex_service.mostrarUsuario(session['username'], name) )
 
         return resultado
 

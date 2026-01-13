@@ -29,12 +29,14 @@
                     <div class="nombre-valor">{{info_usuario.nombre}}</div>
 
                     <div class="contenedor-acciones">
-                        {% if info_usuario.estado_amigo == False%}
+                        {% if info_usuario.estado_amigo == 0%}
                         <form method="POST">
                             <input type="submit" name="submit_button" value="Solicitud amistad" class="btn-solicitud">
                         </form>
-                        {% else %}
+                        {% elif info_usuario.estado_amigo == 1 %}
                             <a class="estado-amigo">Ya es tu amigo</a>
+                        {% elif info_usuario.estado_amigo == 2%}
+                            <a class="estado-amigo">Eres tú</a>
                         {% endif %}
                     </div>
                 </div>

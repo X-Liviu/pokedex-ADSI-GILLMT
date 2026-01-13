@@ -160,16 +160,18 @@ class gestorUsuario:
         return self.usuario.mejorPokemon(numEquipo)
 
     def aniadirAmigo(self, nombreUsuario: str) -> bool:
-        resultado: bool = True
-        comandosSQL: str = "INSERT INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES (?, ?);"
-        resultadoSQL: List[sqlite3.row] = None
+        mi_nombre: str = self.usuario.getNomUsuario()
+        resultado: bool = nombreUsuario != mi_nombre
 
-        try:
-            print(f"NombreUsuario1: {self.usuario.getNombreUsuario()}, NombreUsuario2: {nombreUsuario}")
-            self.db.insert(comandosSQL, (self.usuario.getNomUsuario(), nombreUsuario))
-        except sqlite3.Error:
-            resultado = False
-            print("Error al insertar en la BD")
+        if resultado:
+            comandosSQL: str = "INSERT INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES (?, ?);"
+            resultadoSQL: List[sqlite3.row] = None
+
+            try:
+                self.db.insert(comandosSQL, (mi_nombre, nombreUsuario))
+            except sqlite3.Error:
+                resultado = False
+                print("Error al insertar en la BD")
 
         if resultado:
             try:

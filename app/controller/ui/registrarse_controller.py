@@ -11,12 +11,20 @@ def registrarse_blueprint(db: Connection) -> Blueprint:
         # --- ZONA POST (Procesar formulario) ---
         if request.method == 'POST':
             # 1. Recoger datos
-            pNom = request.form['nombre']
-            pAp = request.form['apellido']
-            pCorreo = request.form['correo']
-            pNomUsuario = request.form['usuario']
-            pContrasena = request.form['contrasena']
-            pContrasenaRep = request.form['contrasena_rep']
+            # Nota: Usamos .get por seguridad, aunque con tu test actual request.form[] también funciona
+            pNom = request.form.get('nombre', '')
+            pAp = request.form.get('apellido', '')
+            pCorreo = request.form.get('correo', '')
+            pNomUsuario = request.form.get('usuario', '')
+            pContrasena = request.form.get('contrasena', '')
+            pContrasenaRep = request.form.get('contrasena_rep', '')
+
+
+            # Si alguno de los campos es una cadena vacía, cortamos el flujo aquí.
+            if not pNom or not pAp or not pCorreo or not pNomUsuario or not pContrasena or not pContrasenaRep:
+                flash("Error: No es posible con campos vacíos.")
+                return render_template('registro.html')
+
 
             # 2. Llamada al sistema
             mi_marcodex = MarcoDex.getMyMarcoDex(db)

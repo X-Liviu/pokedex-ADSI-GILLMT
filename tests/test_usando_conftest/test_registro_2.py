@@ -72,6 +72,33 @@ def test_1_3_registro_usuario_duplicado(client):
     assert b"Error: El nombre de usuario o el correo ya est\xc3\xa1n en uso." in respuesta.data
 
 
+@pytest.mark.parametrize("campo_vacio", ['nombre', 'apellido', 'correo', 'usuario', 'contrasena', 'contrasena_rep'])
+def test_1_4_a_1_7_registro_campos_vacios(client, campo_vacio):
+    """
+    CU: Registrarse (1.4 - 1.7)
+    El registro se realiza dejando algún campo vacío.
+    Resultado esperado: Salta un aviso de validación (Flash message).
+    """
+    # Datos base completos
+    datos = {
+        'nombre': 'Test',
+        'apellido': 'Test',
+        'correo': 't@t.com',
+        'usuario': 'UserTest',
+        'contrasena': '123',
+        'contrasena_rep': '123'
+    }
+
+    # Vaciamos el campo que toca en esta iteración del test
+    datos[campo_vacio] = ''
+
+    # Ejecutamos la petición
+    respuesta = client.post('/registrarse', data=datos, follow_redirects=True)
+
+    # Verificamos que salta TU nuevo mensaje de seguridad
+    # Nota: Usamos la codificación correcta para las tildes si fuera necesario,
+    # pero tu mensaje "vacíos" usa í (utf-8: \xc3\xad)
+    assert b"Error: No es posible con campos vac\xc3\xados." in respuesta.data
 def test_1_8_registro_contrasenas_diferentes(client):
     """
     CU: Registrarse (1.8)

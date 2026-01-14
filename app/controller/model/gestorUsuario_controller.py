@@ -118,11 +118,9 @@ class gestorUsuario:
                         sentence="INSERT INTO PokemonEnEquipo (idEquipoInterno, idPokemon) VALUES (?,?)",
                         parameters=(id_bd_real, id_poki_real)
                     )
-            except sqlite3.Error as e:
-                # Esto te dirá en la consola del test exactamente qué falló
-                print(f"\n[ERROR SQL] Fallo al guardar: {e}")
-                print(f"DATOS INTENTADOS: {info['especie']}, {info['nombre_custom']}")
-                # Importante: No silencies el error en los tests
+
+            except Exception as e:
+                print(f"!!! ERROR SQL al insertar Pokémon: {e}")
                 raise e
 
     def tieneEquipos(self):

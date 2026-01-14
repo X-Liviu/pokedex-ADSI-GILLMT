@@ -35,7 +35,7 @@ CREATE TABLE EspeciePokemon (
     Legendario BOOLEAN,
     AlturaMedia REAL,
     PesoMedia REAL,
-    Region TEXT,
+    Region TEXT
 );
 
 -- 4. Tabla: Tipo

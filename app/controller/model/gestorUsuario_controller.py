@@ -589,8 +589,7 @@ class gestorUsuario:
                 datos_bd = {
                     # CAMBIO AQUÍ: Usamos idPokemon (PK) para el rastro interno
                     "id_real": int(fila['idPokemon']),
-                    # Guardamos el num de pokedex por si lo necesitas para la lógica
-                    "num_pokedex": int(fila['numPokemon']),
+                    "pokemon_id": int(fila['numPokemon']),
                     "rareza": fila['Rareza'],
                     "shiny": bool(fila['Shiny']),
                     "altura": fila['Altura'],

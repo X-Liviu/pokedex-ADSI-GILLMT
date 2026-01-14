@@ -126,7 +126,7 @@ class Equipo:
 
         if datos_bd:
             # --- MODO CARGA (Desde BD) ---
-            nuevoId = datos_bd['id_real']
+            nuevoId = datos_bd['pokemon_id']
             rareza = datos_bd['rareza']
             es_shiny = datos_bd['shiny']
             altura = datos_bd['altura']

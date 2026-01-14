@@ -45,3 +45,10 @@ class gestorNoticias:
             })
 
         return json_noticia
+
+    def aniadirNoticia(self, nombreUsuario: str, descripcion: str):
+        sql = """ 
+            INSERT INTO Publica (nombreUsuario, FechaHora, Contenido)
+			VALUES (?, NOW(), ? )
+        """
+        self.db.insert(sql,(nombreUsuario, descripcion))

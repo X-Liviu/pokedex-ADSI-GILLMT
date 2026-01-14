@@ -11,7 +11,7 @@ def changelog_blueprint(db):
 
         if mDex.tieneAmigos(nombreUsuario):
 
-            lista_noticias = mDex.mostrar_changelog(nombreUsuario, '')
+            lista_noticias = mDex.mostrar_changelog(nombreUsuario, '', db)
             return render_template('changelog.html', noticias=lista_noticias)
         else:
             return render_template('error_no_amigos.html')
@@ -21,7 +21,7 @@ def changelog_blueprint(db):
         mDex = MarcoDex.getMyMarcoDex(db)
         nombreUsuario = session.get('usuario')
         filtro = request.args.get('usuario')
-        lista_noticias = mDex.mostrar_changelog(nombreUsuario, filtro)
+        lista_noticias = mDex.mostrar_changelog(nombreUsuario, filtro, db)
         return render_template('changelog.html', noticias=lista_noticias)
 
     return bp_changelog

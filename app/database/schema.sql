@@ -90,7 +90,6 @@ CREATE TABLE AmigoDe (
     NombreUsuario1 TEXT,
     NombreUsuario2 TEXT,
     PRIMARY KEY (NombreUsuario1, NombreUsuario2),
-    -- Añadimos ON UPDATE CASCADE y ON DELETE CASCADE (opcional, para borrar amigos si se borra el usuario)
     FOREIGN KEY (NombreUsuario1) REFERENCES Usuario(NombreUsuario) ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (NombreUsuario2) REFERENCES Usuario(NombreUsuario) ON UPDATE CASCADE ON DELETE CASCADE
 );
@@ -101,7 +100,6 @@ CREATE TABLE Publica (
     FechaHora DATETIME,
     Contenido TEXT,
     PRIMARY KEY (NombreUsuario, FechaHora),
-    -- AÑADIR ON UPDATE CASCADE AQUÍ:
     FOREIGN KEY (NombreUsuario) REFERENCES Usuario(NombreUsuario) ON UPDATE CASCADE
 );
 
@@ -146,9 +144,9 @@ CREATE TABLE EfectoTipo (
     NombreTipoAtac TEXT,
     NombreTipoDef TEXT,
     Efecto TEXT,
-    PRIMARY KEY (NombreTipo1, NombreTipo2),
-    FOREIGN KEY (NombreTipo1) REFERENCES Tipo(Nombre),
-    FOREIGN KEY (NombreTipo2) REFERENCES Tipo(Nombre)
+    PRIMARY KEY (NombreTipoAtac, NombreTipoDef),
+    FOREIGN KEY (NombreTipoAtac) REFERENCES Tipo(Nombre),
+    FOREIGN KEY (NombreTipoDef) REFERENCES Tipo(Nombre)
 );
 
 -- 16. Relacion evoluciones Pokémon

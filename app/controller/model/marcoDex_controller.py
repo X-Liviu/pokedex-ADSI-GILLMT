@@ -38,7 +38,6 @@ class MarcoDex:
     def aniadirAmigo(self, nombreUsuario: str, nombreAmigo: str) -> Custom_types.GestorUsuario.EstadoAmigo:
         resultado: Custom_types.GestorUsuario.EstadoAmigo = {"Aniadido": False}
         resultado["Aniadido"] = gestorUsuario.getMyGestorUsuario(nombreUsuario, self.db).aniadirAmigo(nombreAmigo)
-
         return resultado
 
     #DE LIVIU
@@ -50,6 +49,8 @@ class MarcoDex:
         if gestor:
             return gestor.aniadirAmigo(pNomUsuarioAmigo)
         return False
+
+
 
     """
     --PARA TABATA-- Las llamadas que se estan haciendo a GestorUsuario no pertenecen a una instancia
@@ -122,9 +123,8 @@ class MarcoDex:
     def tieneAmigos(self, usuario):
         return gestorUsuario.getMyGestorUsuario(usuario).tieneAmigos()
 
-    def mostrar_changelog(self, usuario, filtro):
-        #clase de gestor_noticia por crear
-        return gestorNoticias.getGestorNoticias(usuario).mostrar_changelog(usuario,filtro)
+    def mostrar_changelog(self, usuario, filtro, db):
+        return gestorNoticias.getGestorNoticias(db).mostrar_changelog(usuario,filtro, db)
 
     def mostrarPokedex(self) -> str:
         return PokeDex.get_instance().mostrarPokedex()

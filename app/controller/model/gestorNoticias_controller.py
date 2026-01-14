@@ -6,17 +6,17 @@ class gestorNoticias:
     myGestorNoticias: gestorNoticias = None
 
 
-    def __init__(self):
-        self.db = Connection()
+    def __init__(self, db):
+        self.db = db
 
     @classmethod
     def getGestorNoticias(cls, db=None):
         if cls.myGestorNoticias is None:
-            cls.myGestorNoticias = gestorNoticias()
+            cls.myGestorNoticias = gestorNoticias(db)
         return cls.myGestorNoticias
 
 
-    def mostrar_changelog(self, usuario, filtro):
+    def mostrar_changelog(self, usuario, filtro, db):
         sql = """
             SELECT 
                 P.NombreUsuario, 
@@ -34,7 +34,7 @@ class gestorNoticias:
             ORDER BY P.FechaHora DESC;
         """
 
-        filas = self.db.select(sql, (usuario, filtro))
+        filas = db.select(sql, (usuario, filtro))
         json_noticia = []
 
         for fila in filas:
@@ -46,9 +46,9 @@ class gestorNoticias:
 
         return json_noticia
 
-    def aniadirNoticia(self, nombreUsuario: str, descripcion: str):
+    def aniadirNoticia(self, nombreUsuario, descripcion, db):
         sql = """ 
             INSERT INTO Publica (nombreUsuario, FechaHora, Contenido)
-			VALUES (?, NOW(), ? )
+			VALUES (?, DATETIME('now'), ? )
         """
-        self.db.insert(sql,(nombreUsuario, descripcion))
+        db.insert(sql,(nombreUsuario, descripcion))

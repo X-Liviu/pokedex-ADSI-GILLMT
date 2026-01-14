@@ -41,20 +41,6 @@ def test_ranking_1_1(client):
     assert b"AshKetchum" in respuesta.data
     assert b"GaryOak" in respuesta.data
 
-def test_ranking_1_2(client):
-    """
-    CASO 1.2: Usuario pulsa la opcion "Ranking" en el menu
-    principal y no hay ningun usuario que tenga
-    equipos.
-
-    Resultado: El sistema muestra el ranking
-    vacio
-    """
-
-    iniciar_sesion(client, "GaryOak")
-
-    # Vamos a eliminar los usuarios que tenian algun equipo en la BD
-
 def test_ranking_2(client):
     """
     CASO 2: Usuario pulsa la opcion "Volver" en la
@@ -86,7 +72,7 @@ def test_ranking_2(client):
     assert titulo in respuesta.data
 
 def perfil_usuario(p_respuesta, pNombreUsuario: str, pPuesto: int):
-    etiquetas: Tuple[bytes] = (
+    etiquetas: Tuple[bytes, bytes, bytes, bytes] = (
         b"<img src=\"/static/imagenes/foto_perfil.svg\" class=\"foto-perfil-principal\" alt=\"Foto\">", # foto de perfil
         f"<div class=\"nombre-valor\">{pNombreUsuario}</div>".encode(),  # Nombre del usuario
         f"<span class=\"top-ranking\">#{pPuesto}</span>".encode(),  # Posicion en el ranking
@@ -236,3 +222,37 @@ def test_ranking_5(client):
     titulo: bytes = b"<title>Ranking Usuarios</title>"
 
     assert titulo in respuesta.data
+
+"""
+Este caso no sigue el orden porque modifica la base de datos. Si estuviera arriba
+los las funciones test que estuvieran debajo no funcionarian, que no significa que
+funcionen mal.
+"""
+def test_ranking_1_2(client):
+    """
+    CASO 1.2: Usuario pulsa la opcion "Ranking" en el menu
+    principal y no hay ningun usuario que tenga
+    equipos.
+
+    Resultado: El sistema muestra el ranking
+    vacio
+    """
+
+    iniciar_sesion(client, "GaryOak")
+
+    # Vamos a eliminar los usuarios que tenian algun equipo en la BD
+    # Obtenemos una conexión manual para limpiar la tabla antes del GET
+    from conftest import Connection
+    db = Connection()
+    db.delete("DELETE FROM PokemonEnEquipo")
+    db.delete("DELETE FROM Equipo")
+    # Nota: No hace falta borrar usuarios, sin equipos no aparecen en el ranking
+
+    respuesta = client.get("/ranking")
+    assert respuesta.status_code == 200
+
+    # Verificamos que los usuarios que antes estaban ya no aparecen
+    assert b"AshKetchum" not in respuesta.data
+    assert b"GaryOak" not in respuesta.data
+
+    db.close()

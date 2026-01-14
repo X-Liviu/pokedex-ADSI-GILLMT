@@ -112,6 +112,7 @@ body {
     color: #ffcb05;
     -webkit-text-stroke: 3px #254bb1;
     line-height: 1;
+    text-shadow: 4px 4px black;
 }
 
 .nombre-valor {

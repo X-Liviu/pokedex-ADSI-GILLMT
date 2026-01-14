@@ -76,8 +76,7 @@ def chatbot_blueprint(db):
 
                 # Llamada a los métodos
                 if opcion == "1":
-                    usuario = session.get('usuario', 'Invitado')
-                    res_data = mDex.mejorPokemon(usuario, user_input)
+                    res_data = mDex.mejorPokemon(session.get('usuario'), int(user_input))
                 elif opcion == "2":
                     res_data = mDex.obtenerEfectos(user_input)
                 elif opcion == "3":

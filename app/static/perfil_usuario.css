@@ -203,3 +203,8 @@ body {
     box-shadow: 4px 4px 0px #000;
     text-decoration: none; /* Quita el subrayado de enlace */
 }
+
+.emoji
+{
+    font-size: 64px;
+}

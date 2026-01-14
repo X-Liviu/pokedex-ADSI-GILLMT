@@ -1,7 +1,9 @@
+import json
 import sqlite3
 from typing import List
 import pokebase
 
+from app.controller.model.pokeDex_controller import PokeDex
 from app.model.lista_usuarios import ListaUsuarios
 from app.model.usuario_ranking import UsuarioRanking
 from app.model.utils.custom_types import Custom_types
@@ -115,11 +117,13 @@ class Ranking:
                          }
 
             for fila in resultado_sql:
-                resultado["equipoEspecie"].append(fila["NombreEspecie"])
+                nombre_especie: str = fila["NombreEspecie"]
+                resultado["equipoEspecie"].append(nombre_especie)
                 resultado["equipoCustom"].append(fila["NombreCustom"])
-                sprite_actual = pokebase.pokemon(fila["NombreEspecie"].lower()).sprites.front_default
-                # TODO: La linea sprite actual hay que cambiarla a una llamada de la Pokedex
-                resultado["fotoPokemon"].append(sprite_actual)
+                sprite_actual = json.loads(PokeDex.get_instance().getInfo(nombre_especie))
+                if not "error" in sprite_actual.keys():
+                    # TODO: La linea sprite actual hay que cambiarla a una llamada de la Pokedex
+                    resultado["fotoPokemon"].append(sprite_actual["imagen"])
 
             if pNombreUsuario == pNombreAmigo:
                 resultado["estado_amigo"] = Custom_types.PerfilUsuario.TU_MISMO

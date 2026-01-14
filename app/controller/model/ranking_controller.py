@@ -32,7 +32,15 @@ class Ranking:
         post: Devuelve un diccionario con todos los usuarios existentes
         en la base de datos en orden de mas rareza a menos rareza
         """
-        return self._get_lista_usuarios().to_dict("usuarios")
+        generador = self._get_lista_usuarios().get_users_as_dict()
+        resultado: Custom_types.Ranking.Usuarios = {"usuarios": []}
+
+        for indice, diccionario_actual in enumerate(generador):
+            # El bucle termina cuando el iterador no apunta a nada
+            diccionario_actual["puesto"] = indice+1
+            resultado["usuarios"].append(diccionario_actual)
+
+        return resultado
 
     def _get_lista_usuarios(self) -> ListaUsuarios:
         sentence: str = """

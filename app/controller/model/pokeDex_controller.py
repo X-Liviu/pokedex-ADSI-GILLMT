@@ -76,7 +76,7 @@ class PokeDex:
                 "Efectos contra los que es fuerte": laEspecie.esFuerteContra(),
                 "Efectos contra los que es débil": laEspecie.esDebilContra()
             }
-            return json.dumps(datos, indent=4)
+            return datos
         else:
             return -1
 

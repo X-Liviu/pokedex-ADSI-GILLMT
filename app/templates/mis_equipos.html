@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+    <link rel="icon" href="{{ url_for('static', filename='imagenes/masterball.png') }}">
     <meta charset="UTF-8">
     <title>MarcoDex - Mis Equipos</title>
     <style>
@@ -163,7 +164,7 @@
 
         <div class="columna-acciones">
             <a href="{{ url_for('crear_equipo.crear_equipo', origen='mis_equipos') }}" class="boton-retro">
-                Crear equipo
+                CREAR NUEVO EQUIPO
             </a>
             <a href="/" class="boton-retro" style="background: #eee;">VOLVER AL MENÚ</a>
         </div>

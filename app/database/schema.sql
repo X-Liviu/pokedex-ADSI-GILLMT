@@ -143,8 +143,8 @@ CREATE TABLE EspecieTipo (
 
 -- 15. EfectoTipo
 CREATE TABLE EfectoTipo (
-    NombreTipo1 TEXT,
-    NombreTipo2 TEXT,
+    NombreTipoAtac TEXT,
+    NombreTipoDef TEXT,
     Efecto TEXT,
     PRIMARY KEY (NombreTipo1, NombreTipo2),
     FOREIGN KEY (NombreTipo1) REFERENCES Tipo(Nombre),
@@ -205,7 +205,7 @@ INSERT OR IGNORE INTO PokemonEnEquipo (idEquipoInterno, idPokemon) VALUES (2, 2)
 INSERT OR IGNORE INTO OpcionChatbot VALUES('1', 'Dado un equipo Pokémon, devolver cual es el mejor.');
 INSERT OR IGNORE INTO OpcionChatbot VALUES('2', 'Mostrar los tipos contra los que es fuerte o débil un Pokémon.');
 INSERT OR IGNORE INTO OpcionChatbot VALUES('3', 'Ver la cadena evolutiva de un Pokémon.');
-INSERT OR IGNORE INTO OpcionChatbot VALUES('4', 'Ver las habilidades y características de un Pokémon');
+INSERT OR IGNORE INTO OpcionChatbot VALUES('4', 'Ver las habilidades y características de un Pokémon.');
 INSERT OR IGNORE INTO OpcionChatbot VALUES('5', 'Volver al menú principal.');
 
 -- G. EVOLUCIONES

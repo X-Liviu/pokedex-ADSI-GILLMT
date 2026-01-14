@@ -11,37 +11,29 @@ def chatbot_blueprint(db):
     from app.controller.model.marcoDex_controller import MarcoDex
     mDex = MarcoDex.getMyMarcoDex(db)
 
+    # Función para convertir el dict de datos a HTML
     def dict_a_html(datos):
-        if not datos:
-            return "No se encontraron datos."
-        if isinstance(datos, str):
-            return datos
+        # Si llegamos aquí y es un dict vacío o algo inesperado
+        if not datos or not isinstance(datos, dict):
+            return "No se ha podido procesar la información."
 
-        html = "<b>Datos obtenidos:</b><br>"
-        # Si el resultado de los otros métodos también fuera una lista
-        if isinstance(datos, list):
-            for item in datos:
-                html += f"• {item}<br>"
-        else:
-            for clave, valor in datos.items():
-                etiqueta = clave.replace('_', ' ').capitalize()
-                html += f"• <b>{etiqueta}:</b> {valor}<br>"
+        html = "<b>Información encontrada:</b><br>"
+        for clave, valor in datos.items():
+            etiqueta = clave.replace('_', ' ').capitalize()
+            html += f"• <b>{etiqueta}:</b> {valor}<br>"
         return html
 
     @bp_chatbot.route('/interfaz', methods=['GET', 'POST'])
     def chatbot_view():
-        # 1. PRECARGA: Manejando lista de diccionarios
+        # --- PRECARGA DEL MENÚ ---
         if 'menu_texto' not in session:
-            # res_lista_dicts es algo como: [{"opcion": "1-Ver..."}, {"opcion": "2-Ver..."}]
             res_lista_dicts = mDex.mostrarOpciones()
-
-            # Extraemos solo el texto de cada diccionario para formar el menú
-            opciones_texto = [d.get('Opción') for d in res_lista_dicts]
+            opciones_texto = [f"{d.get('Opción')} - {d.get('Descripción')}" for d in res_lista_dicts]
 
             menu_texto = "<b>Para elegir introduce un número:</b><br>"
             menu_texto += "<br>".join(opciones_texto)
 
-            session['menu_texto'] = menu_texto  # Guardamos el texto ya montado
+            session['menu_texto'] = menu_texto
             session['historial'] = [{"role": "bot", "content": menu_texto}]
             session['estado'] = "MENU"
             session['opcion_activa'] = None
@@ -54,9 +46,12 @@ def chatbot_blueprint(db):
             temp_historial = session['historial']
             temp_historial.append({"role": "user", "content": user_input})
 
+            # --- ESTADO 1: MENÚ ---
             if session['estado'] == "MENU":
                 if user_input == "5":
-                    session.clear()
+                    session.pop('historial', None)
+                    session.pop('menu_texto', None)
+                    session.pop('estado', None)
                     return redirect(url_for('index'))
 
                 elif user_input in ["1", "2", "3", "4"]:
@@ -64,21 +59,25 @@ def chatbot_blueprint(db):
                     session['estado'] = "PARAMETRO"
 
                     prompts = {
-                        "1": "Introduce ID equipo:",
-                        "2": "Introduce Pokémon (Fortalezas):",
-                        "3": "Introduce Pokémon (Evolución):",
-                        "4": "Introduce Pokémon (Stats):"
+                        "1": "Introduce el <b>ID del equipo</b>:",
+                        "2": "Introduce el nombre del Pokémon (Fortalezas):",
+                        "3": "Introduce el nombre (Evolución):",
+                        "4": "Introduce el nombre (Stats):"
                     }
                     temp_historial.append({"role": "bot", "content": prompts.get(user_input)})
                 else:
-                    temp_historial.append({"role": "bot", "content": "Opción no válida (1-5)."})
+                    temp_historial.append(
+                        {"role": "bot", "content": "Opción no válida. Introduce un número del 1 al 5."})
 
+            # --- ESTADO 2: PROCESAR PARÁMETRO ---
             elif session['estado'] == "PARAMETRO":
                 opcion = session['opcion_activa']
                 res_data = None
 
+                # Llamada a los métodos
                 if opcion == "1":
-                    res_data = mDex.mejorPokemon(user_input)
+                    usuario = session.get('usuario', 'Invitado')
+                    res_data = mDex.mejorPokemon(usuario, user_input)
                 elif opcion == "2":
                     res_data = mDex.obtenerEfectos(user_input)
                 elif opcion == "3":
@@ -86,10 +85,16 @@ def chatbot_blueprint(db):
                 elif opcion == "4":
                     res_data = mDex.caracteristicasPokemon(user_input)
 
-                resultado_formateado = dict_a_html(res_data)
-                temp_historial.append({"role": "bot", "content": resultado_formateado, "separador": True})
+                # --- VALIDACIÓN DEL ERROR -1 ---
+                if res_data == -1:
+                    mensaje_error = "⚠️ <b>Error:</b> No se han encontrado resultados para tu búsqueda con. Por favor, inténtalo de nuevo."
+                    temp_historial.append({"role": "bot", "content": mensaje_error, "separador": True})
+                else:
+                    # Si no es -1, es un diccionario, así que lo formateamos
+                    resultado_formateado = dict_a_html(res_data)
+                    temp_historial.append({"role": "bot", "content": resultado_formateado, "separador": True})
 
-                # REUTILIZACIÓN: Usamos el texto del menú guardado en sesión
+                # En ambos casos (éxito o error), volvemos a mostrar el menú
                 temp_historial.append({"role": "bot", "content": session['menu_texto']})
 
                 session['estado'] = "MENU"

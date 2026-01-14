@@ -69,7 +69,7 @@ class Usuario:
 
     def mejorPokemon(self, numEquipo):
         elEquipo = self.buscarEquipo(numEquipo)
-        if elEquipo != None :
+        if elEquipo is not None :
             return elEquipo.getMejorPokemon()
         else:
             return -1

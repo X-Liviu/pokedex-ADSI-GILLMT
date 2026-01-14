@@ -27,11 +27,6 @@ CREATE TABLE Usuario (
     Rol TEXT CHECK(Rol IN ('VERIF', 'NOVERIF', 'ADMIN'))
 );
 
--- 2. Tabla: Pokédex (Región)
-CREATE TABLE Pokedex (
-    Region TEXT PRIMARY KEY,
-    Generacion TEXT
-);
 
 -- 3. Tabla: Especie Pokémon
 CREATE TABLE EspeciePokemon (
@@ -41,7 +36,6 @@ CREATE TABLE EspeciePokemon (
     AlturaMedia REAL,
     PesoMedia REAL,
     Region TEXT,
-    FOREIGN KEY (Region) REFERENCES Pokedex(Region)
 );
 
 -- 4. Tabla: Tipo
@@ -183,7 +177,6 @@ INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrase
 
 
 -- B. Datos necesarios para que los equipos funcionen (Región, Especie)
-INSERT OR IGNORE INTO Pokedex VALUES ('Kanto', 'Primera');
 INSERT OR IGNORE INTO EspeciePokemon VALUES ('Pikachu', 'Ratón eléctrico', FALSE, 0.4, 6.0, 'Kanto');
 INSERT OR IGNORE INTO EspeciePokemon VALUES ('Eevee', 'Evolución', FALSE, 0.3, 6.5, 'Kanto');
 
@@ -206,6 +199,11 @@ INSERT OR IGNORE INTO PokemonEnEquipo (idEquipoInterno, idPokemon) VALUES (2, 2)
 
 -- F. Opción ChatBot
 INSERT OR IGNORE INTO OpcionChatbot VALUES('1', 'Dado un equipo Pokémon, devolver cual es el mejor.');
+INSERT OR IGNORE INTO OpcionChatbot VALUES('2', 'Mostrar los tipos contra los que es fuerte o débil un Pokémon.');
+INSERT OR IGNORE INTO OpcionChatbot VALUES('3', 'Ver la cadena evolutiva de un Pokémon.');
+INSERT OR IGNORE INTO OpcionChatbot VALUES('4', 'Ver las habilidades y características de un Pokémon');
+INSERT OR IGNORE INTO OpcionChatbot VALUES('5', 'Volver al menú principal.');
+
 
 -- G. AMIGOS (NUEVA SECCIÓN)
 -- Amigos para 'LiviuX':

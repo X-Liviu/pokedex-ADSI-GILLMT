@@ -98,8 +98,8 @@ class Equipo:
             self.lista_pokemon.append(pokemon.clonarPokemon())
 
     def getMejorPokemon(self):
-        max = 0.0
         elPokemon = self.lista_pokemon[0]
+        max = elPokemon.rareza
         for Pokemon in range(1, len(self.lista_pokemon)):
             if max <= Pokemon.rareza:
                 max = Pokemon.rareza

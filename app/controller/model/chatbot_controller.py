@@ -21,10 +21,10 @@ class ChatBot :
         filas = self.db.select(
             sentence="SELECT * FROM OpcionChatbot"
         )
-        json_opciones = []
+        opciones = []
         for fila in filas:
-            json_opciones.append({
+            opciones.append({
                 "Opción": fila["Opcion"],
                 "Descripción": fila["Descripcion"],
             })
-        return json_opciones
+        return opciones

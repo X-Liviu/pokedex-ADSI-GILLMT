@@ -196,6 +196,26 @@ def create_app(setup_database_once):
         # 3. Finalmente el Usuario
         db.execute(f"DELETE FROM Usuario WHERE NombreUsuario NOT IN ({placeholders})", tuple(SEED_USERS))
 
+        # 1. Borramos la relación intermedia de los equipos de TataX
+        db.execute("""
+                   DELETE
+                   FROM PokemonEnEquipo
+                   WHERE idEquipoInterno IN (SELECT idEquipo FROM Equipo WHERE NombreUsuario = 'TataX')
+                   """)
+
+        # 2. Borramos los ejemplares de Pokemon de TataX
+        db.execute("""
+                   DELETE
+                   FROM Pokemon
+                   WHERE idPokemon IN (SELECT idPokemon
+                                       FROM PokemonEnEquipo
+                                       WHERE idEquipoInterno IN
+                                             (SELECT idEquipo FROM Equipo WHERE NombreUsuario = 'TataX'))
+                   """)
+
+        # 3. Borramos los equipos de TataX
+        db.execute("DELETE FROM Equipo WHERE NombreUsuario = 'TataX'")
+
         # print("Limpieza de BD realizada correctamente.")
     except Exception as e:
         print(f"Error en limpieza de BD: {e}")

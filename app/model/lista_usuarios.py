@@ -52,13 +52,20 @@ class ListaUsuarios:
 
         return resultado
 
-    def to_dict(self, p_nombre: str) -> Custom_types.Ranking.Usuarios:
-        resultado: Custom_types.Ranking = {p_nombre: []}
+    def get_users_as_dict(self) -> Custom_types.Ranking.Usuario:
+        for usuario_actual in self.usuarios:
+            yield usuario_actual.to_dict() # Esto es un iterador
 
-        for indice, usuario in enumerate(self.usuarios):
-            usuario_diccionario = usuario.to_dict()
-            usuario_actual = { "nombre" : usuario_diccionario["nombre"], "rareza" : usuario_diccionario["rareza"], "puesto" : indice + 1 }
-
-            resultado[p_nombre].append(usuario_actual)
-
-        return resultado
+        """
+        EXPLICACION:
+        get_to_dict se ha convertido en un generador. Cuando se
+        hace una llamada a un generador su ejecucion se PAUSA
+        cuando hay un yield. La ejecucion del generador continua
+        desde el ultimo yield en el que se pauso. Un generador
+        es un objeto y siempre que se vaya a usar uno, requiere
+        inicializarse. Si se usa en un bucle for devolvera el
+        valor al lado de yield en cada ciclo del for externo.
+        No se ejecutan dos bucles seguidos, sino que se ejecuta
+        el bucle "a la vez". No se si conocias esto, si no lo
+        conocias lo intento explicar mas detalladamente.
+        """

@@ -1,4 +1,7 @@
-# MarcoDex #
+<p align="center">
+  <img src="app/static/imagenes/logo.png" alt="Alt text">
+</p>
+
 ### Introducción ###
 Este `README.md` es una guía sobre qué tiene el usuario para usar el programa.
 

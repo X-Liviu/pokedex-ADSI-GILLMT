@@ -7,21 +7,41 @@ import json
 def chatbot_blueprint(db):
     nombre_bp = "chatbot"
     bp_chatbot = Blueprint(nombre_bp, __name__)
+
+    from app.controller.model.marcoDex_controller import MarcoDex
     mDex = MarcoDex.getMyMarcoDex(db)
 
-    @bp_chatbot.route('/chatbot', methods=['GET', 'POST'])
-    def chatbot_view():
-        # 1. PRECARGA: Obtenemos el string JSON inicial
-        if 'menu_json' not in session:
-            res_json_string = mDex.mostrarOpciones()  # Esto devuelve un string
+    def dict_a_html(datos):
+        if not datos:
+            return "No se encontraron datos."
+        if isinstance(datos, str):
+            return datos
 
-            # Solo para extraer las opciones una vez, lo cargamos temporalmente
-            datos_dict = json.loads(res_json_string)
-            session['opciones_menu'] = datos_dict.get('opciones', [])
+        html = "<b>Datos obtenidos:</b><br>"
+        # Si el resultado de los otros métodos también fuera una lista
+        if isinstance(datos, list):
+            for item in datos:
+                html += f"• {item}<br>"
+        else:
+            for clave, valor in datos.items():
+                etiqueta = clave.replace('_', ' ').capitalize()
+                html += f"• <b>{etiqueta}:</b> {valor}<br>"
+        return html
+
+    @bp_chatbot.route('/interfaz', methods=['GET', 'POST'])
+    def chatbot_view():
+        # 1. PRECARGA: Manejando lista de diccionarios
+        if 'menu_texto' not in session:
+            # res_lista_dicts es algo como: [{"opcion": "1-Ver..."}, {"opcion": "2-Ver..."}]
+            res_lista_dicts = mDex.mostrarOpciones()
+
+            # Extraemos solo el texto de cada diccionario para formar el menú
+            opciones_texto = [d.get('Opción') for d in res_lista_dicts]
 
             menu_texto = "<b>Para elegir introduce un número:</b><br>"
-            menu_texto += "<br>".join(session['opciones_menu'])
+            menu_texto += "<br>".join(opciones_texto)
 
+            session['menu_texto'] = menu_texto  # Guardamos el texto ya montado
             session['historial'] = [{"role": "bot", "content": menu_texto}]
             session['estado'] = "MENU"
             session['opcion_activa'] = None
@@ -44,8 +64,10 @@ def chatbot_blueprint(db):
                     session['estado'] = "PARAMETRO"
 
                     prompts = {
-                        "1": "Introduce ID equipo:", "2": "Introduce Pokémon (Fortalezas):",
-                        "3": "Introduce Pokémon (Evolución):", "4": "Introduce Pokémon (Stats):"
+                        "1": "Introduce ID equipo:",
+                        "2": "Introduce Pokémon (Fortalezas):",
+                        "3": "Introduce Pokémon (Evolución):",
+                        "4": "Introduce Pokémon (Stats):"
                     }
                     temp_historial.append({"role": "bot", "content": prompts.get(user_input)})
                 else:
@@ -53,25 +75,22 @@ def chatbot_blueprint(db):
 
             elif session['estado'] == "PARAMETRO":
                 opcion = session['opcion_activa']
+                res_data = None
 
-                # Obtenemos el string JSON tal cual (json.dumps)
                 if opcion == "1":
-                    res_raw = mDex.mejorPokemon(user_input)
+                    res_data = mDex.mejorPokemon(user_input)
                 elif opcion == "2":
-                    res_raw = mDex.obtenerEfectos(user_input)
+                    res_data = mDex.obtenerEfectos(user_input)
                 elif opcion == "3":
-                    res_raw = mDex.cadenaEvolutiva(user_input)
+                    res_data = mDex.cadenaEvolutiva(user_input)
                 elif opcion == "4":
-                    res_raw = mDex.caracteristicasPokemon(user_input)
+                    res_data = mDex.caracteristicasPokemon(user_input)
 
-                # Lo metemos en una etiqueta <pre> para que se vea como bloque de código
-                resultado_formateado = f"<pre style='background:#f4f4f4; padding:10px; border:1px solid #ccc; border-radius:10px; font-size:14px; overflow-x:auto;'>{res_raw}</pre>"
-
+                resultado_formateado = dict_a_html(res_data)
                 temp_historial.append({"role": "bot", "content": resultado_formateado, "separador": True})
 
-                # Reutilizamos el menú
-                menu_reinicio = "<b>Para elegir introduce un número:</b><br>" + "<br>".join(session['opciones_menu'])
-                temp_historial.append({"role": "bot", "content": menu_reinicio})
+                # REUTILIZACIÓN: Usamos el texto del menú guardado en sesión
+                temp_historial.append({"role": "bot", "content": session['menu_texto']})
 
                 session['estado'] = "MENU"
                 session['opcion_activa'] = None

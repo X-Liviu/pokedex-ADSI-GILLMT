@@ -41,6 +41,16 @@ class MarcoDex:
 
         return resultado
 
+    #DE LIVIU
+    def aniadirAmigo(self, pNomUsuario: str, pNomUsuarioAmigo: str) -> bool:
+        """
+        Delega en el GestorUsuario del usuario actual.
+        """
+        gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
+        if gestor:
+            return gestor.aniadirAmigo(pNomUsuarioAmigo)
+        return False
+
     """
     --PARA TABATA-- Las llamadas que se estan haciendo a GestorUsuario no pertenecen a una instancia
     u objeto. En ningun momento hemos creado un objeto en ninguna de los metodos. Tampoco se pasa
@@ -257,14 +267,6 @@ class MarcoDex:
             return gestor.buscarUsuariosConFiltro(pNomUsuarioFiltro)
         return []
 
-    def aniadirAmigo(self, pNomUsuario: str, pNomUsuarioAmigo: str) -> bool:
-        """
-        Delega en el GestorUsuario del usuario actual.
-        """
-        gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
-        if gestor:
-            return gestor.aniadirAmigo(pNomUsuarioAmigo)
-        return False
 
     @staticmethod
     def precargaInicioApp(conn):
@@ -280,6 +282,7 @@ class MarcoDex:
             return
 
         print("Guardando datos en la Base de Datos...")
+        sql_pokedex = "INSERT OR IGNORE INTO Pokedex (Region, Generacion) VALUES (?, ?)"
 
         # Queries preparadas
         sql_especie = """
@@ -294,7 +297,11 @@ class MarcoDex:
 
         # 3. Recorrer y guardar
         for poke in lista_pokemons:
-            # A) Guardar Especie
+            # A) Insertar la Region primero para satisfacer la Foreign Key.
+            # Asumimos 'Generacion API' o similar si la API no te da el número de generación.
+            cursor.execute(sql_pokedex, (poke['region'], 'Generacion API'))
+
+            # B) Guardar Especie
             datos_especie = (
                 poke['nombre'],
                 poke['descripcion'],
@@ -305,7 +312,7 @@ class MarcoDex:
             )
             cursor.execute(sql_especie, datos_especie)
 
-            # B) Guardar Tipos y Relación Especie-Tipo
+            # C) Guardar Tipos y Relación Especie-Tipo
             for nombre_tipo in poke['tipos']:
                 # Guardamos el tipo si no existe (ej: "Fuego", "Sin descripcion por ahora")
                 cursor.execute(sql_tipo, (nombre_tipo, "Tipo elemental"))

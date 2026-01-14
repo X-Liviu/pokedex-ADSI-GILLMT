@@ -200,6 +200,31 @@ class gestorUsuario:
 
         return resultado
 
+    #DE LIVIU
+    def aniadirAmigo(self, pNomUsuarioAmigo: str) -> bool:
+        """
+        Pasos 19-25a: Coordina la adición en memoria y luego en BD.
+        """
+        # Paso 20: Llamada a Usuario.aniadirAmigo (Memoria)
+        exito_memoria = self.usuario.aniadirAmigo(pNomUsuarioAmigo)
+
+        if exito_memoria:
+            # Paso 24a: Obtener nombre usuario actual
+            nom_usuario_actual = self.usuario.getNomUsuario()
+
+            # Paso 25a: execSQL INSERT en Base de Datos
+            sql = "INSERT INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES (?, ?)"
+            try:
+                self.db.insert(sql, (nom_usuario_actual, pNomUsuarioAmigo))
+                return True
+            except Exception as e:
+                print(f"Error al añadir amigo en BD: {e}")
+                # (Opcional) Si falla BD, se debería revertir memoria,
+                # pero seguimos el diagrama estrictamente.
+                return False
+
+        return False  # Ya era amigo o error
+
     def tieneAmigos(self) -> bool:
         return self.usuario.tieneAmigos()
 
@@ -524,29 +549,6 @@ class gestorUsuario:
 
         return diccionario_usuarios
 
-    def aniadirAmigo(self, pNomUsuarioAmigo: str) -> bool:
-        """
-        Pasos 19-25a: Coordina la adición en memoria y luego en BD.
-        """
-        # Paso 20: Llamada a Usuario.aniadirAmigo (Memoria)
-        exito_memoria = self.usuario.aniadirAmigo(pNomUsuarioAmigo)
-
-        if exito_memoria:
-            # Paso 24a: Obtener nombre usuario actual
-            nom_usuario_actual = self.usuario.getNomUsuario()
-
-            # Paso 25a: execSQL INSERT en Base de Datos
-            sql = "INSERT INTO AmigoDe (NombreUsuario1, NombreUsuario2) VALUES (?, ?)"
-            try:
-                self.db.insert(sql, (nom_usuario_actual, pNomUsuarioAmigo))
-                return True
-            except Exception as e:
-                print(f"Error al añadir amigo en BD: {e}")
-                # (Opcional) Si falla BD, se debería revertir memoria,
-                # pero seguimos el diagrama estrictamente.
-                return False
-
-        return False  # Ya era amigo o error
 
     def precargarEquipos(self):
         self.usuario.lista_equipos=[]

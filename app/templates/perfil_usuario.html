@@ -48,7 +48,11 @@
                 {% for especie_actual in info_usuario.equipoEspecie %}
                 <div class="pokemon-card">
                     <span class="nombre-especie">{{especie_actual}}</span>
-                    <img src="{{info_usuario.fotoPokemon[loop.index0]}}" alt="foto-pokemon" class="foto-pokemon">
+                    {% if info_usuario.fotoPokemon[loop.index0]%}
+                        <img src="{{info_usuario.fotoPokemon[loop.index0]}}" alt="foto-pokemon" class="foto-pokemon">
+                    {% else %}
+                        <a class="emoji">🐾</a>
+                    {% endif %}
                     <span class="nombre-custom">"{{info_usuario.equipoCustom[loop.index0]}}"</span>
                 </div>
                 {% endfor %}

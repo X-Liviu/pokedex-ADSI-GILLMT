@@ -28,19 +28,13 @@ class gestorNoticias:
                 SELECT A.NombreUsuario2 
                 FROM AmigoDe A 
                 WHERE A.NombreUsuario1 = ?
-                
-                UNION
-                
-                SELECT A.NombreUsuario1 
-                FROM AmigoDe A 
-                WHERE A.NombreUsuario2 = ?
             )
             AND NombreUsuario LIKE ? || '%'
 
             ORDER BY P.FechaHora DESC;
         """
 
-        filas = self.db.select(sql, (usuario, usuario, filtro))
+        filas = self.db.select(sql, (usuario, filtro))
         json_noticia = []
 
         for fila in filas:

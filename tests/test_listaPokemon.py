@@ -2,8 +2,7 @@ import pytest
 from app import create_app
 from flask import Blueprint
 from app.controller.model.pokeDex_controller import PokeDex
-from app.controller.model.especie_controller import Especie
-from app.controller.model.tipo_controller import Tipo
+from app.model.especie import Especie
 from app.controller.model.marcoDex_controller import MarcoDex
 from app.model.usuario import Usuario
 from app.database.connection import Connection # Aseguramos la importación

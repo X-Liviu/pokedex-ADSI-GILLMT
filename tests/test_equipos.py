@@ -3,7 +3,7 @@ import re
 from flask import Blueprint
 from app import create_app
 from app.controller.model.pokeDex_controller import PokeDex
-from app.controller.model.especie_controller import Especie
+from app.model.especie import Especie
 from app.model.usuario import Usuario
 from app.database.connection import Connection # Aseguramos la importación
 

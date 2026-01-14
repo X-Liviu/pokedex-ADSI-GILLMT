@@ -1,5 +1,5 @@
 import json
-from app.controller.model.especie_controller import Especie
+from app.model.especie import Especie
 
 class PokeDex:
     _instance = None  # Aquí guardaremos la instancia única

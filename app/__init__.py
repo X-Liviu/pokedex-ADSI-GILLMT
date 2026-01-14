@@ -9,8 +9,8 @@ from app.controller.model.marcoDex_controller import MarcoDex
 from app.controller.model.ranking_controller import Ranking
 from app.controller.ui.chatbot_controller import chatbot_blueprint
 from app.model.usuario import Usuario
-from app.controller.model.especie_controller import Especie
-from app.controller.model.tipo_controller import Tipo
+from app.model.especie import Especie
+from app.model.tipo import Tipo
 from app.controller.model.pokeDex_controller import PokeDex
 
 # Custom UI

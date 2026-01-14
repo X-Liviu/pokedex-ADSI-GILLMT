@@ -111,13 +111,13 @@ class MarcoDex:
         return gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db).mejorPokemon(numEquipo)
 
     def obtenerEfectos(self, nombreEspecie) :
-        return PokeDex.obtenerEfectos(nombreEspecie)
+        return PokeDex.get_instance().obtenerEfectos(nombreEspecie)
 
     def caracteristicasPokemon(self, nombreEspecie) :
-        return PokeDex.caracteristicasPokemon(nombreEspecie)
+        return PokeDex.get_instance().caracteristicasPokemon(nombreEspecie)
 
     def cadenaEvolutiva(self, nombreEspecie) :
-        return PokeDex.cadenaEvolutiva(nombreEspecie)
+        return PokeDex.get_instance().cadenaEvolutiva(nombreEspecie)
 
     def tieneAmigos(self, usuario):
         return gestorUsuario.getMyGestorUsuario(usuario).tieneAmigos()

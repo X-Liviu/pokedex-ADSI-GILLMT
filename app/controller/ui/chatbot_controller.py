@@ -59,10 +59,10 @@ def chatbot_blueprint(db):
                     session['estado'] = "PARAMETRO"
 
                     prompts = {
-                        "1": "Introduce el <b>ID del equipo</b>:",
-                        "2": "Introduce el nombre del Pokémon (Fortalezas):",
-                        "3": "Introduce el nombre (Evolución):",
-                        "4": "Introduce el nombre (Stats):"
+                        "1": "Introduce el <b>ID del equipo</b> para ver su mejor Pokémon:",
+                        "2": "Introduce el <b>nombre del Pokémon</b> para ver los tipos contra los que es fuerte y débil:",
+                        "3": "Introduce el <b>nombre del Pokémon</b> para ver su cadena evolutiva:",
+                        "4": "Introduce el <b>nombre del Pokémon</b> para ver sus características:"
                     }
                     temp_historial.append({"role": "bot", "content": prompts.get(user_input)})
                 else:
@@ -76,7 +76,11 @@ def chatbot_blueprint(db):
 
                 # Llamada a los métodos
                 if opcion == "1":
-                    res_data = mDex.mejorPokemon(session.get('usuario'), int(user_input))
+                    try:
+                        id_equipo = int(user_input)
+                        res_data = mDex.mejorPokemon(session.get('usuario'), id_equipo)
+                    except ValueError:
+                        res_data = -1
                 elif opcion == "2":
                     res_data = mDex.obtenerEfectos(user_input)
                 elif opcion == "3":
@@ -86,7 +90,7 @@ def chatbot_blueprint(db):
 
                 # --- VALIDACIÓN DEL ERROR -1 ---
                 if res_data == -1:
-                    mensaje_error = "⚠️ <b>Error:</b> No se han encontrado resultados para tu búsqueda con. Por favor, inténtalo de nuevo."
+                    mensaje_error = "⚠️ <b>Error:</b> No se han encontrado resultados para tu búsqueda. Por favor, inténtalo de nuevo."
                     temp_historial.append({"role": "bot", "content": mensaje_error, "separador": True})
                 else:
                     # Si no es -1, es un diccionario, así que lo formateamos

@@ -8,28 +8,29 @@
             --header-pink: #ff79c6;
             --input-bg: #d9d9d9;
             --border-color: #000;
+            --bot-bubble: #f1f0f0;
         }
 
         body {
-            background: #f4f4f4;
+            background: #e5e5e5;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         .window {
             width: 580px;
-            height: 520px;
+            height: 600px;
             background: #fff;
             border: 3px solid var(--border-color);
             border-radius: 25px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
         }
 
         .window-header {
@@ -39,11 +40,12 @@
             display: flex;
             align-items: center;
             padding-left: 20px;
+            flex-shrink: 0;
         }
 
         .dot {
-            width: 15px; height: 15px; border-radius: 50%;
-            margin-right: 10px; border: 2px solid #000;
+            width: 12px; height: 12px; border-radius: 50%;
+            margin-right: 8px; border: 2px solid #000;
         }
         .red { background: #ff5f56; }
         .yellow { background: #ffbd2e; }
@@ -51,32 +53,93 @@
 
         .chat-content {
             flex: 1;
-            padding: 25px;
+            padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            background-color: #fafafa;
         }
 
-        .msg-bot { align-self: flex-start; color: #000; line-height: 1.5; font-size: 1.05em; }
+        /* Animación base de entrada */
+        @keyframes messageIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-row {
+            display: flex;
+            margin-bottom: 15px;
+            animation: messageIn 0.3s ease-out forwards;
+        }
+
+        /* Retardo para el menú de opciones (segundo mensaje del bot) */
+        .delay-msg {
+            opacity: 0;
+            animation-delay: 0.7s; /* Retardo de casi un segundo */
+        }
+
+        .msg-bot-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            max-width: 85%;
+        }
+
+        .bot-avatar {
+            width: 35px;
+            height: 35px;
+            background: var(--header-pink);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.8em;
+            flex-shrink: 0;
+        }
+
+        .msg-bot {
+            background: var(--bot-bubble);
+            color: #333;
+            padding: 12px 16px;
+            border-radius: 18px;
+            border-top-left-radius: 4px;
+            border: 1.5px solid #ddd;
+            line-height: 1.5;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .msg-user-container {
+            justify-content: flex-end;
+            width: 100%;
+        }
+
+        /* Estilo de usuario recuperado (Retro/Robusto) */
         .msg-user {
-            align-self: flex-end;
             background: #eee;
+            color: #000;
             padding: 8px 15px;
             border-radius: 18px;
             border: 2px solid #333;
             font-weight: bold;
+            max-width: 75%;
         }
 
-        .input-form { padding: 20px; background: #fff; }
+        .input-form {
+            padding: 15px 20px;
+            background: #fff;
+            border-top: 1px solid #eee;
+        }
 
         .input-container {
             background: var(--input-bg);
-            border-radius: 30px;
-            border: 3px solid #000;
+            border-radius: 25px;
+            border: 2.5px solid #000;
             display: flex;
             align-items: center;
-            padding: 5px 20px;
+            padding: 2px 15px;
+            transition: transform 0.2s;
         }
 
         input {
@@ -85,43 +148,100 @@
             border: none;
             outline: none;
             padding: 10px;
-            font-size: 18px;
+            font-size: 16px;
         }
 
-        button { background: none; border: none; cursor: pointer; padding: 5px; }
+        button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.2s;
+        }
 
-        hr { border: 0; border-top: 2px solid #f0f0f0; margin: 10px 0; }
+        button:hover {
+            transform: rotate(-10deg) scale(1.1);
+        }
+
+        hr {
+            border: 0;
+            border-top: 2px solid #eaeaea;
+            margin: 15px 0;
+            width: 100%;
+        }
+
+        .chat-content::-webkit-scrollbar { width: 6px; }
+        .chat-content::-webkit-scrollbar-thumb { background: #ccc; border-radius: 10px; }
     </style>
 </head>
 <body>
     <div class="window">
         <div class="window-header">
-            <div class="dot red"></div><div class="dot yellow"></div><div class="dot green"></div>
+            <div class="dot red"></div>
+            <div class="dot yellow"></div>
+            <div class="dot green"></div>
         </div>
+
         <div class="chat-content" id="chatBox">
             {% for mensaje in historial %}
-                <div class="msg-{{ mensaje.role }}">
-                    {{ mensaje.content | safe }}
+                <div class="message-row {% if loop.last and mensaje.role == 'bot' and not mensaje.separador and loop.length > 1 %}delay-msg{% endif %}">
+                    {% if mensaje.role == 'bot' %}
+                        <div class="msg-bot-container">
+                            <div class="bot-avatar">CB</div>
+                            <div class="msg-bot">
+                                {{ mensaje.content | safe }}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="message-row msg-user-container">
+                            <div class="msg-user">
+                                {{ mensaje.content | safe }}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-                {% if mensaje.separador %}<hr>{% endif %}
+
+                {% if mensaje.separador %}
+                    <hr>
+                {% endif %}
             {% endfor %}
         </div>
+
         <form class="input-form" method="POST" action="{{ url_for('chatbot.chatbot_view') }}">
             <div class="input-container">
-                <input type="text" name="mensaje" autocomplete="off" autofocus>
+                <input type="text" name="mensaje" placeholder="Escribe un mensaje..." autocomplete="off" autofocus>
                 <button type="submit">
-                    <svg width="30" height="30" viewBox="0 0 24 24">
+                    <svg width="26" height="26" viewBox="0 0 24 24">
                         <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" fill="#000"/>
                     </svg>
                 </button>
             </div>
         </form>
     </div>
+
     <script>
+        function scrollToBottom() {
+            const cb = document.getElementById('chatBox');
+            cb.scrollTo({
+                top: cb.scrollHeight,
+                behavior: 'smooth'
+            });
+        }
+
         window.onload = function() {
-            var cb = document.getElementById('chatBox');
-            cb.scrollTop = cb.scrollHeight;
+            scrollToBottom();
+            // Segundo scroll para cuando aparezca el mensaje con retardo
+            setTimeout(scrollToBottom, 800);
         };
+
+        const observer = new MutationObserver(() => {
+            scrollToBottom();
+            // Esperamos un poco a que la animación del delay empiece para reajustar
+            setTimeout(scrollToBottom, 800);
+        });
+        observer.observe(document.getElementById('chatBox'), { childList: true });
     </script>
 </body>
 </html>

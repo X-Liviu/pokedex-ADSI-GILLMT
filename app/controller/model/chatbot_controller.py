@@ -27,4 +27,4 @@ class ChatBot :
                 "Opción": fila["Opcion"],
                 "Descripción": fila["Descripcion"],
             })
-        return json.dumps(json_opciones, indent=4)
+        return json_opciones

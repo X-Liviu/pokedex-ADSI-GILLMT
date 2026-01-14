@@ -2,23 +2,95 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Chatbot Pokémon</title>
+    <title>Chatbot Pokémon UI</title>
     <style>
-        :root { --pink: #ff79c6; --gray: #d9d9d9; --border: #000; }
-        body { background: #f0f0f0; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: sans-serif; }
-        .window { width: 600px; height: 550px; background: #fff; border: 3px solid var(--border); border-radius: 25px; display: flex; flex-direction: column; overflow: hidden; }
-        .window-header { background: var(--pink); height: 45px; border-bottom: 3px solid var(--border); display: flex; align-items: center; padding-left: 20px; }
-        .dot { width: 15px; height: 15px; border-radius: 50%; margin-right: 10px; border: 2.5px solid #000; }
-        .red { background: #ff5f56; } .yellow { background: #ffbd2e; } .green { background: #27c93f; }
-        .chat-content { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .msg-bot { align-self: flex-start; width: 90%; }
-        .msg-user { align-self: flex-end; background: #eee; padding: 8px 15px; border-radius: 15px; border: 2px solid #333; font-weight: bold; }
-        .input-form { padding: 20px; }
-        .input-container { background: var(--gray); border-radius: 30px; border: 3px solid #000; display: flex; align-items: center; padding: 5px 20px; }
-        input { flex: 1; background: transparent; border: none; outline: none; padding: 10px; font-size: 18px; }
-        button { background: none; border: none; cursor: pointer; }
-        hr { border: 0; border-top: 2px solid #eee; margin: 10px 0; }
-        pre { white-space: pre-wrap; word-wrap: break-word; } /* Para que el JSON largo no rompa la caja */
+        :root {
+            --header-pink: #ff79c6;
+            --input-bg: #d9d9d9;
+            --border-color: #000;
+        }
+
+        body {
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .window {
+            width: 580px;
+            height: 520px;
+            background: #fff;
+            border: 3px solid var(--border-color);
+            border-radius: 25px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .window-header {
+            background: var(--header-pink);
+            height: 45px;
+            border-bottom: 3px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            padding-left: 20px;
+        }
+
+        .dot {
+            width: 15px; height: 15px; border-radius: 50%;
+            margin-right: 10px; border: 2px solid #000;
+        }
+        .red { background: #ff5f56; }
+        .yellow { background: #ffbd2e; }
+        .green { background: #27c93f; }
+
+        .chat-content {
+            flex: 1;
+            padding: 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .msg-bot { align-self: flex-start; color: #000; line-height: 1.5; font-size: 1.05em; }
+        .msg-user {
+            align-self: flex-end;
+            background: #eee;
+            padding: 8px 15px;
+            border-radius: 18px;
+            border: 2px solid #333;
+            font-weight: bold;
+        }
+
+        .input-form { padding: 20px; background: #fff; }
+
+        .input-container {
+            background: var(--input-bg);
+            border-radius: 30px;
+            border: 3px solid #000;
+            display: flex;
+            align-items: center;
+            padding: 5px 20px;
+        }
+
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 10px;
+            font-size: 18px;
+        }
+
+        button { background: none; border: none; cursor: pointer; padding: 5px; }
+
+        hr { border: 0; border-top: 2px solid #f0f0f0; margin: 10px 0; }
     </style>
 </head>
 <body>
@@ -28,7 +100,9 @@
         </div>
         <div class="chat-content" id="chatBox">
             {% for mensaje in historial %}
-                <div class="msg-{{ mensaje.role }}">{{ mensaje.content | safe }}</div>
+                <div class="msg-{{ mensaje.role }}">
+                    {{ mensaje.content | safe }}
+                </div>
                 {% if mensaje.separador %}<hr>{% endif %}
             {% endfor %}
         </div>
@@ -36,7 +110,9 @@
             <div class="input-container">
                 <input type="text" name="mensaje" autocomplete="off" autofocus>
                 <button type="submit">
-                    <svg width="28" height="28" viewBox="0 0 24 24"><path d="M2,21L23,12L2,3V10L17,12L2,14V21Z"/></svg>
+                    <svg width="30" height="30" viewBox="0 0 24 24">
+                        <path d="M2,21L23,12L2,3V10L17,12L2,14V21Z" fill="#000"/>
+                    </svg>
                 </button>
             </div>
         </form>

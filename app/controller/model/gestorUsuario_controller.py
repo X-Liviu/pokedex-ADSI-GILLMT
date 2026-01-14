@@ -119,7 +119,11 @@ class gestorUsuario:
                         parameters=(id_bd_real, id_poki_real)
                     )
             except sqlite3.Error as e:
-                print(f"Error guardando equipo: {e}")
+                # Esto te dirá en la consola del test exactamente qué falló
+                print(f"\n[ERROR SQL] Fallo al guardar: {e}")
+                print(f"DATOS INTENTADOS: {info['especie']}, {info['nombre_custom']}")
+                # Importante: No silencies el error en los tests
+                raise e
 
     def tieneEquipos(self):
         return self.usuario.tieneEquipos()
@@ -556,7 +560,8 @@ class gestorUsuario:
         # CAMBIO: Usamos LEFT JOIN para traer equipos aunque estén vacíos
         sql2 = """
                SELECT e.numEquipo,
-                      p.numPokemon,
+                      p.idPokemon,  -- CAMBIO: Traemos el ID real
+                      p.numPokemon, -- Número de la Pokedex
                       p.NombreCustom,
                       p.NombreEspecie,
                       p.Rareza,
@@ -566,8 +571,8 @@ class gestorUsuario:
                       p.Imagen
                FROM Equipo e
                         LEFT JOIN PokemonEnEquipo pe ON e.idEquipo = pe.idEquipoInterno
-                        LEFT JOIN Pokemon p ON pe.idPokemon = p.numPokemon
-               WHERE e.NombreUsuario = ?
+                        LEFT JOIN Pokemon p ON pe.idPokemon = p.idPokemon -- CAMBIO CLAVE AQUÍ
+               WHERE e.NombreUsuario = ? \
                """
 
         resultado = self.db.select(sql2, (nomUsuario,))
@@ -579,12 +584,15 @@ class gestorUsuario:
             self.usuario.cargarEquipo(numEquipo)
 
             # 2. Solo intentamos añadir el Pokémon si EXISTE (si no es None por el Left Join)
-            if fila['numPokemon'] is not None:
+            if fila['idPokemon'] is not None:
                 nombreEspecie = fila['NombreEspecie']
                 nombreCustom = fila['NombreCustom']
 
                 datos_bd = {
-                    "id_real": int(fila['numPokemon']),
+                    # CAMBIO AQUÍ: Usamos idPokemon (PK) para el rastro interno
+                    "id_real": int(fila['idPokemon']),
+                    # Guardamos el num de pokedex por si lo necesitas para la lógica
+                    "num_pokedex": int(fila['numPokemon']),
                     "rareza": fila['Rareza'],
                     "shiny": bool(fila['Shiny']),
                     "altura": fila['Altura'],

@@ -7,8 +7,6 @@ import json
 def chatbot_blueprint(db):
     nombre_bp = "chatbot"
     bp_chatbot = Blueprint(nombre_bp, __name__)
-
-    from app.controller.model.marcoDex_controller import MarcoDex
     mDex = MarcoDex.getMyMarcoDex(db)
 
     # Función para convertir el dict de datos a HTML
@@ -23,7 +21,7 @@ def chatbot_blueprint(db):
             html += f"• <b>{etiqueta}:</b> {valor}<br>"
         return html
 
-    @bp_chatbot.route('/interfaz', methods=['GET', 'POST'])
+    @bp_chatbot.route('/chatbot', methods=['GET', 'POST'])
     def chatbot_view():
         # --- PRECARGA DEL MENÚ ---
         if 'menu_texto' not in session:

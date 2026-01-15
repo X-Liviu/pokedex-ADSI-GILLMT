@@ -22,8 +22,18 @@ class GestorAPI:
                 # 2. Obtener objeto Species (para descripción, legendario, color...)
                 s = p.species
 
-                # Procesar Tipos
-                tipos = [t.type.name.capitalize() for t in p.types]
+                tipos = []
+
+                for t in p.types:
+                    tipo_obj = t.type  # Objeto Type
+                    nombre_tipo = tipo_obj.name.capitalize()  # fallback en inglés
+
+                    for n in tipo_obj.names:
+                        if n.language.name == 'es':
+                            nombre_tipo = n.name
+                            break
+
+                    tipos.append(nombre_tipo)
 
                 # Procesar Descripción (Busca la primera en español, o usa inglés por defecto)
                 descripcion = "Sin descripción"

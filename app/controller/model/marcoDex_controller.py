@@ -178,10 +178,18 @@ class MarcoDex:
             pesoMedio = float(fila['PesoMedia'])
             region = fila['Region']
 
-            # Paso 24aa y 25aa: Añadir a Pokedex
-            mi_pokedex.añadirPokemon(nomPokemon, descr, legendario, altMedia, pesoMedio, region)
+            # Paso 15aa: Consulta a BD para los tipos del Pokémon
+            sql = "SELECT NombreTipo FROM EspecieTipo WHERE NombreEspecie = '%s'" % nomPokemon
 
-        print(f"[DEBUG] Precarga global finalizada: {len(mi_pokedex.listaEspecies)} especies en Pokedex.")
+            resultado = self.db.select(sql, ())  # Pasos 16aa
+            tipos = []
+            for fila in resultado:
+                tipos.append(fila['NombreTipo'])
+
+            # Paso 24aa y 25aa: Añadir a Pokedex
+            mi_pokedex.añadirPokemon(nomPokemon, descr, legendario, altMedia, pesoMedio, tipos, region)
+
+    print(f"[DEBUG] Precarga global finalizada: {len(mi_pokedex.listaEspecies)} especies en Pokedex.")
 
     def getRol(self, nombre_usuario: str) -> str:
         """

@@ -217,7 +217,6 @@ INSERT OR IGNORE INTO Tipo VALUES('Fuego', 'Queman');
 INSERT OR IGNORE INTO Tipo VALUES('Agua', 'Mojan');
 
 -- H. TIPO ESPECIE
-INSERT OR IGNORE INTO EspecieTipo VALUES('Bulbasaur', 'Planta');
 
 -- H. EFECTOS
 INSERT OR IGNORE INTO EfectoTipo VALUES('Planta', 'Agua', 'Eficaz');

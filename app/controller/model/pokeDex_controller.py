@@ -101,7 +101,7 @@ class PokeDex:
         else:
             return -1
 
-    def añadirPokemon(self, nomPokemon, descr, legendario, altMedia, pesoMedio, region):
+    def añadirPokemon(self, nomPokemon, descr, legendario, altMedia, pesoMedio, tipos, region):
         """
         Paso 24aa: Crea la instancia de Especie y la añade a la lista.
         """
@@ -114,7 +114,7 @@ class PokeDex:
             alturaMedia=altMedia,
             pesoMedio=pesoMedio,
             movimientos=[],      # Argumento requerido por Especie.__init__
-            tipos=[],            # Argumento requerido por Especie.__init__
+            tipos=tipos,            # Argumento requerido por Especie.__init__
             imagen="",           # Argumento requerido por Especie.__init__
             evoluciones=[],      # Argumento requerido por Especie.__init__
             preevoluciones=[]    # Argumento requerido por Especie.__init__

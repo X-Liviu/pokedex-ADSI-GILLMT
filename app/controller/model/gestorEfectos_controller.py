@@ -1,8 +1,19 @@
-import json
-class GestorEfectos:
+from app.database.connection import Connection
 
-    def __init__(self, efectos: list):
-        self.efectos = efectos
+class gestorEfectos: pass
+
+class gestorEfectos:
+    myGestorEfectos: gestorEfectos = None
+
+
+    def __init__(self, db):
+        self.db = db
+
+    @classmethod
+    def getGestorEfectos(cls, db=None):
+        if cls.myGestorEfectos is None:
+            cls.myGestorEfectos = gestorEfectos(db)
+        return cls.myGestorEfectos
 
     def obtenerEfectosEficaces(self, nombreTipo):
         datos = []

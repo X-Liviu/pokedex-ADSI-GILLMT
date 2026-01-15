@@ -47,7 +47,7 @@ def ver_lista_usuarios_blueprint(db: Connection) -> Blueprint:
         mDex = MarcoDex.getMyMarcoDex(db)
         exito = mDex.procesarModificarDatosAdmin(pNomUsuario, pNom, pAp, pNomUsuarioModif)
         if exito:
-            return redirect(url_for('index'))
+            return redirect(url_for('menu_principal.mostrar_menu'))
         return redirect(url_for('ver_lista_usuarios.ver_lista_usuarios'))
 
     return bp_verlistaus

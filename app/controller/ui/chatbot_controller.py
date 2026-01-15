@@ -50,7 +50,7 @@ def chatbot_blueprint(db):
                     session.pop('historial', None)
                     session.pop('menu_texto', None)
                     session.pop('estado', None)
-                    return redirect(url_for('index'))
+                    return redirect(url_for('menu_principal.mostrar_menu'))
 
                 elif user_input in ["1", "2", "3", "4"]:
                     session['opcion_activa'] = user_input

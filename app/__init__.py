@@ -28,6 +28,8 @@ from app.controller.ui.identificacion_controller import identificacion_blueprint
 from app.controller.ui.registrarse_controller import registrarse_blueprint
 from app.controller.ui.confirmarContrasena_controller import confirmar_contrasena_blueprint
 from app.controller.ui.verListaUsuarios_controller import ver_lista_usuarios_blueprint
+from app.controller.ui.menu_principal_controller import menu_principal_blueprint
+
 # Tipos de datos
 from config import Config
 
@@ -99,25 +101,12 @@ def create_app():
     app.register_blueprint(registrarse_blueprint(db))
     app.register_blueprint(ver_lista_usuarios_blueprint(db))
     app.register_blueprint(confirmar_contrasena_blueprint(db))
+    app.register_blueprint(menu_principal_blueprint(db))
 
     @app.route('/')
     def index():
-        # 1. Protección de ruta (Si no hay usuario, fuera)
-        if 'usuario' not in session:
-            return redirect(url_for('identificacion.identificacion'))
+        session.clear()
+        return redirect(url_for('identificacion.identificacion'))
 
-        if gestorUsuario.getMyGestorUsuario(session['usuario']) is None:
-            gestorUsuario.cargarUsuario(session['usuario'], db)
-
-        # 2. Generamos el HTML del menú
-        html_content = menu_principal_controller.mostrar_menu()
-
-        # Evitar caché del navegador
-        respuesta = make_response(html_content)
-        respuesta.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
-        respuesta.headers["Pragma"] = "no-cache"
-        respuesta.headers["Expires"] = "0"
-
-        return respuesta
 
     return app

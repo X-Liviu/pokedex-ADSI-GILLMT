@@ -10,7 +10,7 @@ def identificacion_blueprint(db: Connection) -> Blueprint:
     def identificacion():
         # 1. Si ya está logueado, mandamos a TODOS al menú principal (index)
         if 'usuario' in session:
-            return redirect(url_for('index'))
+            return redirect(url_for('menu_principal.mostrar_menu'))
 
         if request.method == 'POST':
             pNomUsuario = request.form.get('usuario')
@@ -35,7 +35,7 @@ def identificacion_blueprint(db: Connection) -> Blueprint:
                     session['rol'] = rol_usuario
 
                     # --- REDIRECCIÓN UNIFICADA ---
-                    return redirect(url_for('index'))
+                    return redirect(url_for('menu_principal.mostrar_menu'))
 
                 else:
                     flash("Usuario o contraseña incorrectos")

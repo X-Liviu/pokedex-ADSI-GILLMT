@@ -39,7 +39,7 @@ def registrarse_blueprint(db: Connection) -> Blueprint:
                     if mi_marcodex.iniciarSesion(pNomUsuario, pContrasena):
                         session['usuario'] = pNomUsuario
                         session['rol'] = mi_marcodex.getRol(pNomUsuario)
-                        return redirect(url_for('index'))
+                        return redirect(url_for('menu_principal.mostrar_menu'))
                     else:
                         flash("Error crítico: Algo falló en el sistema.")
                         return render_template('registro.html')

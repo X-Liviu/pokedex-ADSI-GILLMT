@@ -28,7 +28,7 @@ def confirmar_contrasena_blueprint(db: Connection) -> Blueprint:
                 session['usuario'] = nombre_usuario_actualizado
 
                 flash("Datos modificados correctamente.")
-                return redirect(url_for('index'))
+                return redirect(url_for('menu_principal.mostrar_menu'))
             else:
                 # FALLO (Contraseña incorrecta o error interno)
                 flash("Contraseña incorrecta o error al procesar.")

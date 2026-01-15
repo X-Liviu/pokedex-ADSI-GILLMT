@@ -57,8 +57,7 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
                 # REDIRECCIÓN DINÁMICA
                 if origen == 'mis_equipos':
                     return redirect(url_for('ver_equipos.ver_equipos'))
-                # --- CORRECCIÓN 3: Redirigir a 'index' (que es el menú principal) ---
-                return redirect(url_for('index'))
+                return redirect(url_for('menu_principal.mostrar_menu'))
 
             elif accion == "cancelar":
                 mDex.borrarEquipo(num_equipo, nombre_sesion)
@@ -67,8 +66,7 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
                 # REDIRECCIÓN DINÁMICA
                 if origen == 'mis_equipos':
                     return redirect(url_for('ver_equipos.ver_equipos'))
-                # --- CORRECCIÓN 3: Redirigir a 'index' ---
-                return redirect(url_for('index'))
+                return redirect(url_for('menu_principal.mostrar_menu'))
 
         # C. Renderizado
         especies_json = mDex.mostrarPokedex()

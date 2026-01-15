@@ -33,8 +33,7 @@ def modificar_datos_blueprint(db: Connection) -> Blueprint:
             elif resultado == 0:
                 if pUsuarioNuevo and pUsuarioNuevo.strip() and pUsuarioNuevo != pNomUsuario:
                     session['usuario'] = pUsuarioNuevo
-                return redirect(url_for('index'))
-
+                return redirect(url_for('menu_principal.mostrar_menu'))
         return render_template('modificar_datos.html')
 
     return bp

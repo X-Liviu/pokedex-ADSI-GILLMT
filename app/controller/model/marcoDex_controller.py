@@ -216,7 +216,6 @@ class MarcoDex:
         if gestor is None:
             # El usuario de la sesión no existe en la BD.
             return -1
-
         # 1. Verificar Cambios
         es_sensible = gestor.verificarCambios(pNomUsuario, pUsuarioNuevo, pNuevaContra)
 

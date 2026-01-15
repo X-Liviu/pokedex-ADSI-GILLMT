@@ -2,6 +2,7 @@ import sqlite3
 import random
 from typing import List
 from app.controller.model.gestorCopiasEquipo_controller import gestorCopiasEquipo
+from app.controller.model.gestorNoticias_controller import gestorNoticias
 from app.model.usuario import Usuario
 
 class gestorUsuario:
@@ -123,6 +124,10 @@ class gestorUsuario:
                 print(f"!!! ERROR SQL al insertar Pokémon: {e}")
                 raise e
 
+        text = f"ha creado el equipo {numEquipo}!"
+        gestor = gestorNoticias.getGestorNoticias()
+        gestor.aniadirNoticia(self.usuario.nombre_usuario, text, self.db)
+
     def tieneEquipos(self):
         return self.usuario.tieneEquipos()
 
@@ -154,6 +159,9 @@ class gestorUsuario:
         self.g_copias.compararCopiasEliminar(self.usuario, numEquipo, self.db)
         self.g_copias.compararCopiasAniadir(self.usuario, numEquipo, self.db)
         self.g_copias.finalizarEdicion(self.usuario.nombre_usuario)
+        text = f"ha modificado el equipo {numEquipo}!"
+        gestor = gestorNoticias.getGestorNoticias()
+        gestor.aniadirNoticia(self.usuario.nombre_usuario, text, self.db)
 
     def descartarCambios(self, numEquipo):
         self.g_copias.descartarCambios(self.usuario, numEquipo)

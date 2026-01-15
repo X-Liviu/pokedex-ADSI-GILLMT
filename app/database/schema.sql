@@ -208,8 +208,22 @@ INSERT OR IGNORE INTO OpcionChatbot VALUES('5', 'Volver al menú principal.');
 
 -- G. EVOLUCIONES
 INSERT OR IGNORE INTO Evolucion VALUES('Ivysaur', 'Bulbasaur');
+INSERT OR IGNORE INTO Evolucion VALUES('Venusaur', 'Bulbasaur');
 INSERT OR IGNORE INTO Evolucion VALUES('Venusaur', 'Ivysaur');
 
+-- H. TIPO
+INSERT OR IGNORE INTO Tipo VALUES('Planta', 'Hierba');
+INSERT OR IGNORE INTO Tipo VALUES('Fuego', 'Queman');
+INSERT OR IGNORE INTO Tipo VALUES('Agua', 'Mojan');
+
+-- H. TIPO ESPECIE
+INSERT OR IGNORE INTO EspecieTipo VALUES('Bulbasaur', 'Planta');
+
+-- H. EFECTOS
+INSERT OR IGNORE INTO EfectoTipo VALUES('Planta', 'Agua', 'Eficaz');
+INSERT OR IGNORE INTO EfectoTipo VALUES('Planta', 'Fuego', 'Débil');
+INSERT OR IGNORE INTO EfectoTipo VALUES('Fuego', 'Planta', 'Eficaz');
+INSERT OR IGNORE INTO EfectoTipo VALUES('Agua', 'Planta', 'Débil');
 
 -- G. AMIGOS (NUEVA SECCIÓN)
 -- Amigos para 'LiviuX':

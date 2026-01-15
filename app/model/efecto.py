@@ -8,5 +8,5 @@ class Efecto:
         return (nombreTipo == self.tipoAtac) and (self.efecto == "Eficaz")
 
     def esDebil(self, nombreTipo) :
-        return (nombreTipo == self.tipoAtac) and (self.efecto == "Debil")
+        return (nombreTipo == self.tipoAtac) and (self.efecto == "Débil")
 

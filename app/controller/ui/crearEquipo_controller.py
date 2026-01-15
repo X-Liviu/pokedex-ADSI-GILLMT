@@ -43,6 +43,8 @@ def crear_equipo_blueprint(db: Connection) -> Blueprint:
                     flash("Ya tienes un Pokemon que se llama así!!")
                 elif resultado == -3:
                     flash("Esta especie ya está en tu equipo")
+                else:
+                    flash("Pokémon añadido al equipo")
 
             elif accion == "borrar":
                 pokemon_id = request.form.get("pokemon_id")

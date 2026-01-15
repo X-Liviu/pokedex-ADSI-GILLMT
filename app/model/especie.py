@@ -1,6 +1,6 @@
 import json
 
-from app.controller.model.gestorEfectos_controller import GestorEfectos
+from app.controller.model.gestorEfectos_controller import gestorEfectos
 
 
 class Especie:
@@ -22,13 +22,13 @@ class Especie:
     def esFuerteContra(self):
         datos = []
         for tipo in self.tipos :
-            datos.append(GestorEfectos.obtenerEfectosEficaces(tipo.nombre))
+            datos.append(gestorEfectos.obtenerEfectosEficaces(tipo.nombre))
         return datos
 
     def esDebilContra(self):
         datos = []
         for tipo in self.tipos :
-            datos.append(GestorEfectos.obtenerEfectosDebiles(tipo.nombre))
+            datos.append(gestorEfectos.obtenerEfectosDebiles(tipo.nombre))
         return datos
 
     def getInfo(self):

@@ -128,19 +128,36 @@
             font-size: 0.8em;
         }
 
-        .alerta-error {
-            background: #FF4D4D;
+        .flash-message {
+            background-color: #3b4cca; /* Azul Pokemon */
             color: white;
-            border: 3px solid black;
-            border-radius: 12px;
-            padding: 10px;
-            font-weight: bold;
+            padding: 15px 30px;
             margin-bottom: 10px;
-            box-shadow: 4px 4px 0px black;
+            border: 3px solid black;
+            border-radius: 15px;
+            font-weight: bold;
+            box-shadow: 8px 8px 0px rgba(0,0,0,0.2);
+            animation: slideIn 0.5s ease-out;
         }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
     </style>
 </head>
 <body>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div id="flash-container" style="position: fixed; top: 20px; width: 100%; z-index: 9999; display: flex; flex-direction: column; align-items: center;">
+      {% for message in messages %}
+        <div class="flash-message">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
 
 <div class="ventana">
     <div class="barra-superior">
@@ -149,16 +166,6 @@
         <div class="circulo verde"></div>
         <h2 class="titulo-ventana">MODIFICANDO EQUIPO #{{ num_equipo }}</h2>
     </div>
-
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <div style="padding: 20px 30px 0 30px;">
-          {% for message in messages %}
-            <div class="alerta-error">{{ message }}</div>
-          {% endfor %}
-        </div>
-      {% endif %}
-    {% endwith %}
 
     <div class="contenido">
         <div class="columna">
@@ -210,14 +217,17 @@
 </div>
 
 <script>
-    setTimeout(function() {
-        let alertas = document.querySelectorAll('.alerta-error');
-        alertas.forEach(function(a) {
-            a.style.transition = "opacity 0.5s ease";
-            a.style.opacity = "0";
-            setTimeout(() => a.remove(), 500);
+    document.addEventListener('DOMContentLoaded', function() {
+        const messages = document.querySelectorAll('.flash-message');
+        messages.forEach(function(msg) {
+            setTimeout(function() {
+                msg.style.transition = "all 0.6s ease";
+                msg.style.opacity = "0";
+                msg.style.transform = "translateY(-20px)";
+                setTimeout(() => msg.remove(), 600);
+            }, 3000); // Se borra a los 3 segundos
         });
-    }, 3000);
+    });
 </script>
 
 </body>

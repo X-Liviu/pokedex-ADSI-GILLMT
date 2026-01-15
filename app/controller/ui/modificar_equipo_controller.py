@@ -33,16 +33,26 @@ def modificar_equipo_blueprint(db: Connection) -> Blueprint:
                 especie = request.form.get("especie")
                 nombre_custom = request.form.get("nombre_custom")
                 # El modelo añade el bicho a la COPIA del equipo
-                mDex.aniadirPokemon(especie, nombre_custom, num_equipo_activo, nombre_sesion)
+                resultado = mDex.aniadirPokemon(especie, nombre_custom, num_equipo_activo, nombre_sesion)
+                if resultado == -1:
+                    flash("¡El equipo ya está completo (máximo 6)!")
+                elif resultado == -2:
+                    flash("Ya tienes un Pokemon que se llama así!!")
+                elif resultado == -3:
+                    flash("Esta especie ya está en tu equipo")
+                else:
+                    flash("Pokémon añadido al equipo")
 
             elif accion == "borrar":
                 pokemon_id = request.form.get("pokemon_id")
                 mDex.borrarPokemon(num_equipo_activo, int(pokemon_id), nombre_sesion)
+                flash("Pokémon eliminado del equipo")
 
             elif accion == "guardar":
                 # Guardamos los cambios de la copia en la BD y en el objeto real
                 mDex.compararCopias(num_equipo_activo, nombre_sesion)
                 session.pop('equipo_en_edicion', None)
+                flash("¡Equipo modificado con éxito!")
                 return redirect(url_for('ver_equipos.ver_equipos'))
 
             elif accion == "cancelar":

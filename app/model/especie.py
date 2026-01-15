@@ -19,17 +19,8 @@ class Especie:
     def esEsta(self, nombreEspecie):
         return self.nombre == nombreEspecie
 
-    def esFuerteContra(self):
-        datos = []
-        for tipo in self.tipos :
-            datos.append(gestorEfectos.obtenerEfectosEficaces(tipo.nombre))
-        return datos
-
-    def esDebilContra(self):
-        datos = []
-        for tipo in self.tipos :
-            datos.append(gestorEfectos.obtenerEfectosDebiles(tipo.nombre))
-        return datos
+    def getTipos(self):
+        return self.tipos
 
     def getInfo(self):
         datos = {
@@ -48,11 +39,11 @@ class Especie:
         if (len(self.preevoluciones) == 0) & (len(self.evoluciones) == 0):
             datos = {"Cadena evolutiva": self.nombre}
         elif len(self.evoluciones) == 0 :
-            datos = {"Cadena evolutiva": [self.preevoluciones, self.nombre]}
+            datos = {"Cadena evolutiva": self.preevoluciones + [self.nombre]}
         elif len(self.preevoluciones) == 0 :
-            datos = {"Cadena evolutiva": [self.nombre, self.evoluciones]}
+            datos = {"Cadena evolutiva": [self.nombre] + self.evoluciones}
         else:
-            datos = {"Cadena evolutiva": [self.preevoluciones, self.nombre, self.evoluciones]}
+            datos = {"Cadena evolutiva": self.preevoluciones + [self.nombre] + self.evoluciones}
         return datos
 
 

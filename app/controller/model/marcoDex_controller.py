@@ -175,10 +175,27 @@ class MarcoDex:
             for fila in resultado:
                 tipos.append(fila['NombreTipo'])
 
-            # Paso 24aa y 25aa: Añadir a Pokedex
-            mi_pokedex.añadirPokemon(nomPokemon, descr, legendario, altMedia, pesoMedio, tipos, region)
 
-    print(f"[DEBUG] Precarga global finalizada: {len(mi_pokedex.listaEspecies)} especies en Pokedex.")
+            # Paso 15aa: Consulta a BD para las evoluciones
+            sql = "SELECT Evolucion FROM Evolucion WHERE Preevolucion = '%s'" % nomPokemon
+
+            resultado = self.db.select(sql, ())  # Pasos 16aa
+            evoluciones = []
+            for fila in resultado:
+                evoluciones.append(fila['Evolucion'])
+
+            # Paso 15aa: Consulta a BD para las preevoluciones
+            sql = "SELECT Preevolucion FROM Evolucion WHERE Evolucion = '%s'" % nomPokemon
+
+            resultado = self.db.select(sql, ())  # Pasos 16aa
+            preevoluciones = []
+            for fila in resultado:
+                preevoluciones.append(fila['Preevolucion'])
+
+            # Paso 24aa y 25aa: Añadir a Pokedex
+            mi_pokedex.añadirPokemon(nomPokemon, descr, legendario, altMedia, pesoMedio, tipos, evoluciones, preevoluciones, region)
+
+        print(f"[DEBUG] Precarga global finalizada: {len(mi_pokedex.listaEspecies)} especies en Pokedex.")
 
     def getRol(self, nombre_usuario: str) -> str:
         """

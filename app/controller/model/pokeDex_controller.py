@@ -1,4 +1,6 @@
 import json
+
+from app.controller.model.gestorEfectos_controller import gestorEfectos
 from app.model.especie import Especie
 
 class PokeDex:
@@ -72,13 +74,26 @@ class PokeDex:
         """
         laEspecie = self.buscarEspecie(nombreEspecie)
         if laEspecie is not None:
+            tipos = laEspecie.getTipos()
             datos = {
-                "Efectos contra los que es fuerte": laEspecie.esFuerteContra(),
-                "Efectos contra los que es débil": laEspecie.esDebilContra()
+                "Efectos contra los que es fuerte": self.esFuerteContra(tipos),
+                "Efectos contra los que es débil": self.esDebilContra(tipos)
             }
             return datos
         else:
             return -1
+
+    def esFuerteContra(self, tipos):
+        datos = []
+        for tipo in tipos :
+            datos.append(gestorEfectos.getGestorEfectos().obtenerEfectosEficaces(tipo))
+        return datos
+
+    def esDebilContra(self, tipos):
+        datos = []
+        for tipo in tipos :
+            datos.append(gestorEfectos.getGestorEfectos().obtenerEfectosDebiles(tipo))
+        return datos
 
     def caracteristicasPokemon(self, nombreEspecie):
         """
@@ -101,7 +116,7 @@ class PokeDex:
         else:
             return -1
 
-    def añadirPokemon(self, nomPokemon, descr, legendario, altMedia, pesoMedio, tipos, region):
+    def añadirPokemon(self, nomPokemon, descr, legendario, altMedia, pesoMedio, tipos, evoluciones, preevoluciones, region):
         """
         Paso 24aa: Crea la instancia de Especie y la añade a la lista.
         """
@@ -116,8 +131,8 @@ class PokeDex:
             movimientos=[],      # Argumento requerido por Especie.__init__
             tipos=tipos,            # Argumento requerido por Especie.__init__
             imagen="",           # Argumento requerido por Especie.__init__
-            evoluciones=[],      # Argumento requerido por Especie.__init__
-            preevoluciones=[]    # Argumento requerido por Especie.__init__
+            evoluciones= evoluciones,      # Argumento requerido por Especie.__init__
+            preevoluciones= preevoluciones    # Argumento requerido por Especie.__init__
         )
         self.listaEspecies.append(nueva_especie)
 

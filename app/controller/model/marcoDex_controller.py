@@ -29,13 +29,13 @@ class MarcoDex:
             MarcoDex(db)
         return cls.myMarcoDex
 
-    def mostrarRanking(self) -> Custom_types.Ranking.Usuarios:
+    def mostrarRanking(self) -> Custom_types.Ranking.JSONRanking:
         return Ranking.getMyRanking(self.db).mostrarRanking()
 
-    def mostrarUsuario(self, pNombreUsuario: str, pNombreAmigo: str) -> Custom_types.MarcoDex.Usuario:
+    def mostrarUsuario(self, pNombreUsuario: str, pNombreAmigo: str) -> Custom_types.Ranking.JSONRankingUsuario:
         return Ranking.getMyRanking(self.db).mostrarUsuario(pNombreUsuario, pNombreAmigo)
 
-    def aniadirAmigo(self, nombreUsuario: str, nombreAmigo: str) -> Custom_types.GestorUsuario.EstadoAmigo:
+    def aniadirAmigo(self, nombreUsuario: str, nombreAmigo: str) -> Custom_types.GestorUsuario.JSONEstadoAmigo:
         resultado: Custom_types.GestorUsuario.EstadoAmigo = {"Aniadido": False}
         resultado["Aniadido"] = gestorUsuario.getMyGestorUsuario(nombreUsuario, self.db).aniadirAmigo(nombreAmigo)
         return resultado
@@ -49,17 +49,6 @@ class MarcoDex:
         if gestor:
             return gestor.aniadirAmigo(pNomUsuarioAmigo)
         return False
-
-
-
-    """
-    --PARA TABATA-- Las llamadas que se estan haciendo a GestorUsuario no pertenecen a una instancia
-    u objeto. En ningun momento hemos creado un objeto en ninguna de los metodos. Tampoco se pasa
-    una referencia a un objeto por parametros de dichos metodos. Hay que crear una MAE o
-    pasar referencia a un objeto creado al inicio de todo por parametros en todos los metodos
-    que requiera llamadas a este. Janire en su proyecto de ejemplo crea objetos en la
-    constructora de otros(book_controller en loan_controller) 
-    """
 
     def newEquipo(self, nombre_usuario: str):
         gestor = gestorUsuario.getMyGestorUsuario(nombre_usuario, self.db)

@@ -36,6 +36,11 @@ def perfil_usuario_blueprint(db: Connection) -> Blueprint:
                 resultado_solicitud: bool = marcodex_service.aniadirAmigo(usuario_actual, otro_usuario)
 
                 if resultado_solicitud:
+                    """
+                    En caso de que el proceso solicitud de amistad haya funcionado
+                    correctamente, hay que actualizar la pagina, para que el usuario
+                    vea que ya son amigos.
+                    """
                     resultado = redirect(f"/perfil_usuario/{otro_usuario}")
             except:
                 flash(f"No se pudo seguir a {otro_usuario}.")

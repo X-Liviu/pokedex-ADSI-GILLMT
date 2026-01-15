@@ -22,13 +22,23 @@ class UsuarioRanking:
     def add_rareza(self, rareza: int) -> None:
         self.rareza += rareza
 
-    def to_dict(self) -> Custom_types.Ranking.CalificacionUsuario:
+    def to_dict(self) -> Custom_types.Ranking.JSONCalificacionUsuario2:
         return {
             "nombre": self.nombre,
             "rareza": self.rareza
         }
 
     def compare(self, usuario: UsuarioRanking) -> int:
+        """
+        pre:
+        post: devuelve 1 si la rareza del usuario por parametros
+        es menor que el de el usuario al que se le esta
+        haciendo llamada.
+
+        devuelve -1 si la rareza del usuario por parametros
+        es mayor que el de el usuario al que se le esta
+        haciendo llamada.
+        """
         resultado: int = 0
 
         if self.rareza > usuario.rareza:

@@ -2,15 +2,25 @@ from typing import Dict, List, Any
 
 class Custom_types:
     class Ranking:
-        CalificacionUsuario = Dict[str, Any] # Asginacion de tipos de datos. Como el typedef en C
-        Usuarios = Dict[str, List]
-        Usuario = Dict[str, Any]
+        # Diagrama de secuencia 1
+        JSONCalificacionUsuario1 = Dict[str, Any] # Esto deberia ser {"usuario": String, "rareza": float}
+        JSONCalificacionUsuario2 = Dict[str, Any] # Esto deberia ser {"usuario": String, "rareza": float, "puesto": int}
+        JSONRanking = Dict[str, List[Any]] # Esto deberia ser Dict[str, List[JSONCalificacionUsuario1]]
+
+        # Diagrama de secuencia 2
+        JSONRankingUsuario = Dict[str, Any]
+        """
+        Esto deberia ser {"nombre": str,
+                         "equipoEspecie": List,
+                         "equipoCustom": List,
+                         "fotoPokemon": List,
+                         "puesto": int,
+                         "estado_amigo": int
+                         }
+        """
 
     class GestorUsuario:
-        EstadoAmigo = Dict[str, bool]
-
-    class MarcoDex:
-        Usuario = Dict[str, Any]
+        JSONEstadoAmigo = Dict[str, bool]
 
     class PerfilUsuario:
         NO_AMIGO: int = 0

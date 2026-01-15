@@ -22,6 +22,7 @@ class GestorAPI:
                 # 2. Obtener objeto Species (para descripción, legendario, color...)
                 s = p.species
 
+                #Obtener Tipos
                 tipos = []
 
                 for t in p.types:
@@ -34,6 +35,25 @@ class GestorAPI:
                             break
 
                     tipos.append(nombre_tipo)
+
+                #Obtener cadena evolutiva
+                chain = s.evolution_chain.chain
+
+                def recorrer(chain, lista):
+                    lista.append(chain.species.name)
+                    for evo in chain.evolves_to:
+                        recorrer(evo, lista)
+
+                todos = []
+                recorrer(chain, todos)
+
+                idx = todos.index(p.name)
+
+                preevoluciones = todos[:idx]
+                evoluciones = todos[idx + 1:]
+
+                preevoluciones = [pr.capitalize() for pr in preevoluciones]
+                evoluciones = [ev.capitalize() for ev in evoluciones]
 
                 # Procesar Descripción (Busca la primera en español, o usa inglés por defecto)
                 descripcion = "Sin descripción"
@@ -49,6 +69,8 @@ class GestorAPI:
                     "altura": p.height / 10.0,  # Convertir decímetros a metros
                     "peso": p.weight / 10.0,  # Convertir hectogramos a kg
                     "tipos": tipos,  # Lista de strings ['Planta', 'Veneno']
+                    "preevoluciones": preevoluciones,
+                    "evoluciones": evoluciones,
                     "descripcion": descripcion,
                     "legendario": s.is_legendary,
                     "region": "Kanto"  # Asumimos Kanto para la gen 1

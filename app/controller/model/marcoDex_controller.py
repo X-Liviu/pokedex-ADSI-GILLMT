@@ -307,6 +307,8 @@ class MarcoDex:
 
         sql_especie_tipo = "INSERT OR IGNORE INTO EspecieTipo (NombreEspecie, NombreTipo) VALUES (?, ?)"
 
+        sql_evolucion = "INSERT OR IGNORE INTO Evolucion VALUES (?, ?)"
+
         # 3. Recorrer y guardar
         for poke in lista_pokemons:
             # A) Guardar Especie
@@ -327,6 +329,16 @@ class MarcoDex:
 
                 # Relacionamos Especie con Tipo
                 cursor.execute(sql_especie_tipo, (poke['nombre'], nombre_tipo))
+
+        for poke in lista_pokemons:
+            # C) Guardar Evoluciones y Preevoluciones
+            for evolucion in poke['evoluciones']:
+                # Guardamos el tipo si no existe (ej: "Fuego", "Sin descripcion por ahora")
+                cursor.execute(sql_evolucion, (evolucion, poke['nombre']))
+            for preevolucion in poke['preevoluciones']:
+                # Guardamos el tipo si no existe (ej: "Fuego", "Sin descripcion por ahora")
+                cursor.execute(sql_evolucion, (poke['nombre'], preevolucion))
+
 
         conn.commit()
         print(f"¡Base de datos poblada con {len(lista_pokemons)} especies nuevas!")

@@ -86,13 +86,13 @@ class PokeDex:
     def esFuerteContra(self, tipos):
         datos = []
         for tipo in tipos :
-            datos.append(gestorEfectos.getGestorEfectos().obtenerEfectosEficaces(tipo))
+            datos.extend(gestorEfectos.getGestorEfectos().obtenerEfectosEficaces(tipo))
         return datos
 
     def esDebilContra(self, tipos):
         datos = []
         for tipo in tipos :
-            datos.append(gestorEfectos.getGestorEfectos().obtenerEfectosDebiles(tipo))
+            datos.extend(gestorEfectos.getGestorEfectos().obtenerEfectosDebiles(tipo))
         return datos
 
     def caracteristicasPokemon(self, nombreEspecie):

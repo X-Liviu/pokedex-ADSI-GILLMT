@@ -7,14 +7,15 @@ class gestorEfectos: pass
 class gestorEfectos:
     myGestorEfectos: gestorEfectos = None
 
-    def __init__(self, efectos: list, db):
+    def __init__(self, efectos: list):
         self.efectos = efectos
-        self.db = db
 
     @classmethod
-    def getGestorEfectos(cls, db=None):
+    def getGestorEfectos(cls, efectos=None):
         if cls.myGestorEfectos is None:
-            cls.myGestorEfectos = gestorEfectos(db)
+            if efectos is None:
+                efectos = []
+            cls.myGestorEfectos = gestorEfectos(efectos)
         return cls.myGestorEfectos
 
     def obtenerEfectosEficaces(self, nombreTipo):

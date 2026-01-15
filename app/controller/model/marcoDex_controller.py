@@ -1,6 +1,7 @@
 import string
 
 from app.controller.model.chatbot_controller import ChatBot
+from app.controller.model.gestorEfectos_controller import gestorEfectos
 from app.controller.model.pokeDex_controller import PokeDex
 from app.controller.model.ranking_controller import Ranking
 from app.model.utils.custom_types import Custom_types
@@ -194,6 +195,16 @@ class MarcoDex:
 
             # Paso 24aa y 25aa: Añadir a Pokedex
             mi_pokedex.añadirPokemon(nomPokemon, descr, legendario, altMedia, pesoMedio, tipos, evoluciones, preevoluciones, region)
+        # Paso 15aa: Efectos
+        sql = "SELECT * FROM EfectoTipo"
+        resultado = self.db.select(sql, ())  # Pasos 16aa
+        gEfectos = gestorEfectos.getGestorEfectos()
+        for fila in resultado:
+            # Pasos 18aa - 23aa: Obtener datos
+            tipoAtac = fila['NombreTipoAtac']
+            tipoDef = fila['NombreTipoDef']
+            efecto = fila['Efecto']
+            gEfectos.anadirEfecto(tipoAtac, tipoDef, efecto)
 
         print(f"[DEBUG] Precarga global finalizada: {len(mi_pokedex.listaEspecies)} especies en Pokedex.")
 

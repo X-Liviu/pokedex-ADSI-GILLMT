@@ -1,5 +1,6 @@
 import pytest
 import re
+import time
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 from conftest import Connection
 
@@ -255,6 +256,7 @@ def test_guardar_edicion_sin_cambios(client):
     """Verifica que se puede guardar un equipo sin haber hecho modificaciones."""
     iniciar_sesion(client, "TataX")
     n_eq = asegurar_equipo_test(client, "TataX")
+    time.sleep(1.1)
 
     # Entramos a editar
     client.get(f'/modificar-equipo/{n_eq}')
@@ -271,10 +273,12 @@ def test_guardar_edicion_con_cambios_mixtos_persiste(client):
     """Verifica borrar y añadir, asegurando que el bicho base existe en disco."""
     iniciar_sesion(client, "TataX")
     n_eq = asegurar_equipo_test(client, "TataX")
+    time.sleep(1.1)
 
     # Forzamos un guardado. Si el bicho ya está en RAM por el 'asegurar',
     # esto lo manda a la BD. Así el 'borrar' siguiente sí tendrá algo que borrar en el disco.
     client.post(f'/modificar-equipo/{n_eq}', data={'accion': 'guardar'}, follow_redirects=True)
+    time.sleep(1.1)
     # ------------------------------------------------------
 
     mote_nuevo = "BichoNuevo"

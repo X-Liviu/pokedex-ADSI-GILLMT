@@ -38,7 +38,7 @@ def limpiar_tablas(db):
     except Exception:
         pass
 
-
+# CÓDIGO AÑADIDO POR GORKA QUE NO FIGURA EN EL DIAGRAMA DE SECUENCIA DE INICIAR SESIÓN DE LIVIU
 def registrar_usuario(db, username):
     """
     Usa MarcoDex.procesarRegistro con respaldo SQL.

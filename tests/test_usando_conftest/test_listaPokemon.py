@@ -1,10 +1,6 @@
 import pytest
-from flask import session
 from app.controller.model.pokeDex_controller import PokeDex
 from app.model.especie import Especie
-from app.controller.model.marcoDex_controller import MarcoDex
-from app.model.usuario import Usuario
-from app.controller.model.gestorUsuario_controller import gestorUsuario
 from conftest import Connection
 
 def inyectar_datos_pokedex():

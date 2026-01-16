@@ -53,16 +53,20 @@ def chatbot_blueprint(db):
                     return redirect(url_for('menu_principal.mostrar_menu'))
 
                 elif user_input in ["1", "2", "3", "4"]:
-                    session['opcion_activa'] = user_input
-                    session['estado'] = "PARAMETRO"
+                    if (user_input == "1") & (not mDex.tieneEquipos(session.get('usuario'))):
+                        temp_historial.append(
+                            {"role": "bot", "content": "En este momento no dispones de equipos. Crea un equipo o introduce otro número."})
+                    else:
+                        session['opcion_activa'] = user_input
+                        session['estado'] = "PARAMETRO"
 
-                    prompts = {
-                        "1": "Introduce el <b>ID del equipo</b> para ver su mejor Pokémon:",
-                        "2": "Introduce el <b>nombre del Pokémon</b> para ver los tipos contra los que es fuerte y débil:",
-                        "3": "Introduce el <b>nombre del Pokémon</b> para ver su cadena evolutiva:",
-                        "4": "Introduce el <b>nombre del Pokémon</b> para ver sus características:"
-                    }
-                    temp_historial.append({"role": "bot", "content": prompts.get(user_input)})
+                        prompts = {
+                            "1": "Introduce el <b>ID del equipo</b> para ver su mejor Pokémon:",
+                            "2": "Introduce el <b>nombre del Pokémon</b> para ver los tipos contra los que es fuerte y débil:",
+                            "3": "Introduce el <b>nombre del Pokémon</b> para ver su cadena evolutiva:",
+                            "4": "Introduce el <b>nombre del Pokémon</b> para ver sus características:"
+                        }
+                        temp_historial.append({"role": "bot", "content": prompts.get(user_input)})
                 else:
                     temp_historial.append(
                         {"role": "bot", "content": "Opción no válida. Introduce un número del 1 al 5."})

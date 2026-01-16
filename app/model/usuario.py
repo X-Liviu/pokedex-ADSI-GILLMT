@@ -152,7 +152,7 @@ class Usuario:
             return True
         return False
 
-    def cargarEquipo(self, numEquipo: int) -> int:
+    def cargarEquipo(self, numEquipo: int):
         """
         Paso 34aa: Busca si el equipo existe, si no, lo crea.
         """
@@ -160,7 +160,6 @@ class Usuario:
         if equipo is None:
             nuevo_equipo = Equipo(numEquipo)
             self.lista_equipos.append(nuevo_equipo)
-        return 1
 
     def añadirPokemon(self, nombreEspecie: str, nombreCustom: str, numEquipo: int, datos_bd: dict = None) -> int:
         """

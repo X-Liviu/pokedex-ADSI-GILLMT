@@ -135,13 +135,14 @@ class MarcoDex:
 
         if exito:
             # Paso 14aa: Cargar datos globales (Pokedex)
-            # Respetamos que precargarDatos() sea void y sin argumentos.
             self.precargarDatos()
             # Recuperamos el gestor del usuario actual para cargar sus datos privados
             gestor = gestorUsuario.getMyGestorUsuario(pNomUsuario, self.db)
             if gestor:
                 print("hay gestor")
+                #PASO 27aa
                 gestor.precargarEquipos()
+                # PASO 39aa
                 gestor.precargarAmigos()
 
         return exito
@@ -157,7 +158,9 @@ class MarcoDex:
         resultado = self.db.select(sql, ())
 
         mi_pokedex = PokeDex.get_instance()
+        #PASO 17aa: reiniciar la pokédex
         mi_pokedex.reiniciarPokedex()
+
         for fila in resultado:
             #Obtener datos
             nomPokemon = fila['Nombre']
@@ -192,7 +195,7 @@ class MarcoDex:
             for fila in resultado:
                 preevoluciones.append(fila['Preevolucion'])
 
-            #Añadir a Pokedex
+            #PASO 25aa: Añadir a Pokedex
             mi_pokedex.añadirPokemon(nomPokemon, descr, legendario, altMedia, pesoMedio, tipos, evoluciones, preevoluciones, region)
         # Consulta para los efectos
         sql = "SELECT * FROM EfectoTipo"

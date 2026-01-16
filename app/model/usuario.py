@@ -164,19 +164,16 @@ class Usuario:
 
     def añadirPokemon(self, nombreEspecie: str, nombreCustom: str, numEquipo: int, datos_bd: dict = None) -> int:
         """
-        Paso 35aa: añadirPokemon
+        Paso 36aa: añadirPokemon
         """
         equipo = self.buscarEquipo(numEquipo)
         if equipo:
-            # Paso 36aa: addPokemon llamando a Equipo
+            # Paso 37aa: addPokemon llamando a Equipo (addPokemon de LIVIU)
             return equipo.addPokemon(nombreEspecie, nombreCustom, datos_bd)
         return -1
 
     def cargarAmigo(self, amigoNuevo):
-        """
-        Paso 47aa: Carga el amigo en la lista.
-        """
-        # Paso 48aa: amigos.add(amigoNuevo)
+        # Paso 49aa: amigos.add(amigoNuevo)
         # Verificamos duplicados por si acaso
         if not any(a.nombre_usuario == amigoNuevo.nombre_usuario for a in self.amigos):
             self.amigos.append(amigoNuevo)

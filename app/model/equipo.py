@@ -15,6 +15,7 @@ class Equipo:
     def tiene6(self):
         return len(self.lista_pokemon) == 6
 
+    # DE TÁBATA (no nos dio tiempo a juntar métodos de addPokemon)
     def addPokemon(self, nombreEspecie, nombrePokemon):
         # 1. Obtenemos la especie desde el Singleton PokeDex
         especie_obj = PokeDex.get_instance().buscarEspecie(nombreEspecie)
@@ -107,6 +108,7 @@ class Equipo:
                 elPokemon = Pokemon
         return elPokemon.getInfo()
 
+    #DE LIVIU (no nos dio tiempo a juntar métodos de addPokemon)
     def addPokemon(self, nombreEspecie, nombrePokemon, datos_bd=None):
         """
         Paso 36aa: addPokemon.

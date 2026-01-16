@@ -20,7 +20,7 @@ class gestorUsuario:
     def iniciarSesion(cls, pNomUsuario: str, pContrasena: str, db) -> bool:
         # Paso 4: execSQL
         sql = "SELECT * FROM Usuario WHERE NombreUsuario = ? AND Contrasena = ?"
-        resultado = db.select(sql, (pNomUsuario, pContrasena))
+        resultado = db.select(sql, (pNomUsuario, pContrasena))  # Paso 5
 
         if resultado and len(resultado) > 0:
             fila = resultado[0]
@@ -608,12 +608,11 @@ class gestorUsuario:
 
     def precargarAmigos(self):
         """
-        Paso 38aa: precargarAmigos
+        Paso 39aa: precargarAmigos
         """
-        # Paso 39aa
         nomUsuario = self.usuario.getNomUsuario()
 
-        # Paso 40aa: execSQL (Corregido alias NombreUsuarioAmigo)
+        # Paso 41aa: execSQL (Corregido alias NombreUsuarioAmigo)
         sql3 = """
                SELECT u.Nombre, u.Apellido, u.NombreUsuario AS NombreUsuarioAmigo
                FROM AmigoDe a
@@ -623,13 +622,13 @@ class gestorUsuario:
 
         resultado = self.db.select(sql3, (nomUsuario,))  # Pasos 41aa
 
-        for fila in resultado:  # Paso 42aa: next()
-            # Pasos 43aa - 45aa
+        for fila in resultado:  # Paso 43aa: next()
+            # Pasos 44aa - 46aa
             nombreAmigo = fila['Nombre']
             apellidoAmigo = fila['Apellido']
             nombreUsuarioAmigo = fila['NombreUsuarioAmigo']  # Usamos el Alias
 
-            # Paso 46aa: amigoNuevo = new Usuario(...)
+            # Paso 47aa: amigoNuevo = new Usuario(...)
             # Creamos usuario "ligero" (sin pass, ni rol, ni db)
             amigoNuevo = Usuario(
                 nombre=nombreAmigo,
@@ -639,7 +638,7 @@ class gestorUsuario:
                 lista_equipos=[], amigos=[], db=None
             )
 
-            # Paso 47aa: elUsuario.cargarAmigo(amigoNuevo)
+            # Paso 48aa: elUsuario.cargarAmigo(amigoNuevo)
             self.usuario.cargarAmigo(amigoNuevo)
             print(
                 f"DEBUG: Usuario {self.usuario.nombre_usuario} cargado con {len(self.usuario.amigos)} amigos en memoria.")

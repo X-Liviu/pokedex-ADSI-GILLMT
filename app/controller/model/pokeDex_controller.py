@@ -118,11 +118,7 @@ class PokeDex:
             return -1
 
     def añadirPokemon(self, nomPokemon, descr, legendario, altMedia, pesoMedio, tipos, evoluciones, preevoluciones, region):
-        """
-        Paso 24aa: Crea la instancia de Especie y la añade a la lista.
-        """
-        # Paso 25aa: especies.add(new EspeciePokemon(...))
-        # Añadimos los argumentos que faltan con valores por defecto para evitar el TypeError
+        # Paso 26aa: especies.add(new EspeciePokemon(...))
         nueva_especie = Especie(
             nombre=nomPokemon,
             descripcion=descr,

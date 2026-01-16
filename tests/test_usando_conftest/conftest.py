@@ -23,7 +23,7 @@ from app.controller.ui.identificacion_controller import identificacion_blueprint
 from app.controller.ui.registrarse_controller import registrarse_blueprint
 from app.controller.ui.verListaUsuarios_controller import ver_lista_usuarios_blueprint
 from app.controller.ui.confirmarContrasena_controller import confirmar_contrasena_blueprint
-from app.controller.ui import menu_principal_controller
+from app.controller.ui.menu_principal_controller import menu_principal_blueprint
 
 # Rutas
 PROJECT_ROOT = os.getcwd()
@@ -167,17 +167,12 @@ def create_app(setup_database_once):
     app.register_blueprint(registrarse_blueprint(db))
     app.register_blueprint(ver_lista_usuarios_blueprint(db))
     app.register_blueprint(confirmar_contrasena_blueprint(db))
-    app.register_blueprint(menu_principal_controller.menu_principal_blueprint(db))
+    app.register_blueprint(menu_principal_blueprint(db))
 
     @app.route('/')
     def index():
-        if 'usuario' not in session:
-            return redirect(url_for('identificacion.identificacion'))
-
-        if gestorUsuario.getMyGestorUsuario(session['usuario']) is None:
-            gestorUsuario.cargarUsuario(session['usuario'], db)
-
-        return menu_principal_controller.mostrar_menu()
+        session.clear()
+        return redirect(url_for('identificacion.identificacion'))
 
     # Entrega la app al test
     yield app

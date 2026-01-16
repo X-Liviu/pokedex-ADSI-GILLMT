@@ -115,7 +115,6 @@ class GestorAPI:
                 eficaz = [nombre_tipo_es(t) for t in tipo.damage_relations.double_damage_to]
                 debil = [nombre_tipo_es(t) for t in tipo.damage_relations.double_damage_from]
                 sin_efecto = [nombre_tipo_es(t) for t in tipo.damage_relations.no_damage_to]
-
                 lista_datos.append({
                     "nombre": nombre,
                     "descripcion": descripcion,

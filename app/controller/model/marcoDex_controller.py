@@ -198,6 +198,7 @@ class MarcoDex:
         sql = "SELECT * FROM EfectoTipo"
         resultado = self.db.select(sql, ())
         gEfectos = gestorEfectos.getGestorEfectos()
+        gEfectos.reiniciarEfectos()
         for fila in resultado:
             #Obtener datos
             tipoAtac = fila['NombreTipoAtac']

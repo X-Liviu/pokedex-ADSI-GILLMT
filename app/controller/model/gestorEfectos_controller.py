@@ -37,3 +37,10 @@ class gestorEfectos:
     def anadirEfecto (self, tipoAtac, tipoDef, efecto):
         nuevo = Efecto(tipoAtac, tipoDef, efecto)
         self.efectos.append(nuevo)
+
+    def reiniciarEfectos(self):
+        """
+        Vacía la lista de especies para evitar duplicados al recargar datos.
+        """
+        self.efectos = []
+        print("[DEBUG] Efectos reiniciados (Memoria limpia).")

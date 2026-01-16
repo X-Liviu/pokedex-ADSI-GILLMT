@@ -3,6 +3,19 @@ from app.model.usuario_ranking import UsuarioRanking
 from app.model.utils.custom_types import Custom_types
 
 class ListaUsuarios:
+    class Iterator:
+        def __init__(self, lista: List[UsuarioRanking]):
+            self.lista: List = lista
+            self.index: int = 0
+
+        def has_next(self) -> bool:
+            return self.index < len(self.lista)
+
+        def next(self) -> UsuarioRanking:
+            resultado: UsuarioRanking = self.lista[self.index]
+            self.index += 1
+            return resultado
+
     def __init__(self):
         self.usuarios: List[UsuarioRanking] = []
 
@@ -96,3 +109,28 @@ class ListaUsuarios:
         el bucle "a la vez". No se si conocias esto, si no lo
         conocias lo intento explicar mas detalladamente.
         """
+    def get_users_as_dict(self) -> Custom_types.Ranking.JSONCalificacionUsuario2:
+        """
+        pre:
+        post: devuelve el usuario actual que se esta iterando en este momento
+        en formato de JSONCalificacionUsuario2.
+        """
+        for usuario_actual in self.usuarios:
+            yield usuario_actual.to_dict() # Esto es un iterador
+
+        """
+        EXPLICACION:
+        get_to_dict se ha convertido en un generador. Cuando se
+        hace una llamada a un generador su ejecucion se PAUSA
+        cuando hay un yield. La ejecucion del generador continua
+        desde el ultimo yield en el que se pauso. Un generador
+        es un objeto y siempre que se vaya a usar uno, requiere
+        inicializarse. Si se usa en un bucle for devolvera el
+        valor al lado de yield en cada ciclo del for externo.
+        No se ejecutan dos bucles seguidos, sino que se ejecuta
+        el bucle "a la vez". No se si conocias esto, si no lo
+        conocias lo intento explicar mas detalladamente.
+        """
+
+    def get_iterador(self) -> Iterator:
+        return ListaUsuarios.Iterator(self.usuarios)

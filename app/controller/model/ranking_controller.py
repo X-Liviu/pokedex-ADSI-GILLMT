@@ -1,7 +1,6 @@
 import json
 import sqlite3
 from typing import List
-import pokebase
 
 from app.controller.model.pokeDex_controller import PokeDex
 from app.model.lista_usuarios import ListaUsuarios
@@ -34,13 +33,38 @@ class Ranking:
         post: Devuelve un diccionario con todos los usuarios existentes
         en la base de datos en orden de mas rareza a menos rareza
         """
-        generador = self._get_lista_usuarios().get_users_as_dict()
+        iterador: ListaUsuarios.Iterator = self._get_lista_usuarios().get_iterador()
         resultado: Custom_types.Ranking.JSONRanking = {"usuarios": []}
+        indice: int = 0
+
+        while iterador.has_next():
+            # El bucle termina cuando el iterador no apunta a nada
+            diccionario_actual: UsuarioRanking = iterador.next().to_dict()
+            diccionario_actual["puesto"] = indice + 1
+            resultado["usuarios"].append(diccionario_actual)
+            indice += 1
+
+        """
+        # FORMA CON YIELD
+        generador = self._get_lista_usuarios().get_users_as_dict()
 
         for indice, diccionario_actual in enumerate(generador):
-            # El bucle termina cuando el iterador no apunta a nada
-            diccionario_actual["puesto"] = indice+1
+            diccionario_actual["puesto"] = indice + 1
             resultado["usuarios"].append(diccionario_actual)
+        """
+        """
+        QUE HACE ENUMERATE?
+        lista = [elemento0, elemento1, ...]
+        enumerate(lista) -> ((indice, elemento), ...)
+        enumerate(lista) -> ((0, elemento0), (1, elemento1), ...))
+    
+        dada una lista devuelve una tupla, donde cada elemento es
+        una dupla. La dupla contiene en la posicion 0 el indice y
+        en la posicion 1 el elemento que se situa en dicho indice
+        en la lista original
+        Tupla: Array que una vez definidos los elementos al inicializar
+        no se puede cambiar ni sus elementos ni su tamaino,
+        """
 
         return resultado
 

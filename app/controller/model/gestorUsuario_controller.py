@@ -286,7 +286,7 @@ class gestorUsuario:
             "usuario": pUsuarioNuevo,
             "contrasena": pNuevaContra
         }
-        gestorUsuario._cambios_pendientes[pNomUsuario] = datos
+        gestorUsuario._cambios_pendientes[pNomUsuario] = datos #Equivalente a idea de HashMap del Diagrama de Clases
 
     def recuperarModificacionTemporal(self, pNomUsuario: str) -> Usuario:
         # Recuperamos el diccionario
@@ -410,7 +410,7 @@ class gestorUsuario:
                 "nomUsuario": fila['NombreUsuario'],
                 "rol": fila['Rol']
             })
-
+        #Hasta aquí, se ha ejecutado hasta el Paso 11 incluido
         return lista_diccionarios
 
     @classmethod
@@ -483,7 +483,7 @@ class gestorUsuario:
             final_ap = pAp if pAp and pAp.strip() else usuario_act.getApellido()
             final_usuario = pNomUsuarioModif if pNomUsuarioModif and pNomUsuarioModif.strip() else usuario_act.getNomUsuario()
 
-            # 2. Modificar datos en el objeto en memoria (usando los valores finales)
+            # 2. Modificar datos en el objeto en memoria (usando los valores finales) Paso 19
             usuario_act.modificarDatos(final_nom, final_ap, usuario_act.getCorreo(), final_usuario, None)
 
             # 3. Update SQL

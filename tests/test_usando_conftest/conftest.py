@@ -167,6 +167,7 @@ def create_app(setup_database_once):
     app.register_blueprint(registrarse_blueprint(db))
     app.register_blueprint(ver_lista_usuarios_blueprint(db))
     app.register_blueprint(confirmar_contrasena_blueprint(db))
+    app.register_blueprint(menu_principal_controller.menu_principal_blueprint(db))
 
     @app.route('/')
     def index():
@@ -215,6 +216,7 @@ def create_app(setup_database_once):
 
         # 3. Borramos los equipos de TataX
         db.execute("DELETE FROM Equipo WHERE NombreUsuario = 'TataX'")
+        db.execute("DELETE FROM Publica WHERE NombreUsuario = 'TataX'")
 
         # print("Limpieza de BD realizada correctamente.")
     except Exception as e:

@@ -1,7 +1,7 @@
 import pytest
 from app.controller.model.gestorUsuario_controller import gestorUsuario
 
-#TESTS DE LIVIU
+#TESTS DE LIVIU SIGUIENDO EL PLAN DE PRUEBAS DE GORKA
 def test_1_1_registro_exitoso(client):
     """
     CU: Registrarse (1.1)

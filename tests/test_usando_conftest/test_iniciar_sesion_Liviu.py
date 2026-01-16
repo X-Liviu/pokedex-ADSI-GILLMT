@@ -1,7 +1,7 @@
 import pytest
 from app.controller.model.gestorUsuario_controller import gestorUsuario #Necesario para poder borrar objetos en memoria para probar que la BD falla en el test 2.10
 
-#TESTS DE LIVIU
+#TESTS DE LIVIU SIGUIENDO EL PLAN DE PRUEBAS DE GORKA
 def test_2_1_login_exitoso(client):
     """
     CU: Iniciar sesión (2.1)

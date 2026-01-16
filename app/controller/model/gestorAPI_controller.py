@@ -85,3 +85,39 @@ class GestorAPI:
 
         print("--- CARGA DE API COMPLETADA ---")
         return lista_datos
+
+    @staticmethod
+    def cargarTiposEfectos() -> List[Dict[str, Any]]:
+        lista_datos = []
+
+        def nombre_tipo_es(tipo):
+            # Asegurar que tenemos el Type completo
+            if not hasattr(tipo, "names"):
+                tipo = pb.type_(tipo.name)
+
+            for n in tipo.names:
+                if n.language.name == 'es':
+                    return n.name
+            return tipo.name.capitalize()
+
+        for tipo_id in range(1, 19):
+            tipo = pb.type_(tipo_id)
+
+            # Descripción en español
+            descripcion = "Tipo elemental"
+
+            nombre = nombre_tipo_es(tipo)
+
+            eficaz = [nombre_tipo_es(t) for t in tipo.damage_relations.double_damage_to]
+            debil = [nombre_tipo_es(t) for t in tipo.damage_relations.double_damage_from]
+            sin_efecto = [nombre_tipo_es(t) for t in tipo.damage_relations.no_damage_to]
+
+            lista_datos.append({
+                "nombre": nombre,
+                "descripcion": descripcion,
+                "eficaz": eficaz,
+                "debil": debil,
+                "sin_efecto": sin_efecto
+            })
+
+        return lista_datos

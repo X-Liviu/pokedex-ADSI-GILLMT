@@ -292,6 +292,7 @@ class MarcoDex:
         return []
 
 
+
     @staticmethod
     def precargaInicioApp(conn):
         """
@@ -300,6 +301,7 @@ class MarcoDex:
         cursor = conn.cursor()
 
         # 1. Obtener datos limpios de la API
+        lista_tipos = GestorAPI.cargarTiposEfectos()
         lista_pokemons = GestorAPI.cargarPokemons()
 
         if not lista_pokemons:
@@ -320,6 +322,27 @@ class MarcoDex:
 
         sql_evolucion = "INSERT OR IGNORE INTO Evolucion VALUES (?, ?)"
 
+        sql_efecto= "INSERT OR IGNORE INTO EfectoTipo VALUES (?, ?, ?)"
+
+        #Cargamos todos los tipos
+        for tipo in lista_tipos:
+            cursor.execute(sql_tipo, (tipo['nombre'], tipo['descripcion']))
+
+        #Cargamos los efectos
+        for tipo in lista_tipos:
+            nombre = tipo['nombre']
+            eficaz = tipo['eficaz']
+            for t in eficaz:
+                cursor.execute(sql_efecto, (nombre, t, 'Eficaz'))
+            debil = tipo['debil']
+            for t in debil:
+                cursor.execute(sql_efecto, (nombre, t, 'Débil'))
+            sin_efecto = tipo['sin_efecto']
+            for t in sin_efecto:
+                cursor.execute(sql_efecto, (nombre, t, 'Sin efecto'))
+
+        print(f"¡Tipos y efectos cargados correctamente!")
+
         # 3. Recorrer y guardar
         for poke in lista_pokemons:
             # A) Guardar Especie
@@ -335,9 +358,6 @@ class MarcoDex:
 
             # B) Guardar Tipos y Relación Especie-Tipo
             for nombre_tipo in poke['tipos']:
-                # Guardamos el tipo si no existe (ej: "Fuego", "Sin descripcion por ahora")
-                cursor.execute(sql_tipo, (nombre_tipo, "Tipo elemental"))
-
                 # Relacionamos Especie con Tipo
                 cursor.execute(sql_especie_tipo, (poke['nombre'], nombre_tipo))
 

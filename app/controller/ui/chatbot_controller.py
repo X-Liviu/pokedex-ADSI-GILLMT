@@ -55,7 +55,8 @@ def chatbot_blueprint(db):
                 elif user_input in ["1", "2", "3", "4"]:
                     if (user_input == "1") & (not mDex.tieneEquipos(session.get('usuario'))):
                         temp_historial.append(
-                            {"role": "bot", "content": "En este momento no dispones de equipos. Crea un equipo o introduce otro número."})
+                            {"role": "bot", "content": "En este momento no dispones de equipos. Crea un equipo o elige otra opción."})
+                        temp_historial.append({"role": "bot", "content": session['menu_texto']})
                     else:
                         session['opcion_activa'] = user_input
                         session['estado'] = "PARAMETRO"
@@ -70,6 +71,7 @@ def chatbot_blueprint(db):
                 else:
                     temp_historial.append(
                         {"role": "bot", "content": "Opción no válida. Introduce un número del 1 al 5."})
+                    temp_historial.append({"role": "bot", "content": session['menu_texto']})
 
             # --- ESTADO 2: PROCESAR PARÁMETRO ---
             elif session['estado'] == "PARAMETRO":

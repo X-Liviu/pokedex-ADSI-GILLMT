@@ -68,6 +68,7 @@ class Usuario:
         #return json.dumps(datos, indent=4)
 
     def mejorPokemon(self, numEquipo):
+        #Devuelve el mejor Pokémon de un equipo si el equipo existe
         elEquipo = self.buscarEquipo(numEquipo)
         if elEquipo is not None :
             return elEquipo.getMejorPokemon()

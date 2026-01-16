@@ -18,6 +18,7 @@ class ChatBot :
         return cls.myChatBot
 
     def mostrarOpciones(self) :
+        #Se cargan las opciones del chatbot
         filas = self.db.select(
             sentence="SELECT * FROM OpcionChatbot"
         )

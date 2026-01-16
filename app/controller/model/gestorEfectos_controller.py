@@ -19,6 +19,7 @@ class gestorEfectos:
         return cls.myGestorEfectos
 
     def obtenerEfectosEficaces(self, nombreTipo):
+        #Devuelve los efectos contra los que el tipo es fuerte
         datos = []
         for efecto in self.efectos :
             if efecto.esFuerte(nombreTipo) :
@@ -26,6 +27,7 @@ class gestorEfectos:
         return datos
 
     def obtenerEfectosDebiles(self, nombreTipo):
+        #Devuelve los efectos contra los que el tipo es débil
         datos = []
         for efecto in self.efectos :
             if efecto.esDebil(nombreTipo) :

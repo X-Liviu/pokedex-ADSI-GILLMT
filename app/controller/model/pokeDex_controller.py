@@ -70,11 +70,12 @@ class PokeDex:
 
     def obtenerEfectos(self, nombreEspecie):
         """
-        Devuelve un JSON con las debilidades y fortalezas de la especie.
+        Devuelve un JSON con las debilidades y fortalezas de la especie si esta existe.
         """
         laEspecie = self.buscarEspecie(nombreEspecie)
         if laEspecie is not None:
             tipos = laEspecie.getTipos()
+            # Hay una llamada para los efectos eficaces y otro para los débiles
             datos = {
                 "Efectos contra los que es fuerte": self.esFuerteContra(tipos),
                 "Efectos contra los que es débil": self.esDebilContra(tipos)
@@ -108,7 +109,7 @@ class PokeDex:
 
     def cadenaEvolutiva(self, nombreEspecie):
         """
-        Devuelve la cadena evolutiva de la especie.
+        Devuelve la cadena evolutiva de la especie si esta existe.
         """
         laEspecie = self.buscarEspecie(nombreEspecie)
         if laEspecie is not None:

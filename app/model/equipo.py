@@ -98,6 +98,7 @@ class Equipo:
             self.lista_pokemon.append(pokemon.clonarPokemon())
 
     def getMejorPokemon(self):
+        #Devuelve la información del Pokémon con más rareza
         elPokemon = None
         max = 0.0
         for Pokemon in self.lista_pokemon:

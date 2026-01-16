@@ -151,16 +151,15 @@ class MarcoDex:
         Paso 14aa: precargarDatos() : void
         Carga exclusivamente la información global (La Pokedex).
         """
-        # Paso 15aa: Consulta a BD para EspeciePokemon
+        # Consulta a BD para EspeciePokemon
         sql = "SELECT * FROM EspeciePokemon"
 
-        resultado = self.db.select(sql, ())  # Pasos 16aa
+        resultado = self.db.select(sql, ())
 
         mi_pokedex = PokeDex.get_instance()
         mi_pokedex.reiniciarPokedex()
-        # Paso 17aa: Recorrer resultados
         for fila in resultado:
-            # Pasos 18aa - 23aa: Obtener datos
+            #Obtener datos
             nomPokemon = fila['Nombre']
             descr = fila['Descripcion']
             legendario = bool(fila['Legendario'])
@@ -168,7 +167,7 @@ class MarcoDex:
             pesoMedio = float(fila['PesoMedia'])
             region = fila['Region']
 
-            # Paso 15aa: Consulta a BD para los tipos del Pokémon
+            #Consulta a BD para los tipos del Pokémon
             sql = "SELECT NombreTipo FROM EspecieTipo WHERE NombreEspecie = '%s'" % nomPokemon
 
             resultado = self.db.select(sql, ())  # Pasos 16aa
@@ -177,30 +176,30 @@ class MarcoDex:
                 tipos.append(fila['NombreTipo'])
 
 
-            # Paso 15aa: Consulta a BD para las evoluciones
+            #Consulta a BD para las evoluciones
             sql = "SELECT Evolucion FROM Evolucion WHERE Preevolucion = '%s'" % nomPokemon
 
-            resultado = self.db.select(sql, ())  # Pasos 16aa
+            resultado = self.db.select(sql, ())
             evoluciones = []
             for fila in resultado:
                 evoluciones.append(fila['Evolucion'])
 
-            # Paso 15aa: Consulta a BD para las preevoluciones
+            #Consulta a BD para las preevoluciones
             sql = "SELECT Preevolucion FROM Evolucion WHERE Evolucion = '%s'" % nomPokemon
 
-            resultado = self.db.select(sql, ())  # Pasos 16aa
+            resultado = self.db.select(sql, ())
             preevoluciones = []
             for fila in resultado:
                 preevoluciones.append(fila['Preevolucion'])
 
-            # Paso 24aa y 25aa: Añadir a Pokedex
+            #Añadir a Pokedex
             mi_pokedex.añadirPokemon(nomPokemon, descr, legendario, altMedia, pesoMedio, tipos, evoluciones, preevoluciones, region)
-        # Paso 15aa: Efectos
+        # Consulta para los efectos
         sql = "SELECT * FROM EfectoTipo"
-        resultado = self.db.select(sql, ())  # Pasos 16aa
+        resultado = self.db.select(sql, ())
         gEfectos = gestorEfectos.getGestorEfectos()
         for fila in resultado:
-            # Pasos 18aa - 23aa: Obtener datos
+            #Obtener datos
             tipoAtac = fila['NombreTipoAtac']
             tipoDef = fila['NombreTipoDef']
             efecto = fila['Efecto']
@@ -300,7 +299,7 @@ class MarcoDex:
         """
         cursor = conn.cursor()
 
-        # 1. Obtener datos limpios de la API
+        # Obtener datos limpios de la API
         lista_tipos = GestorAPI.cargarTiposEfectos()
         lista_pokemons = GestorAPI.cargarPokemons()
 
@@ -343,7 +342,7 @@ class MarcoDex:
 
         print(f"¡Tipos y efectos cargados correctamente!")
 
-        # 3. Recorrer y guardar
+        # Guardamos los Pokémon
         for poke in lista_pokemons:
             # A) Guardar Especie
             datos_especie = (
@@ -364,10 +363,8 @@ class MarcoDex:
         for poke in lista_pokemons:
             # C) Guardar Evoluciones y Preevoluciones
             for evolucion in poke['evoluciones']:
-                # Guardamos el tipo si no existe (ej: "Fuego", "Sin descripcion por ahora")
                 cursor.execute(sql_evolucion, (evolucion, poke['nombre']))
             for preevolucion in poke['preevoluciones']:
-                # Guardamos el tipo si no existe (ej: "Fuego", "Sin descripcion por ahora")
                 cursor.execute(sql_evolucion, (poke['nombre'], preevolucion))
 
 

@@ -5,8 +5,10 @@ class Efecto:
         self.efecto = efecto
 
     def esFuerte(self, nombreTipo) :
+        #Indica si el tipo introducido es eficaz
         return (nombreTipo == self.tipoAtac) and (self.efecto == "Eficaz")
 
     def esDebil(self, nombreTipo) :
+        #Indica si el tipo introducido es débil
         return (nombreTipo == self.tipoAtac) and (self.efecto == "Débil")
 

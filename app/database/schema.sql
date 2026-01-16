@@ -177,9 +177,6 @@ INSERT OR IGNORE INTO Usuario (NombreUsuario, Nombre, Apellido, Correo, Contrase
 -- B. Datos necesarios para que los equipos funcionen (Región, Especie)
 INSERT OR IGNORE INTO EspeciePokemon VALUES ('Pikachu', 'Ratón eléctrico', FALSE, 0.4, 6.0, 'Kanto');
 INSERT OR IGNORE INTO EspeciePokemon VALUES ('Eevee', 'Evolución', FALSE, 0.3, 6.5, 'Kanto');
-INSERT OR IGNORE INTO EspeciePokemon VALUES ('Bulbasaur', 'Semilla', FALSE, 0.7, 6.9, 'Kanto');
-INSERT OR IGNORE INTO EspeciePokemon VALUES ('Ivysaur', 'Bulbo', FALSE, 1.0, 13.0, 'Kanto');
-INSERT OR IGNORE INTO EspeciePokemon VALUES ('Venusaur', 'Pétalos', FALSE, 2.0, 100.0, 'Kanto');
 
 
 -- C. Pokémons individuales (Instancias)
@@ -205,24 +202,6 @@ INSERT OR IGNORE INTO OpcionChatbot VALUES('2', 'Mostrar los tipos contra los qu
 INSERT OR IGNORE INTO OpcionChatbot VALUES('3', 'Ver la cadena evolutiva de un Pokémon.');
 INSERT OR IGNORE INTO OpcionChatbot VALUES('4', 'Ver las habilidades y características de un Pokémon.');
 INSERT OR IGNORE INTO OpcionChatbot VALUES('5', 'Volver al menú principal.');
-
--- G. EVOLUCIONES
-INSERT OR IGNORE INTO Evolucion VALUES('Ivysaur', 'Bulbasaur');
-INSERT OR IGNORE INTO Evolucion VALUES('Venusaur', 'Bulbasaur');
-INSERT OR IGNORE INTO Evolucion VALUES('Venusaur', 'Ivysaur');
-
--- H. TIPO
-INSERT OR IGNORE INTO Tipo VALUES('Planta', 'Hierba');
-INSERT OR IGNORE INTO Tipo VALUES('Fuego', 'Queman');
-INSERT OR IGNORE INTO Tipo VALUES('Agua', 'Mojan');
-
--- H. TIPO ESPECIE
-
--- H. EFECTOS
-INSERT OR IGNORE INTO EfectoTipo VALUES('Planta', 'Agua', 'Eficaz');
-INSERT OR IGNORE INTO EfectoTipo VALUES('Planta', 'Fuego', 'Débil');
-INSERT OR IGNORE INTO EfectoTipo VALUES('Fuego', 'Planta', 'Eficaz');
-INSERT OR IGNORE INTO EfectoTipo VALUES('Agua', 'Planta', 'Débil');
 
 -- G. AMIGOS (NUEVA SECCIÓN)
 -- Amigos para 'LiviuX':

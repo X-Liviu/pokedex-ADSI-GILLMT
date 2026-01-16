@@ -36,12 +36,17 @@ class Especie:
         return datos
 
     def cadenaEvolutiva(self):
+        #Devuelve la cadena evolutiva de un Pokémon
+        #Si la cadena solo se compone de un Pokémon
         if (len(self.preevoluciones) == 0) & (len(self.evoluciones) == 0):
             datos = {"Cadena evolutiva": self.nombre}
+        #Si el Pokémon es la evolución de la cadena
         elif len(self.evoluciones) == 0 :
             datos = {"Cadena evolutiva": self.preevoluciones + [self.nombre]}
+        #Si el Pokémon es la preevolución de la cadena
         elif len(self.preevoluciones) == 0 :
             datos = {"Cadena evolutiva": [self.nombre] + self.evoluciones}
+        #Si el Pokémon tiene tanto evolución como preevolución
         else:
             datos = {"Cadena evolutiva": self.preevoluciones + [self.nombre] + self.evoluciones}
         return datos

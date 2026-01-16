@@ -57,13 +57,13 @@ def test_ranking_2(client):
     assert respuesta.status_code == 200
 
     # Buscamos aquella linea en el html que dirija al menu princiàl y se llame la opcion volver
-    objetivo: bytes = b"<a href=\"/\" class=\"boton-volver-estilo\">Volver</a>"
+    objetivo: bytes = b"<a href=\"/menu\" class=\"boton-volver-estilo\">Volver</a>"
 
     assert objetivo in respuesta.data
 
     # Nos dirigimos de forma manual a "/" y comprobamos que sea el menu principal
 
-    respuesta = client.get("/")
+    respuesta = client.get("/menu")
 
     assert respuesta.status_code == 200
 

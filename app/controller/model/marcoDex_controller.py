@@ -36,12 +36,13 @@ class MarcoDex:
     def mostrarUsuario(self, pNombreUsuario: str, pNombreAmigo: str) -> Custom_types.Ranking.JSONRankingUsuario:
         return Ranking.getMyRanking(self.db).mostrarUsuario(pNombreUsuario, pNombreAmigo)
 
+    # DE MARCO (no nos ha dado tiempo a juntar el código)
     def aniadirAmigo(self, nombreUsuario: str, nombreAmigo: str) -> Custom_types.GestorUsuario.JSONEstadoAmigo:
         resultado: Custom_types.GestorUsuario.EstadoAmigo = {"Aniadido": False}
         resultado["Aniadido"] = gestorUsuario.getMyGestorUsuario(nombreUsuario, self.db).aniadirAmigo(nombreAmigo)
         return resultado
 
-    #DE LIVIU
+    #DE LIVIU (no nos ha dado tiempo a juntar el código)
     def aniadirAmigo(self, pNomUsuario: str, pNomUsuarioAmigo: str) -> bool:
         """
         Delega en el GestorUsuario del usuario actual.
